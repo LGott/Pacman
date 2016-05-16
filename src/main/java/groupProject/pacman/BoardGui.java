@@ -1,11 +1,9 @@
 package groupProject.pacman;
 
 import javax.swing.JFrame;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-@Singleton
 public class BoardGui extends JFrame {
 	/*
 	 * it will hold all gui components and an instance of the logic class
