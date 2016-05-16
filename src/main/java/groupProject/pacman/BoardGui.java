@@ -2,6 +2,8 @@ package groupProject.pacman;
 
 import javax.swing.JFrame;
 
+import com.google.inject.Inject;
+
 public class BoardGui extends JFrame {
 	/*
 	 * it will hold all gui components and an instance of the logic class
@@ -11,6 +13,7 @@ public class BoardGui extends JFrame {
 	private Pacman pacman1;
 	private Pacman pacman2;
 
+	@Inject
 	public BoardGui() {
 		setSize(600, 600);
 		setTitle("Pacman");
