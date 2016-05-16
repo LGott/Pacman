@@ -1,7 +1,5 @@
 package groupProject.pacman;
 
-import java.awt.Graphics;
-
 import javax.swing.JFrame;
 
 import com.google.inject.Inject;
@@ -15,6 +13,7 @@ public class BoardGui extends JFrame {
 	private Pacman pacman1;
 	private Pacman pacman2;
 
+	@Inject
 	public BoardGui(Pacman pacman1) {
 		setSize(600, 600);
 		setTitle("Pacman");
@@ -22,9 +21,9 @@ public class BoardGui extends JFrame {
 		this.pacman1 = pacman1;
 		repaint();
 	}
-	
-	public void draw(Graphics g){
+
+	public void painComponent() {
 		System.out.println("IN GRAPHICS");
-		pacman1.draw(g);
+		pacman1.draw(getGraphics());
 	}
 }
