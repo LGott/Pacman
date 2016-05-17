@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 import com.google.inject.Inject;
 
-public class MazeGui extends JPanel implements KeyListener {
+public class MazeGui extends JPanel {
 	private Pacman pacman1;
 	private Pacman pacman2;
 	JLabel label1, label2, label3, label4;
@@ -27,45 +27,29 @@ public class MazeGui extends JPanel implements KeyListener {
 		label3 = new JLabel(new ImageIcon("blackSquare.jpg"));
 		label4 = new JLabel(new ImageIcon("pacman.jpg"));
 
-		this.addKeyListener(this);
-
 		add(label1);
 		add(label2);
 		add(label3);
 		add(label4);
 	}
 
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void keyTyped(KeyEvent e) {
-		int keyCode = e.getKeyCode();
-		switch (keyCode) {
-		case (KeyEvent.VK_UP): {
-			setLabelIcon(label4, "blackSquare");
-			setLabelIcon(label2, "pacman");
-			break;
-		}
-		case (KeyEvent.VK_DOWN): {
-			break;
-		}
-		case (KeyEvent.VK_LEFT): {
-			break;
-		}
-		case (KeyEvent.VK_RIGHT): {
-			break;
-		}
-		}
-	}
-
-	private void setLabelIcon(JLabel label, String iconString) {
+	public void setLabelIcon(JLabel label, String iconString) {
 		label.setIcon(new ImageIcon(iconString));
+	}
+
+	public JLabel getLabel1() {
+		return label1;
+	}
+
+	public JLabel getLabel2() {
+		return label2;
+	}
+
+	public JLabel getLabel3() {
+		return label3;
+	}
+
+	public JLabel getLabel4() {
+		return label4;
 	}
 }

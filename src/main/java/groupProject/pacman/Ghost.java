@@ -1,6 +1,5 @@
 package groupProject.pacman;
 
-
-public class Ghost extends Tile {
+public class Ghost {// extends Tile {
 
 }
