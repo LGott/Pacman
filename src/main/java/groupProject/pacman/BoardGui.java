@@ -13,11 +13,11 @@ public class BoardGui extends JFrame {
 	 */
 
 	private GameLogic gameLogic;
-	private Maze maze;
+	private MazeGui maze;
 	private ScorePanel scorePanel;
 
 	@Inject
-	public BoardGui(Maze maze) {
+	public BoardGui(MazeGui maze) {
 		setSize(600, 600);
 		setTitle("Pacman");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

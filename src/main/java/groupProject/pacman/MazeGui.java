@@ -5,12 +5,12 @@ import javax.swing.JComponent;
 
 import com.google.inject.Inject;
 
-public class Maze extends JComponent {
+public class MazeGui extends JComponent {
 	private Pacman pacman1;
 	private Pacman pacman2;
 
 	@Inject
-	public Maze(Pacman pacman1) {
+	public MazeGui(Pacman pacman1) {
 		this.pacman1 = pacman1;
 	}
 
