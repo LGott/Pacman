@@ -9,20 +9,17 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.World;
 
 import shapePackage.GhostShape;
 import shapePackage.PacmanShape;
 
 public class MazeGui extends Application {
-	private static final int WIDTH = 700;
-	private static final int HEIGHT = 700;
 	Group rootGroup;
 	Scene scene;
-	World world;
-	boolean doSleep = true;
-	Vec2 gravity = new Vec2(0f, 0f);
-	PacmanShape pacman1;
+	static boolean doSleep = true;
+	static Vec2 gravity = new Vec2(0f, 0f);
+	public static WorldLogic world = new WorldLogic(gravity, doSleep);
+	PacmanShape pacman1;	
 	PacmanShape pacman2;
 	GhostShape[] ghosts;
 	int numPellets;
@@ -31,8 +28,8 @@ public class MazeGui extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		// TODO Auto-generated method stub
-		stage.setWidth(WIDTH);
-		stage.setHeight(HEIGHT);
+		stage.setWidth(Properties.WIDTH);
+		stage.setHeight(Properties.HEIGHT);
 		stage.setTitle("Pacman");
 
 		stage.setResizable(false);
@@ -40,7 +37,8 @@ public class MazeGui extends Application {
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
 
-		Scene scene = new Scene(rootGroup, WIDTH, HEIGHT, Color.BLACK);
+		Scene scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
+				Color.BLACK);
 
 		createShapes();
 
@@ -51,8 +49,8 @@ public class MazeGui extends Application {
 
 	private void createShapes() {
 		createWalls();
-		createPacman(0, 0, 0, 0); // pacman1
-		createPacman(0, 0, 0, 0); // pacman2
+		createPacman(50, 80); // pacman1
+		createPacman(50, 20); // pacman2
 		createGhosts();
 		createPellets();
 		createBonusPellets(); // should createPellets call createBonusPellets?
@@ -65,7 +63,10 @@ public class MazeGui extends Application {
 	private void createWalls() {
 	}
 
-	private void createPacman(int x, int y, int width, int height) {
+	private void createPacman(int x, int y) {
+		PacmanShape pacmanShape = new PacmanShape(x, y);
+		rootGroup.getChildren().add(pacmanShape.getNode());
+		// world.createBodyAndFixture(x, y, BodyType.DYNAMIC, pacmanShape);
 	}
 
 	private void createGhosts() {
@@ -95,18 +96,6 @@ public class MazeGui extends Application {
 				}
 			}
 		});
-	}
-
-	// Convert a JBox2D x coordinate to a JavaFX pixel y coordinate
-	private float toPixelPosX(float posX) {
-		float x = WIDTH * posX / 100.0f;
-		return x;
-	}
-
-	// Convert a JBox2D y coordinate to a JavaFX pixel y coordinate
-	protected float toPixelPosY(float posY) {
-		float y = HEIGHT - (1.0f * HEIGHT) * posY / 100.0f;
-		return y;
 	}
 
 	public void play(String[] args) {
