@@ -9,7 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
-public class Pacman extends Tile {
+public class Pacman extends Piece {
 	private Node node;
 	// radius in pixels
 	private final int radius = 20;

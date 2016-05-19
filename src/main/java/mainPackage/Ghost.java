@@ -9,7 +9,7 @@ import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
-public class Ghost extends Tile {
+public class Ghost extends Piece {
 	private Node node;
 	private final int width = 40; // square - same width and height
 	private final BodyType bodyType = BodyType.DYNAMIC;

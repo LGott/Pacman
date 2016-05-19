@@ -8,12 +8,12 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 
-public abstract class Tile {
+public abstract class Piece {
 	private int posX;
 	private int posY;
 	private World world;
 
-	public Tile(int posX, int posY, World world) {
+	public Piece(int posX, int posY, World world) {
 		this.posX = posX;
 		this.posY = posY;
 		this.world = world;
