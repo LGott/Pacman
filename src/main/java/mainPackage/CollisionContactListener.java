@@ -9,6 +9,10 @@ public class CollisionContactListener implements ContactListener {
 
 	private boolean colliding;
 
+	public boolean isColliding() {
+		return colliding;
+	}
+
 	public CollisionContactListener() {
 		colliding = false;
 	}

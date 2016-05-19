@@ -1,4 +1,4 @@
-package groupProject.pacman;
+package Trials;
 
 import javax.swing.JComponent;
 

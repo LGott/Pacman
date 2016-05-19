@@ -1,4 +1,4 @@
-package groupProject.pacman;
+package Trials;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;

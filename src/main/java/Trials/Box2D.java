@@ -1,4 +1,4 @@
-package groupProject.pacman;
+package Trials;
 
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.collision.shapes.Shape;

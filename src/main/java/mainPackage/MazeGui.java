@@ -15,19 +15,12 @@ import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
 import objectsPackage.Wall;
-
 import org.jbox2d.dynamics.Body;
-
-import javafx.scene.Node;
-
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.FixtureDef;
-
 import javafx.util.Duration;
-
-import org.jbox2d.dynamics.BodyType;
 
 public class MazeGui extends Application {
 	private Group rootGroup;
@@ -41,6 +34,7 @@ public class MazeGui extends Application {
 	private int numPellets;
 	private int numBonusPellets;
 	final Timeline timeline = new Timeline();
+	private CollisionContactListener contactListener=new CollisionContactListener();
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -58,7 +52,7 @@ public class MazeGui extends Application {
 				Color.BLACK);
 
 		createShapes();
-		world.setContactListener(new CollisionContactListener());
+		world.setContactListener(contactListener);
 		startSimulation();
 		addKeyListeners(scene);
 		stage.setScene(scene);
@@ -90,6 +84,7 @@ public class MazeGui extends Application {
 			public void handle(ActionEvent t) {
 				// Create time step. Set Iteration count 8 for velocity and 3
 				// for positions
+				if(!contactListener.isColliding()){
 				world.step(1.0f / 60.f, 8, 3);
 				// Move balls to the new position computed by JBox2D
 				for (Ghost g : ghosts) {
@@ -101,6 +96,8 @@ public class MazeGui extends Application {
 					g.resetLayoutY(ypos);
 					System.out.printf("%4.2f %4.2f %4.2f\n", xpos, ypos, body.getAngle());
 				}
+			}else{
+				System.out.println("Collision");}
 			}
 		};
 
@@ -130,11 +127,14 @@ public class MazeGui extends Application {
 		rootGroup.getChildren().add(new Wall(60, 90, world, 10, 100).getNode());
 		rootGroup.getChildren().add(new Wall(60, 90, world, 100, 10).getNode());
 		rootGroup.getChildren().add(
-				new Wall(0, 0, world, 5, Properties.HEIGHT).getNode());// left wall
+				new Wall(0, 5, world, 5, Properties.WIDTH).getNode());// bottom wall
 		rootGroup.getChildren().add(
-				new Wall(0, 0, world, Properties.WIDTH, 5).getNode());// ceiling
+				new Wall(0, 100, world, 5, Properties.WIDTH).getNode());// ceiling
 		rootGroup.getChildren().add(
-				new Wall(Properties.WIDTH, 0, world, 5, Properties.HEIGHT)
+				new Wall(98, 100, world,  Properties.HEIGHT,5)
+						.getNode());// right wall
+		rootGroup.getChildren().add(
+				new Wall(0, 100, world,  Properties.HEIGHT,5)
 						.getNode());// right wall
 	}
 
