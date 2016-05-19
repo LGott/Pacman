@@ -40,6 +40,7 @@ public class Pacman extends Piece {
 		CircleShape cs = new CircleShape();
 		cs.m_radius = radius * 0.1f; // We need to convert radius to JBox2D
 										// equivalent
+		
 		createBodyAndFixture(bodyType, cs);
 
 		return pacman;

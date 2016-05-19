@@ -51,12 +51,12 @@ public class MazeGui extends Application {
 		createGhosts();
 		createPellets();
 		createBonusPellets(); // should createPellets call createBonusPellets?
+		
 	}
 
-	// create _______ shape
-	// add to rootGroup
-
 	private void createWalls() {
+		rootGroup.getChildren().add(new Wall(80, 90, world, 10, 100).getNode());
+		rootGroup.getChildren().add(new Wall(80, 90, world, 100, 10).getNode());
 	}
 
 	private Pacman createPacman(int x, int y) {
@@ -77,9 +77,15 @@ public class MazeGui extends Application {
 	}
 
 	private void createPellets() {
+		for (int i = 10; i < 100; i+= 10){
+		rootGroup.getChildren().add(new Pellet(i, 15, world, 10).getNode());
+		}
 	}
 
 	private void createBonusPellets() {
+		for (int i = 30; i < 100; i+= 10){
+			rootGroup.getChildren().add(new BonusPellet(15, i, world).getNode());
+			}
 	}
 
 	private void addKeyListeners(Scene scene) {

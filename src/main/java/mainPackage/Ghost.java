@@ -33,7 +33,8 @@ public class Ghost extends Piece {
 
 		PolygonShape cs = new PolygonShape();
 		cs.m_radius = width * 0.1f;
-
+		//IS THERE A BETTER WAY TO SET THE WIDTH AND HEIGHT?
+		
 		createBodyAndFixture(bodyType, cs);
 
 		return ghost;
