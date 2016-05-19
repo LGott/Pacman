@@ -1,4 +1,6 @@
-package mainPackage;
+package objectsPackage;
+
+import mainPackage.Properties;
 
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.dynamics.Body;

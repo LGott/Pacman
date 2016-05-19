@@ -1,9 +1,10 @@
-package mainPackage;
+package objectsPackage;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import mainPackage.Properties;
 
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.Body;
@@ -34,15 +35,23 @@ public class Ghost extends Piece {
 
 		PolygonShape cs = new PolygonShape();
 		cs.m_radius = width * 0.1f;
-		//IS THERE A BETTER WAY TO SET THE WIDTH AND HEIGHT?
-		
+		// IS THERE A BETTER WAY TO SET THE WIDTH AND HEIGHT?
+
 		Body body = createBodyAndFixture(bodyType, cs);
 		ghost.setUserData(body);
 		return ghost;
 	}
 
+	public void resetLayoutX(float x) {
+		node.setLayoutX(x);
+	}
+
+	public void resetLayoutY(float y) {
+		node.setLayoutY(y);
+	}
+
 	@Override
-	Node getNode() {
+	public Node getNode() {
 		return node;
 	}
 }
