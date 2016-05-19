@@ -35,10 +35,8 @@ public class Wall extends Piece {
 		wall.setCache(true); // Cache this object for better performance
 
 		PolygonShape ps = new PolygonShape();
-		//ps.m_radius = radius * 0.1f; // We need to convert radius to JBox2D
-										// equivalent
-		//HOW DO YOU MAKE A POLYGON SHAPE???
-		
+		ps.setAsBox(width * 0.1f, height * 0.1f);
+				
 		Body body = createBodyAndFixture(bodyType, ps);
 		wall.setUserData(body);
 		return wall;

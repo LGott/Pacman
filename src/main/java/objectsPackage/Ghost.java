@@ -33,11 +33,10 @@ public class Ghost extends Piece {
 		ghost.setLayoutY(Properties.toPixelPosY(getPosY()));
 		ghost.setCache(true); // Cache this object for better performance
 
-		PolygonShape cs = new PolygonShape();
-		cs.m_radius = width * 0.1f;
-		// IS THERE A BETTER WAY TO SET THE WIDTH AND HEIGHT?
-
-		Body body = createBodyAndFixture(bodyType, cs);
+		PolygonShape ps = new PolygonShape();
+		ps.setAsBox(width * 0.1f, width * 0.1f);
+	
+		Body body = createBodyAndFixture(bodyType, ps);
 		ghost.setUserData(body);
 		return ghost;
 	}

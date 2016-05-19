@@ -26,7 +26,7 @@ public class MazeGui extends Application {
 	private Group rootGroup;
 	private Scene scene;
 	private boolean doSleep = true;
-	private Vec2 gravity = new Vec2(-10.0f, 0.0f);
+	private Vec2 gravity = new Vec2(0.0f, 0.0f);
 	private WorldLogic world = new WorldLogic(gravity, doSleep);
 	private Pacman pacman1;
 	private Pacman pacman2;
@@ -59,7 +59,7 @@ public class MazeGui extends Application {
 		stage.show();
 	}
 
-	public void createGround() {
+	/*public void createGround() {
 		PolygonShape ps = new PolygonShape();
 		ps.setAsBox(Properties.WIDTH, 5);
 
@@ -70,7 +70,7 @@ public class MazeGui extends Application {
 		bd.position = new Vec2(0.0f, 0.0f);
 
 		world.createBody(bd).createFixture(fd);
-	}
+	}*/
 
 	private void startSimulation() {
 		timeline.setCycleCount(Timeline.INDEFINITE);
@@ -86,7 +86,22 @@ public class MazeGui extends Application {
 				// for positions
 				if(!contactListener.isColliding()){
 				world.step(1.0f / 60.f, 8, 3);
-				// Move balls to the new position computed by JBox2D
+				
+				// Move pacman1 to the new position computed by JBox2D
+				Body pacBody1 = (Body) pacman1.getNode().getUserData();
+				float xpos1 = Properties.toPixelPosX(pacBody1.getPosition().x);
+				float ypos1 = Properties.toPixelPosY(pacBody1.getPosition().y);
+				pacman1.resetLayoutX(xpos1);
+				pacman1.resetLayoutY(ypos1);
+				
+				// Move pacman2 to the new position computed by JBox2D
+				Body pacBody2 = (Body) pacman2.getNode().getUserData();
+				float xpos2 = Properties.toPixelPosX(pacBody2.getPosition().x);
+				float ypos2 = Properties.toPixelPosY(pacBody2.getPosition().y);
+				pacman2.resetLayoutX(xpos2);
+				pacman2.resetLayoutY(ypos2);
+				
+				//move ghosts
 				for (Ghost g : ghosts) {
 					System.out.println("Moving");
 					Body body = (Body) g.getNode().getUserData();
@@ -114,7 +129,7 @@ public class MazeGui extends Application {
 
 	private void createShapes() {
 		createWalls();
-		createGround();
+		//createGround();
 		pacman1 = createPacman(50, 80);
 		pacman2 = createPacman(50, 20);
 		createGhosts();
@@ -139,9 +154,9 @@ public class MazeGui extends Application {
 	}
 
 	private Pacman createPacman(int x, int y) {
-		Pacman pacmanShape = new Pacman(x, y, world);
-		rootGroup.getChildren().add(pacmanShape.getNode());
-		return pacmanShape;
+		Pacman pacman = new Pacman(x, y, world);
+		rootGroup.getChildren().add(pacman.getNode());
+		return pacman;
 	}
 
 	private void createGhosts() {
@@ -178,20 +193,36 @@ public class MazeGui extends Application {
 					timeline.playFromStart();
 					break;
 				case UP:
-					gravity = new Vec2(0.0f, 10.0f);
-					world.setGravity(gravity);
+					((Body) pacman1.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
+					//gravity = new Vec2(0.0f, 10.0f);
+					//world.setGravity(gravity);
 					break;
 				case DOWN:
-					gravity = new Vec2(0.0f, -10.0f);
-					world.setGravity(gravity);
+					((Body) pacman1.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, -20.0f));
+					//gravity = new Vec2(0.0f, -10.0f);
+					//world.setGravity(gravity);
 					break;
 				case LEFT:
-					gravity = new Vec2(-10.0f, 0.0f);
-					world.setGravity(gravity);
+					((Body) pacman1.getNode().getUserData()).setLinearVelocity(new Vec2(-20.0f, 0.0f));
+					//gravity = new Vec2(-10.0f, 0.0f);
+					//world.setGravity(gravity);
 					break;
 				case RIGHT:
-					gravity = new Vec2(10.0f, 0.0f);
-					world.setGravity(gravity);
+					((Body) pacman1.getNode().getUserData()).setLinearVelocity(new Vec2(20.0f, 0.0f));
+					//gravity = new Vec2(10.0f, 0.0f);
+					//world.setGravity(gravity);
+					break;
+				case S://LEFT
+					((Body) pacman2.getNode().getUserData()).setLinearVelocity(new Vec2(-20.0f, 0.0f));
+					break;
+				case D://Down
+					((Body) pacman2.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, -20.0f));
+					break;
+				case F://Right
+					((Body) pacman2.getNode().getUserData()).setLinearVelocity(new Vec2(20.0f, 0.0f));
+					break;
+				case E://Up
+					((Body) pacman2.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
 					break;
 				default:
 					break;

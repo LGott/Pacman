@@ -48,6 +48,14 @@ public class Pacman extends Piece {
 		pacman.setUserData(body);
 		return pacman;
 	}
+	
+	public void resetLayoutX(float x) {
+		node.setLayoutX(x);
+	}
+
+	public void resetLayoutY(float y) {
+		node.setLayoutY(y);
+	}
 
 	public Node getNode() {
 		return node;
