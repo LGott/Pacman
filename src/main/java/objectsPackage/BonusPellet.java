@@ -1,4 +1,4 @@
-package mainPackage;
+package objectsPackage;
 
 import org.jbox2d.dynamics.World;
 

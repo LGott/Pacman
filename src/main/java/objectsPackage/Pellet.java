@@ -1,9 +1,10 @@
-package mainPackage;
+package objectsPackage;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import mainPackage.Properties;
 
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.dynamics.Body;
