@@ -10,20 +10,17 @@ import javafx.stage.Stage;
 
 import org.jbox2d.common.Vec2;
 
-import shapePackage.GhostShape;
-import shapePackage.PacmanShape;
-
 public class MazeGui extends Application {
-	Group rootGroup;
-	Scene scene;
-	static boolean doSleep = true;
-	static Vec2 gravity = new Vec2(0f, 0f);
-	public static WorldLogic world = new WorldLogic(gravity, doSleep);
-	PacmanShape pacman1;	
-	PacmanShape pacman2;
-	GhostShape[] ghosts;
-	int numPellets;
-	int numBonusPellets;
+	private Group rootGroup;
+	private Scene scene;
+	private boolean doSleep = true;
+	private Vec2 gravity = new Vec2(0f, 0f);
+	private WorldLogic world = new WorldLogic(gravity, doSleep);
+	private Pacman pacman1;
+	private Pacman pacman2;
+	private Ghost[] ghosts = new Ghost[4]; // HOW MANY??
+	private int numPellets;
+	private int numBonusPellets;
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -49,8 +46,8 @@ public class MazeGui extends Application {
 
 	private void createShapes() {
 		createWalls();
-		createPacman(50, 80); // pacman1
-		createPacman(50, 20); // pacman2
+		pacman1 = createPacman(50, 80);
+		pacman2 = createPacman(50, 20);
 		createGhosts();
 		createPellets();
 		createBonusPellets(); // should createPellets call createBonusPellets?
@@ -58,18 +55,25 @@ public class MazeGui extends Application {
 
 	// create _______ shape
 	// add to rootGroup
-	// call world.createBody(x, y, bodyType)
-	// call world.createFixture(shape)
+
 	private void createWalls() {
 	}
 
-	private void createPacman(int x, int y) {
-		PacmanShape pacmanShape = new PacmanShape(x, y);
+	private Pacman createPacman(int x, int y) {
+		Pacman pacmanShape = new Pacman(x, y, world);
 		rootGroup.getChildren().add(pacmanShape.getNode());
-		// world.createBodyAndFixture(x, y, BodyType.DYNAMIC, pacmanShape);
+		return pacmanShape;
 	}
 
 	private void createGhosts() {
+		ghosts[0] = new Ghost(30, 30, world, "/blueGhost.png");
+		ghosts[1] = new Ghost(50, 50, world, "/pinkGhost.png");
+		ghosts[2] = new Ghost(80, 80, world, "/orangeGhost.png");
+		ghosts[3] = new Ghost(60, 60, world, "/redGhost.png");
+
+		for (Ghost g : ghosts) {
+			rootGroup.getChildren().add(g.getNode());
+		}
 	}
 
 	private void createPellets() {
