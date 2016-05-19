@@ -173,43 +173,6 @@ public class Box2D extends Application {
 		return y;
 	}
 
-//	private void setWalls() {
-//		// TODO Auto-generated method stub
-//		addGround(100, 10);
-//		//
-//		// //Add left and right walls so balls will not move outside the viewing
-//		// area.
-//		addWall(0, 100, 1, 100); // Left wall
-//		addWall(99, 100, 1, 100); // Right wall
-//	}
 
-//	private void addWall(float posX, float posY, float width, float height) {
-//
-//		PolygonShape wall = new PolygonShape();
-//		wall.setAsBox(width, height);
-//
-//		FixtureDef fd = new FixtureDef();
-//		fd.shape = wall;
-//		fd.density = 1.0f;
-//		fd.friction = 0.3f;
-//
-//		BodyDef bd = new BodyDef();
-//		bd.position.set(posX, posY);
-//
-//		world.createBody(bd).createFixture(fd);
-//	}
-//
-//	public void addGround(float width, float height) {
-//		PolygonShape ps = new PolygonShape();
-//		ps.setAsBox(width, height);
-//
-//		FixtureDef fd = new FixtureDef();
-//		fd.shape = ps;
-//
-//		BodyDef bd = new BodyDef();
-//		bd.position = new Vec2(0.0f, -10f);
-//
-//		world.createBody(bd).createFixture(fd);
-//	}
 
 }
