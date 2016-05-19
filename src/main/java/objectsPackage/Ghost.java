@@ -35,18 +35,21 @@ public class Ghost extends Piece {
 
 		PolygonShape cs = new PolygonShape();
 		cs.m_radius = width * 0.1f;
-		//IS THERE A BETTER WAY TO SET THE WIDTH AND HEIGHT?
-		
+		// IS THERE A BETTER WAY TO SET THE WIDTH AND HEIGHT?
+
 		Body body = createBodyAndFixture(bodyType, cs);
 		ghost.setUserData(body);
 		return ghost;
 	}
-public void resetLayoutX(float x){
-	node.setLayoutX(x);
-}
-public void resetLayoutY(float y){
-	node.setLayoutY(y);
-}
+
+	public void resetLayoutX(float x) {
+		node.setLayoutX(x);
+	}
+
+	public void resetLayoutY(float y) {
+		node.setLayoutY(y);
+	}
+
 	@Override
 	public Node getNode() {
 		return node;

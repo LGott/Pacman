@@ -33,7 +33,7 @@ public class MazeGui extends Application {
 	private Group rootGroup;
 	private Scene scene;
 	private boolean doSleep = true;
-	private Vec2 gravity = new Vec2(0f, 0f);
+	private Vec2 gravity = new Vec2(-10.0f, 0.0f);
 	private WorldLogic world = new WorldLogic(gravity, doSleep);
 	private Pacman pacman1;
 	private Pacman pacman2;
@@ -67,7 +67,7 @@ public class MazeGui extends Application {
 
 	public void createGround() {
 		PolygonShape ps = new PolygonShape();
-		ps.setAsBox(Properties.WIDTH, Properties.HEIGHT);
+		ps.setAsBox(Properties.WIDTH, 5);
 
 		FixtureDef fd = new FixtureDef();
 		fd.shape = ps;
@@ -93,11 +93,13 @@ public class MazeGui extends Application {
 				world.step(1.0f / 60.f, 8, 3);
 				// Move balls to the new position computed by JBox2D
 				for (Ghost g : ghosts) {
+					System.out.println("Moving");
 					Body body = (Body) g.getNode().getUserData();
 					float xpos = Properties.toPixelPosX(body.getPosition().x);
 					float ypos = Properties.toPixelPosY(body.getPosition().y);
 					g.resetLayoutX(xpos);
 					g.resetLayoutY(ypos);
+					System.out.printf("%4.2f %4.2f %4.2f\n", xpos, ypos, body.getAngle());
 				}
 			}
 		};
@@ -127,14 +129,13 @@ public class MazeGui extends Application {
 	private void createWalls() {
 		rootGroup.getChildren().add(new Wall(60, 90, world, 10, 100).getNode());
 		rootGroup.getChildren().add(new Wall(60, 90, world, 100, 10).getNode());
-		//rootGroup.getChildren().add(
-				//new Wall(0, 0, world, 5, Properties.HEIGHT).getNode());// left
-																		// wall
-		//rootGroup.getChildren().add(
-				//new Wall(0, 0, world, Properties.WIDTH, 5).getNode());// ceiling
-		//rootGroup.getChildren().add(
-			//	new Wall(Properties.WIDTH, 0, world, 5, Properties.HEIGHT)
-					//	.getNode());// right wall
+		rootGroup.getChildren().add(
+				new Wall(0, 0, world, 5, Properties.HEIGHT).getNode());// left wall
+		rootGroup.getChildren().add(
+				new Wall(0, 0, world, Properties.WIDTH, 5).getNode());// ceiling
+		rootGroup.getChildren().add(
+				new Wall(Properties.WIDTH, 0, world, 5, Properties.HEIGHT)
+						.getNode());// right wall
 	}
 
 	private Pacman createPacman(int x, int y) {
@@ -177,12 +178,20 @@ public class MazeGui extends Application {
 					timeline.playFromStart();
 					break;
 				case UP:
+					gravity = new Vec2(0.0f, 10.0f);
+					world.setGravity(gravity);
 					break;
 				case DOWN:
+					gravity = new Vec2(0.0f, -10.0f);
+					world.setGravity(gravity);
 					break;
 				case LEFT:
+					gravity = new Vec2(-10.0f, 0.0f);
+					world.setGravity(gravity);
 					break;
 				case RIGHT:
+					gravity = new Vec2(10.0f, 0.0f);
+					world.setGravity(gravity);
 					break;
 				default:
 					break;
