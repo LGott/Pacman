@@ -6,6 +6,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
 import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
@@ -35,8 +36,8 @@ public class Ghost extends Piece {
 		cs.m_radius = width * 0.1f;
 		//IS THERE A BETTER WAY TO SET THE WIDTH AND HEIGHT?
 		
-		createBodyAndFixture(bodyType, cs);
-
+		Body body = createBodyAndFixture(bodyType, cs);
+		ghost.setUserData(body);
 		return ghost;
 	}
 

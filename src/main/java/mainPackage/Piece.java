@@ -3,6 +3,7 @@ package mainPackage;
 import javafx.scene.Node;
 
 import org.jbox2d.collision.shapes.Shape;
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
@@ -21,7 +22,7 @@ public abstract class Piece {
 
 	abstract Node getNode();
 
-	public void createBodyAndFixture(BodyType bodyType, Shape shape) {
+	public Body createBodyAndFixture(BodyType bodyType, Shape shape) {
 
 		// Create an JBox2D body definition
 		BodyDef bd = new BodyDef();
@@ -36,7 +37,9 @@ public abstract class Piece {
 		fd.friction = 0f;
 		fd.restitution = 0f;
 
-		world.createBody(bd).createFixture(fd);
+		Body body = world.createBody(bd);
+		body.createFixture(fd);
+		return body;
 	}
 
 	public int getPosX() {

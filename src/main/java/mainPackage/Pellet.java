@@ -6,6 +6,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
 import org.jbox2d.collision.shapes.CircleShape;
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
@@ -36,8 +37,8 @@ public class Pellet extends Piece{
 		CircleShape cs = new CircleShape();
 		cs.m_radius = radius * 0.1f; // We need to convert radius to JBox2D
 										// equivalent
-		createBodyAndFixture(bodyType, cs);
-
+		Body body = createBodyAndFixture(bodyType, cs);
+		pellet.setUserData(body);
 		return pellet;
 	}
 

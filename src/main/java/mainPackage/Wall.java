@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
@@ -13,7 +14,7 @@ public class Wall extends Piece {
 	// radius in pixels
 	private final int height;
 	private final int width;
-	private final BodyType bodyType = BodyType.DYNAMIC;
+	private final BodyType bodyType = BodyType.STATIC;
 
 	public Wall(int posX, int posY, World world, int height, int width) {
 		super(posX, posY, world);
@@ -37,8 +38,8 @@ public class Wall extends Piece {
 										// equivalent
 		//HOW DO YOU MAKE A POLYGON SHAPE???
 		
-		createBodyAndFixture(bodyType, ps);
-
+		Body body = createBodyAndFixture(bodyType, ps);
+		wall.setUserData(body);
 		return wall;
 	}
 
