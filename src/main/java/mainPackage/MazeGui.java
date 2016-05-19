@@ -58,6 +58,7 @@ public class MazeGui extends Application {
 				Color.BLACK);
 
 		createShapes();
+		world.setContactListener(new CollisionContactListener());
 		startSimulation();
 		addKeyListeners(scene);
 		stage.setScene(scene);
@@ -72,7 +73,7 @@ public class MazeGui extends Application {
 		fd.shape = ps;
 
 		BodyDef bd = new BodyDef();
-		bd.position = new Vec2(0.0f, -10f);
+		bd.position = new Vec2(0.0f, 0.0f);
 
 		world.createBody(bd).createFixture(fd);
 	}
@@ -124,16 +125,16 @@ public class MazeGui extends Application {
 	}
 
 	private void createWalls() {
-		rootGroup.getChildren().add(new Wall(80, 90, world, 10, 100).getNode());
-		rootGroup.getChildren().add(new Wall(80, 90, world, 100, 10).getNode());
-		rootGroup.getChildren().add(
-				new Wall(0, 0, world, 5, Properties.HEIGHT).getNode());// left
+		rootGroup.getChildren().add(new Wall(60, 90, world, 10, 100).getNode());
+		rootGroup.getChildren().add(new Wall(60, 90, world, 100, 10).getNode());
+		//rootGroup.getChildren().add(
+				//new Wall(0, 0, world, 5, Properties.HEIGHT).getNode());// left
 																		// wall
-		rootGroup.getChildren().add(
-				new Wall(0, 0, world, Properties.WIDTH, 5).getNode());// ceiling
-		rootGroup.getChildren().add(
-				new Wall(Properties.WIDTH, 0, world, 5, Properties.HEIGHT)
-						.getNode());// right wall
+		//rootGroup.getChildren().add(
+				//new Wall(0, 0, world, Properties.WIDTH, 5).getNode());// ceiling
+		//rootGroup.getChildren().add(
+			//	new Wall(Properties.WIDTH, 0, world, 5, Properties.HEIGHT)
+					//	.getNode());// right wall
 	}
 
 	private Pacman createPacman(int x, int y) {
