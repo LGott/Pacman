@@ -6,6 +6,7 @@ import javafx.scene.shape.Rectangle;
 import mainPackage.Properties;
 
 import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.collision.shapes.Shape;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
@@ -35,8 +36,8 @@ public class Wall extends Piece {
 		wall.setCache(true); // Cache this object for better performance
 
 		PolygonShape ps = new PolygonShape();
-		ps.setAsBox(width * 0.1f, height * 0.1f);
-				
+		ps.setAsBox(width /2, height  /2);
+
 		Body body = createBodyAndFixture(bodyType, ps);
 		wall.setUserData(body);
 		return wall;

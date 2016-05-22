@@ -103,13 +103,13 @@ public class MazeGui extends Application {
 				
 				//move ghosts
 				for (Ghost g : ghosts) {
-					System.out.println("Moving");
+					
 					Body body = (Body) g.getNode().getUserData();
 					float xpos = Properties.toPixelPosX(body.getPosition().x);
 					float ypos = Properties.toPixelPosY(body.getPosition().y);
 					g.resetLayoutX(xpos);
 					g.resetLayoutY(ypos);
-					System.out.printf("%4.2f %4.2f %4.2f\n", xpos, ypos, body.getAngle());
+				
 				}
 			}else{
 				System.out.println("Collision");}
@@ -139,8 +139,8 @@ public class MazeGui extends Application {
 	}
 
 	private void createWalls() {
-		rootGroup.getChildren().add(new Wall(60, 90, world, 10, 100).getNode());
-		rootGroup.getChildren().add(new Wall(60, 90, world, 100, 10).getNode());
+		//rootGroup.getChildren().add(new Wall(60, 90, world, 10, 100).getNode());
+		//rootGroup.getChildren().add(new Wall(60, 90, world, 100, 10).getNode());
 		rootGroup.getChildren().add(
 				new Wall(0, 5, world, 5, Properties.WIDTH).getNode());// bottom wall
 		rootGroup.getChildren().add(

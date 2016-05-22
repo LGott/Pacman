@@ -9,7 +9,7 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 
-public abstract class Piece {
+public abstract class Piece{
 	private int posX;
 	private int posY;
 	private World world;
