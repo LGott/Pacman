@@ -11,7 +11,10 @@ import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import objectsPackage.BonusPellet;
@@ -42,7 +45,8 @@ public class MazeGui extends Application {
 	final Timeline timeline = new Timeline();
 	private int x = 0;
 	private CollisionContactListener contactListener;
-
+	Pellet[] pellets= new Pellet[10];
+	private ScorePanel scorePanel= new ScorePanel();
 	@Override
 	public void start(Stage stage) throws Exception {
 		// TODO Auto-generated method stub
@@ -52,9 +56,11 @@ public class MazeGui extends Application {
 
 		stage.setResizable(false);
 
+	    
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
-		contactListener=new CollisionContactListener(rootGroup);
+		contactListener=new CollisionContactListener(rootGroup, pellets, scorePanel);
+
 		Scene scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
 				Color.BLACK);
 
@@ -65,6 +71,8 @@ public class MazeGui extends Application {
 		stage.setScene(scene);
 		stage.show();
 	}
+
+	
 
 	private void startSimulation() {
 		
@@ -109,6 +117,10 @@ public class MazeGui extends Application {
 				}
 			//}else{
 			//	System.out.println("Collision");}
+			if(scorePanel.isGameOver()){
+				System.out.println("Game over");
+				System.exit(0);
+			}
 			}
 		};
 
@@ -167,8 +179,10 @@ public class MazeGui extends Application {
 	}
 
 	private void createPellets() {
-		for (int i = 10; i < 100; i += 10) {
-			rootGroup.getChildren().add(new Pellet(i, 15, world, 10).getNode());
+		Pellet[] pellets= new Pellet[10];
+		for (int j=0, i = 10; i < 100; j++, i += 10) {
+			pellets[j]= new Pellet(i, 15, world, 10);
+			rootGroup.getChildren().add(pellets[j].getNode());
 		}
 	}
 

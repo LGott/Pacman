@@ -11,16 +11,17 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
-public class Pellet extends Piece{
+public class Pellet extends Piece {
 	private Node node;
 	// radius in pixels
 	private final int radius;
 	private final BodyType bodyType = BodyType.STATIC;
+	protected Body body;
 
 	public Pellet(int posX, int posY, World world, int radius) {
 		super(posX, posY, world);
 		this.radius = radius;
-		node = create();		
+		node = create();
 	}
 
 	private Node create() {
@@ -38,7 +39,7 @@ public class Pellet extends Piece{
 		CircleShape cs = new CircleShape();
 		cs.m_radius = radius * 0.1f; // We need to convert radius to JBox2D
 										// equivalent
-		Body body = createBodyAndFixture(bodyType, cs);
+		body = createBodyAndFixture(bodyType, cs);
 		body.setUserData("PELLET");
 		pellet.setUserData(body);
 		return pellet;

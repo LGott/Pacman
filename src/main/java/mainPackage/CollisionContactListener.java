@@ -2,6 +2,7 @@ package mainPackage;
 
 import javafx.scene.Group;
 import objectsPackage.Ghost;
+import objectsPackage.Pellet;
 
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
@@ -13,14 +14,17 @@ public class CollisionContactListener implements ContactListener {
 
 	private boolean colliding;
 	private Group rootGroup;
-
+	private ScorePanel scorePanel;
+private Pellet[] pellets;
 	public boolean isColliding() {
 		return colliding;
 	}
 
-	public CollisionContactListener(Group rootGroup) {
+	public CollisionContactListener(Group rootGroup, Pellet[] pellets, ScorePanel scorePanel) {
 		colliding = false;
 		this.rootGroup = rootGroup;
+		this.pellets=pellets;
+		this.scorePanel=scorePanel;
 	}
 
 	public void beginContact(Contact contact) {
@@ -29,15 +33,27 @@ public class CollisionContactListener implements ContactListener {
 		if (f1.getBody().getUserData() == "PACMAN"
 				&& f2.getBody().getUserData() == "PELLET") {
 			colliding = true;
-			rootGroup.getChildren().clear();
-			System.out.println("here");
+			if(rootGroup.getChildren().contains(pellets[1])){
+				System.out.println("Contaioned");
+			}
+			//remove the pellet
+			//rootGroup.getChildren().remove(pellets[1]);
+			scorePanel.incrementScore(10);
 		}
-
-		System.out.println("PACMAN AND PELLET detected");
-		System.out.println(f1.getBody().getUserData());
-		System.out.println(f2.getBody().getUserData());
-
-		System.out.println("Contact detected");
+		else if (f1.getBody().getUserData() == "PACMAN"
+				&& f2.getBody().getUserData() == "BONUS_PELLET") {
+			//remove the bonus pellet
+			colliding = true;
+			scorePanel.incrementScore(50);
+			
+		}
+		else if (f1.getBody().getUserData() == "PACMAN"
+				&& f2.getBody().getUserData() == "GHOST" || (f2.getBody().getUserData() == "GHOST"
+				&& f1.getBody().getUserData() == "GHOST")) {
+			//remove an extra pacman
+			scorePanel.decrementLives();
+			colliding = true;			
+		}
 	}
 
 	public void endContact(Contact contact) {
