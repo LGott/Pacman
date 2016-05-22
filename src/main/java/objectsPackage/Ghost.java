@@ -37,6 +37,7 @@ public class Ghost extends Piece {
 		ps.setAsBox(width * 0.1f, width * 0.1f);
 	
 		Body body = createBodyAndFixture(bodyType, ps);
+		body.setUserData("GHOST");
 		ghost.setUserData(body);
 		return ghost;
 	}

@@ -45,6 +45,7 @@ public class Pacman extends Piece {
 										// equivalent
 		
 		Body body = createBodyAndFixture(bodyType, cs);
+		body.setUserData("PACMAN");
 		pacman.setUserData(body);
 		return pacman;
 	}

@@ -1,11 +1,15 @@
 package mainPackage;
 
+import java.awt.List;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -15,11 +19,13 @@ import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
 import objectsPackage.Wall;
+
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.FixtureDef;
+
 import javafx.util.Duration;
 
 public class MazeGui extends Application {
@@ -34,7 +40,8 @@ public class MazeGui extends Application {
 	private int numPellets;
 	private int numBonusPellets;
 	final Timeline timeline = new Timeline();
-	private CollisionContactListener contactListener=new CollisionContactListener();
+	private int x = 0;
+	private CollisionContactListener contactListener;
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -47,7 +54,7 @@ public class MazeGui extends Application {
 
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
-
+		contactListener=new CollisionContactListener(rootGroup);
 		Scene scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
 				Color.BLACK);
 
@@ -59,20 +66,8 @@ public class MazeGui extends Application {
 		stage.show();
 	}
 
-	/*public void createGround() {
-		PolygonShape ps = new PolygonShape();
-		ps.setAsBox(Properties.WIDTH, 5);
-
-		FixtureDef fd = new FixtureDef();
-		fd.shape = ps;
-
-		BodyDef bd = new BodyDef();
-		bd.position = new Vec2(0.0f, 0.0f);
-
-		world.createBody(bd).createFixture(fd);
-	}*/
-
 	private void startSimulation() {
+		
 		timeline.setCycleCount(Timeline.INDEFINITE);
 
 		Duration duration = Duration.seconds(1.0 / 60.0); // Set duration for
@@ -82,11 +77,12 @@ public class MazeGui extends Application {
 		// moves the balls to new position
 		EventHandler<ActionEvent> ae = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
+				
 				// Create time step. Set Iteration count 8 for velocity and 3
 				// for positions
-				if(!contactListener.isColliding()){
+			//	if(!contactListener.isColliding()){
 				world.step(1.0f / 60.f, 8, 3);
-				
+				x++;
 				// Move pacman1 to the new position computed by JBox2D
 				Body pacBody1 = (Body) pacman1.getNode().getUserData();
 				float xpos1 = Properties.toPixelPosX(pacBody1.getPosition().x);
@@ -111,8 +107,8 @@ public class MazeGui extends Application {
 					g.resetLayoutY(ypos);
 				
 				}
-			}else{
-				System.out.println("Collision");}
+			//}else{
+			//	System.out.println("Collision");}
 			}
 		};
 
@@ -139,8 +135,8 @@ public class MazeGui extends Application {
 	}
 
 	private void createWalls() {
-		//rootGroup.getChildren().add(new Wall(60, 90, world, 10, 100).getNode());
-		//rootGroup.getChildren().add(new Wall(60, 90, world, 100, 10).getNode());
+		//rootGroup.getChildren().add(new Wall(60, 90, world, 5, 100).getNode());
+		//rootGroup.getChildren().add(new Wall(60, 90, world, 100, 5).getNode());
 		rootGroup.getChildren().add(
 				new Wall(0, 5, world, 5, Properties.WIDTH).getNode());// bottom wall
 		rootGroup.getChildren().add(

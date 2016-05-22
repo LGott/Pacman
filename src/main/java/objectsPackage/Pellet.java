@@ -39,6 +39,7 @@ public class Pellet extends Piece{
 		cs.m_radius = radius * 0.1f; // We need to convert radius to JBox2D
 										// equivalent
 		Body body = createBodyAndFixture(bodyType, cs);
+		body.setUserData("PELLET");
 		pellet.setUserData(body);
 		return pellet;
 	}

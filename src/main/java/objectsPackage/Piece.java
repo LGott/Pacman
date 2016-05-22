@@ -22,12 +22,13 @@ public abstract class Piece{
 
 	abstract Node getNode();
 
-	public Body createBodyAndFixture(BodyType bodyType, Shape shape) {
+	public Body createBodyAndFixture2(BodyType bodyType, Shape shape, float width, float height) {
 
 		// Create an JBox2D body definition
 		BodyDef bd = new BodyDef();
 		// set position to x and y coordinates
-		bd.position.set(posX, posY);
+		bd.position.set(posX + width / 2, posY + height / 2);
+		//bd.position.set(posX, posY);
 		bd.type = bodyType;
 
 		// Create a fixture
@@ -41,8 +42,26 @@ public abstract class Piece{
 		body.createFixture(fd);
 		return body;
 	}
+	public Body createBodyAndFixture(BodyType bodyType, Shape shape) {
 
-	public int getPosX() {
+		// Create an JBox2D body definition
+		BodyDef bd = new BodyDef();
+		// set position to x and y coordinates
+		bd.position.set(posX, posY);
+		//bd.position.set(posX, posY);
+		bd.type = bodyType;
+
+		// Create a fixture
+		FixtureDef fd = new FixtureDef();
+		fd.shape = shape;
+		fd.density = 0f;
+		fd.friction = 0f;
+		fd.restitution = 0f;
+
+		Body body = world.createBody(bd);
+		body.createFixture(fd);
+		return body;
+	} int getPosX() {
 		return posX;
 	}
 
