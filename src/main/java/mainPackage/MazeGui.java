@@ -84,28 +84,31 @@ public class MazeGui extends Application {
 
 					// Move pacman1 to the new position computed by JBox2D
 					Body pacBody1 = (Body) pacman1.getNode().getUserData();
-					float xpos1 = Properties.fxToJboxPosX(pacBody1.getPosition().x);
-					float ypos1 = Properties.fxToJboxPosY(pacBody1.getPosition().y);
+					float xpos1 = Properties.jBoxToFxPosX(pacBody1.getPosition().x);
+					float ypos1 = Properties.jBoxToFxPosY(pacBody1.getPosition().y);
 					pacman1.resetLayoutX(xpos1);
 					pacman1.resetLayoutY(ypos1);
 
-					// Move pacman2 to the new position computed by JBox2D
-					Body pacBody2 = (Body) pacman2.getNode().getUserData();
-					float xpos2 = Properties.fxToJboxPosX(pacBody2.getPosition().x);
-					float ypos2 = Properties.fxToJboxPosY(pacBody2.getPosition().y);
-					pacman2.resetLayoutX(xpos2);
-					pacman2.resetLayoutY(ypos2);
+					/*
+					 * // Move pacman2 to the new position computed by JBox2D
+					 * Body pacBody2 = (Body) pacman2.getNode().getUserData();
+					 * float xpos2 =
+					 * Properties.jBoxToFxPosX(pacBody2.getPosition().x); float
+					 * ypos2 =
+					 * Properties.jBoxToFxPosY(pacBody2.getPosition().y);
+					 * pacman2.resetLayoutX(xpos2); pacman2.resetLayoutY(ypos2);
+					 */
 
 					// move ghosts
-					for (Ghost g : ghosts) {
-						System.out.println("Moving");
-						Body body = (Body) g.getNode().getUserData();
-						float xpos = Properties.fxToJboxPosX(body.getPosition().x);
-						float ypos = Properties.fxToJboxPosY(body.getPosition().y);
-						g.resetLayoutX(xpos);
-						g.resetLayoutY(ypos);
-						System.out.printf("%4.2f %4.2f %4.2f\n", xpos, ypos, body.getAngle());
-					}
+					/*
+					 * for (Ghost g : ghosts) { System.out.println("Moving");
+					 * Body body = (Body) g.getNode().getUserData(); float xpos
+					 * = Properties.jBoxToFxPosX(body.getPosition().x); float
+					 * ypos = Properties.jBoxToFxPosY(body.getPosition().y);
+					 * g.resetLayoutX(xpos); g.resetLayoutY(ypos);
+					 * System.out.printf("%4.2f %4.2f %4.2f\n", xpos, ypos,
+					 * body.getAngle()); }
+					 */
 				} else {
 					System.out.println("Collision");
 				}
@@ -136,19 +139,22 @@ public class MazeGui extends Application {
 	}
 
 	private void createWalls() {
-		// rootGroup.getChildren().add(new Wall(60, 90, world, 10,
-		// 100).getNode());
+		rootGroup.getChildren().add(new Wall(300, 300, world, 50, 50).getNode());
 		// rootGroup.getChildren().add(new Wall(60, 90, world, 100,
 		// 10).getNode());
 
 		// bottom wall
-		rootGroup.getChildren().add(new Wall(0, 5, world, 5, Properties.WIDTH).getNode());
+		rootGroup.getChildren().add(new Wall(0, 666, world, 5, Properties.WIDTH).getNode());
 		// ceiling
-		rootGroup.getChildren().add(new Wall(0, 100, world, 5, Properties.WIDTH).getNode());
-		// right wall
-		rootGroup.getChildren().add(new Wall(98, 100, world, Properties.HEIGHT, 5).getNode());
+		rootGroup.getChildren().add(
+				new Wall(0, (int) Properties.fxToJboxPosY(Properties.HEIGHT), world, 5, Properties.WIDTH).getNode());
 		// left wall
-		rootGroup.getChildren().add(new Wall(0, 100, world, Properties.HEIGHT, 5).getNode());
+		rootGroup.getChildren().add(
+				new Wall((int) Properties.fxToJboxPosY(Properties.HEIGHT), (int) Properties
+						.fxToJboxPosY(Properties.HEIGHT), world, Properties.HEIGHT, 5).getNode());
+		// right wall
+		rootGroup.getChildren().add(
+				new Wall(689, (int) Properties.fxToJboxPosY(Properties.HEIGHT), world, Properties.HEIGHT, 5).getNode());
 	}
 
 	private Pacman createPacman(int x, int y) {

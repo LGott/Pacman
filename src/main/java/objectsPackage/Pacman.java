@@ -35,8 +35,8 @@ public class Pacman extends Piece {
 
 		// Set ball position on JavaFX scene. We need to convert JBox2D
 		// coordinates to JavaFX coordinates which are in pixels.
-		pacman.setLayoutX(Properties.jBoxToFxPosX(getPosX()));
-		pacman.setLayoutY(Properties.jBoxToFxPosY(getPosY()));
+		pacman.setLayoutX(getPosX());
+		pacman.setLayoutY(getPosY());
 		pacman.setCache(true); // Cache this object for better performance
 
 		// create a jbox2D circle shape

@@ -1,6 +1,7 @@
 package objectsPackage;
 
 import javafx.scene.Node;
+import mainPackage.Properties;
 
 import org.jbox2d.collision.shapes.Shape;
 import org.jbox2d.dynamics.Body;
@@ -27,7 +28,9 @@ public abstract class Piece {
 		// Create an JBox2D body definition
 		BodyDef bd = new BodyDef();
 		// set position to x and y coordinates
-		bd.position.set(posX, posY);
+		float tx = Properties.fxToJboxPosX(posX);
+		float ty = Properties.fxToJboxPosY(posY);
+		bd.position.set(Properties.fxToJboxPosX(posX), Properties.fxToJboxPosY(posY));
 		bd.type = bodyType;
 
 		// Create a fixture

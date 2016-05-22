@@ -30,12 +30,12 @@ public class Wall extends Piece {
 
 		// Set ball position on JavaFX scene. We need to convert JBox2D
 		// coordinates to JavaFX coordinates which are in pixels.
-		wall.setLayoutX(Properties.jBoxToFxPosX(getPosX()));
-		wall.setLayoutY(Properties.jBoxToFxPosY(getPosY()));
+		wall.setLayoutX(getPosX());
+		wall.setLayoutY(getPosY());
 		wall.setCache(true); // Cache this object for better performance
 
 		PolygonShape ps = new PolygonShape();
-		ps.setAsBox(width / 2, height / 2);
+		ps.setAsBox((float) (width / 7.5), (float) (height / 7.5));
 
 		Body body = createBodyAndFixture(bodyType, ps);
 		wall.setUserData(body);

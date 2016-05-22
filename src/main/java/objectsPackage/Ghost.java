@@ -29,8 +29,8 @@ public class Ghost extends Piece {
 		ImagePattern imagePattern = new ImagePattern(img);
 		ghost.setFill(imagePattern);
 
-		ghost.setLayoutX(Properties.fxToJboxPosX(getPosX()));
-		ghost.setLayoutY(Properties.fxToJboxPosY(getPosY()));
+		ghost.setLayoutX(Properties.jBoxToFxPosX(getPosX()));
+		ghost.setLayoutY(Properties.jBoxToFxPosY(getPosY()));
 		ghost.setCache(true); // Cache this object for better performance
 
 		PolygonShape ps = new PolygonShape();
