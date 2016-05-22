@@ -11,7 +11,7 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
-public class Pellet extends Piece{
+public class Pellet extends Piece {
 	private Node node;
 	// radius in pixels
 	private final int radius;
@@ -20,7 +20,7 @@ public class Pellet extends Piece{
 	public Pellet(int posX, int posY, World world, int radius) {
 		super(posX, posY, world);
 		this.radius = radius;
-		node = create();		
+		node = create();
 	}
 
 	private Node create() {
@@ -30,8 +30,8 @@ public class Pellet extends Piece{
 		ImagePattern imagePattern = new ImagePattern(img);
 		pellet.setFill(imagePattern);
 
-		pellet.setLayoutX(Properties.toPixelPosX(getPosX()));
-		pellet.setLayoutY(Properties.toPixelPosY(getPosY()));
+		pellet.setLayoutX(Properties.fxToJboxPosX(getPosX()));
+		pellet.setLayoutY(Properties.fxToJboxPosY(getPosY()));
 		pellet.setCache(true); // Cache this object for better performance
 
 		// create a jbox2D circle shape
