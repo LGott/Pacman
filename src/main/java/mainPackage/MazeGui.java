@@ -143,19 +143,18 @@ public class MazeGui extends Application {
 		// rootGroup.getChildren().add(new Wall(60, 90, world, 100,
 		// 10).getNode());
 
-		// bottom wall
-		rootGroup.getChildren().add(new Wall(0, 666, world, 5, Properties.WIDTH).getNode());
-		// ceiling
-		rootGroup.getChildren().add(
-				new Wall(0, (int) Properties.fxToJboxPosY(Properties.HEIGHT), world, 5, Properties.WIDTH).getNode());
-		// left wall
-		rootGroup.getChildren().add(
-				new Wall((int) Properties.fxToJboxPosY(Properties.HEIGHT), (int) Properties
-						.fxToJboxPosY(Properties.HEIGHT), world, Properties.HEIGHT, 5).getNode());
-		// right wall
-		rootGroup.getChildren().add(
-				new Wall(689, (int) Properties.fxToJboxPosY(Properties.HEIGHT), world, Properties.HEIGHT, 5).getNode());
-	}
+		/*
+		 * // bottom wall rootGroup.getChildren().add(new Wall(0, 666, world, 5,
+		 * Properties.WIDTH).getNode()); // ceiling rootGroup.getChildren().add(
+		 * new Wall(0, (int) Properties.fxToJboxPosY(Properties.HEIGHT), world,
+		 * 5, Properties.WIDTH).getNode()); // left wall
+		 * rootGroup.getChildren().add( new Wall((int)
+		 * Properties.fxToJboxPosY(Properties.HEIGHT), (int) Properties
+		 * .fxToJboxPosY(Properties.HEIGHT), world, Properties.HEIGHT,
+		 * 5).getNode()); // right wall rootGroup.getChildren().add( new
+		 * Wall(689, (int) Properties.fxToJboxPosY(Properties.HEIGHT), world,
+		 * Properties.HEIGHT, 5).getNode());
+		 */}
 
 	private Pacman createPacman(int x, int y) {
 		Pacman pacman = new Pacman(x, y, world);
