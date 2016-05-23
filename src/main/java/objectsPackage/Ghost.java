@@ -11,9 +11,11 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
+@SuppressWarnings("deprecation")
 public class Ghost extends Piece {
 	private Node node;
-	private final int width = 40; // square - same width and height
+	private final int width = 3; // square - same width and height
+	private final int height = 3;
 	private final BodyType bodyType = BodyType.DYNAMIC;
 	private String image;
 
@@ -24,17 +26,18 @@ public class Ghost extends Piece {
 	}
 
 	private Node create() {
-		Rectangle ghost = new Rectangle(width, width);
 		Image img = new Image(image);
 		ImagePattern imagePattern = new ImagePattern(img);
+		
+		Rectangle ghost = new Rectangle((Properties.jBoxtoPixelWidth(width) * 2), 
+				(Properties.jBoxtoPixelHeight(height) * 2));
 		ghost.setFill(imagePattern);
-
-		ghost.setLayoutX(Properties.toPixelPosX(getPosX()));
-		ghost.setLayoutY(Properties.toPixelPosY(getPosY()));
+		ghost.setLayoutX(Properties.jBoxToFxPosX(getPosX()) - Properties.jBoxtoPixelWidth(width));
+		ghost.setLayoutY(Properties.jBoxToFxPosY(getPosY()) - Properties.jBoxtoPixelHeight(height));
 		ghost.setCache(true); // Cache this object for better performance
 
 		PolygonShape ps = new PolygonShape();
-		ps.setAsBox(width * 0.1f, width * 0.1f);
+		ps.setAsBox(width, height);
 	
 		Body body = createBodyAndFixture(bodyType, ps);
 		ghost.setUserData(body);
@@ -42,11 +45,11 @@ public class Ghost extends Piece {
 	}
 
 	public void resetLayoutX(float x) {
-		node.setLayoutX(x);
+		node.setLayoutX(x - Properties.jBoxtoPixelWidth(width));		
 	}
 
 	public void resetLayoutY(float y) {
-		node.setLayoutY(y);
+		node.setLayoutY(y - Properties.jBoxtoPixelWidth(height));
 	}
 
 	@Override
