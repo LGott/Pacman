@@ -35,8 +35,8 @@ public class Wall extends Piece {
 		wall.setCache(true); // Cache this object for better performance
 
 		PolygonShape ps = new PolygonShape();
-		ps.setAsBox(width * 0.1f, height * 0.1f);
-				
+		ps.setAsBox(width / 2, height / 2);
+
 		Body body = createBodyAndFixture(bodyType, ps);
 		wall.setUserData(body);
 		return wall;
