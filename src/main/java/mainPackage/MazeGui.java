@@ -1,35 +1,25 @@
 package mainPackage;
 
-import java.awt.List;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import objectsPackage.BonusPellet;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
 import objectsPackage.Wall;
 
-import org.jbox2d.dynamics.Body;
-import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.BodyDef;
-import org.jbox2d.dynamics.FixtureDef;
-
-import javafx.util.Duration;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.Fixture;
 
 public class MazeGui extends Application {
 	private Group rootGroup;
@@ -45,7 +35,7 @@ public class MazeGui extends Application {
 	final Timeline timeline = new Timeline();
 	private int x = 0;
 	private CollisionContactListener contactListener;
-	Pellet[] pellets= new Pellet[10];
+	private Pellet[] pellets= new Pellet[10];
 	private ScorePanel scorePanel= new ScorePanel();
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -56,7 +46,7 @@ public class MazeGui extends Application {
 
 		stage.setResizable(false);
 
-	    
+
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
 		contactListener=new CollisionContactListener(rootGroup, pellets, scorePanel);
@@ -72,55 +62,73 @@ public class MazeGui extends Application {
 		stage.show();
 	}
 
-	
+
 
 	private void startSimulation() {
-		
+
 		timeline.setCycleCount(Timeline.INDEFINITE);
 
 		Duration duration = Duration.seconds(1.0 / 60.0); // Set duration for
-															// frame.
+		// frame.
 
 		// Create an ActionEvent, on trigger it executes a world time step and
 		// moves the balls to new position
 		EventHandler<ActionEvent> ae = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
-				
+
 				// Create time step. Set Iteration count 8 for velocity and 3
 				// for positions
-			//	if(!contactListener.isColliding()){
+				//	if(!contactListener.isColliding()){
 				world.step(1.0f / 60.f, 8, 3);
 				x++;
+
+				for(Fixture b : contactListener.getFixturesToRemove()){
+					world.destroyBody(b.getBody());
+					//rootGroup.getChildren().remove(b);
+				}
+
+				for(Pellet p : contactListener.getPelletsToRemove()){
+					rootGroup.getChildren().remove(p.getNode());
+				}
+
+
+				//clear for next step
+				contactListener.getPelletsToRemove().clear();
+				contactListener.getFixturesToRemove().clear();
+
 				// Move pacman1 to the new position computed by JBox2D
 				Body pacBody1 = (Body) pacman1.getNode().getUserData();
 				float xpos1 = Properties.toPixelPosX(pacBody1.getPosition().x);
 				float ypos1 = Properties.toPixelPosY(pacBody1.getPosition().y);
 				pacman1.resetLayoutX(xpos1);
 				pacman1.resetLayoutY(ypos1);
-				
+
 				// Move pacman2 to the new position computed by JBox2D
 				Body pacBody2 = (Body) pacman2.getNode().getUserData();
 				float xpos2 = Properties.toPixelPosX(pacBody2.getPosition().x);
 				float ypos2 = Properties.toPixelPosY(pacBody2.getPosition().y);
 				pacman2.resetLayoutX(xpos2);
 				pacman2.resetLayoutY(ypos2);
-				
+
 				//move ghosts
 				for (Ghost g : ghosts) {
-					
+
 					Body body = (Body) g.getNode().getUserData();
 					float xpos = Properties.toPixelPosX(body.getPosition().x);
 					float ypos = Properties.toPixelPosY(body.getPosition().y);
 					g.resetLayoutX(xpos);
 					g.resetLayoutY(ypos);
-				
+
 				}
-			//}else{
-			//	System.out.println("Collision");}
-			if(scorePanel.isGameOver()){
-				System.out.println("Game over");
-				System.exit(0);
-			}
+				//}else{
+				//	System.out.println("Collision");}
+
+
+
+				if(scorePanel.isGameOver()){
+					System.out.println("Game over");
+					System.exit(0);
+				}
 			}
 		};
 
@@ -155,10 +163,10 @@ public class MazeGui extends Application {
 				new Wall(0, 100, world, 5, Properties.WIDTH).getNode());// ceiling
 		rootGroup.getChildren().add(
 				new Wall(98, 100, world,  Properties.HEIGHT,5)
-						.getNode());// right wall
+				.getNode());// right wall
 		rootGroup.getChildren().add(
 				new Wall(0, 100, world,  Properties.HEIGHT,5)
-						.getNode());// right wall
+				.getNode());// right wall
 	}
 
 	private Pacman createPacman(int x, int y) {
@@ -179,7 +187,6 @@ public class MazeGui extends Application {
 	}
 
 	private void createPellets() {
-		Pellet[] pellets= new Pellet[10];
 		for (int j=0, i = 10; i < 100; j++, i += 10) {
 			pellets[j]= new Pellet(i, 15, world, 10);
 			rootGroup.getChildren().add(pellets[j].getNode());
@@ -189,7 +196,7 @@ public class MazeGui extends Application {
 	private void createBonusPellets() {
 		for (int i = 30; i < 100; i += 10) {
 			rootGroup.getChildren()
-					.add(new BonusPellet(15, i, world).getNode());
+			.add(new BonusPellet(15, i, world).getNode());
 		}
 	}
 
