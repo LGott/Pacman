@@ -1,21 +1,20 @@
 package mainPackage;
 
 import javafx.scene.Group;
-import objectsPackage.Ghost;
 import objectsPackage.Pellet;
 
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
-import org.jbox2d.collision.*;
+import org.jbox2d.collision.Manifold;
 import org.jbox2d.dynamics.Fixture;
-import org.jbox2d.dynamics.contacts.*;
+import org.jbox2d.dynamics.contacts.Contact;
 
 public class CollisionContactListener implements ContactListener {
 
 	private boolean colliding;
 	private Group rootGroup;
 	private ScorePanel scorePanel;
-private Pellet[] pellets;
+	private Pellet[] pellets;
 	public boolean isColliding() {
 		return colliding;
 	}
@@ -45,7 +44,7 @@ private Pellet[] pellets;
 			//remove the bonus pellet
 			colliding = true;
 			scorePanel.incrementScore(50);
-			
+
 		}
 		else if (f1.getBody().getUserData() == "PACMAN"
 				&& f2.getBody().getUserData() == "GHOST" || (f2.getBody().getUserData() == "GHOST"
