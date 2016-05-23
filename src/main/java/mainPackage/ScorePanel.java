@@ -28,6 +28,7 @@ public class ScorePanel {
 	}
 	public void decrementLives(){
 		lives--;
+		System.out.println("decremented");
 		if(lives==0){
 			gameOver=true;
 		}

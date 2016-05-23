@@ -38,6 +38,7 @@ public class CollisionContactListener implements ContactListener {
 			//remove the pellet
 			//rootGroup.getChildren().remove(pellets[1]);
 			scorePanel.incrementScore(10);
+			System.out.println("pacman-pellet");
 		}
 		else if (f1.getBody().getUserData() == "PACMAN"
 				&& f2.getBody().getUserData() == "BONUS_PELLET") {
@@ -45,13 +46,17 @@ public class CollisionContactListener implements ContactListener {
 			colliding = true;
 			scorePanel.incrementScore(50);
 
+			System.out.println("pacman-bonus pellet");
 		}
+
 		else if (f1.getBody().getUserData() == "PACMAN"
 				&& f2.getBody().getUserData() == "GHOST" || (f2.getBody().getUserData() == "GHOST"
 				&& f1.getBody().getUserData() == "GHOST")) {
 			//remove an extra pacman
+			System.out.println("here");
 			scorePanel.decrementLives();
-			colliding = true;			
+			colliding = true;		
+			System.out.println("pacman-ghost");
 		}
 	}
 
