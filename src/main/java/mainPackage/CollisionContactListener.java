@@ -1,6 +1,9 @@
 package mainPackage;
 
+import java.util.ArrayList;
+
 import javafx.scene.Group;
+import objectsPackage.ObjectBody;
 import objectsPackage.Pellet;
 
 import org.jbox2d.callbacks.ContactImpulse;
@@ -15,15 +18,21 @@ public class CollisionContactListener implements ContactListener {
 	private Group rootGroup;
 	private ScorePanel scorePanel;
 	private Pellet[] pellets;
+	private ArrayList<Fixture> fixturesToRemove;
+	private ArrayList<Pellet> pelletsToRemove;
+
 	public boolean isColliding() {
 		return colliding;
 	}
 
-	public CollisionContactListener(Group rootGroup, Pellet[] pellets, ScorePanel scorePanel) {
+	public CollisionContactListener(Group rootGroup, Pellet[] pellets,
+			ScorePanel scorePanel) {
 		colliding = false;
 		this.rootGroup = rootGroup;
-		this.pellets=pellets;
-		this.scorePanel=scorePanel;
+		this.pellets = pellets;
+		this.scorePanel = scorePanel;
+		this.fixturesToRemove = new ArrayList<Fixture>();
+		this.pelletsToRemove = new ArrayList<Pellet>();
 	}
 
 	public void beginContact(Contact contact) {
@@ -32,17 +41,26 @@ public class CollisionContactListener implements ContactListener {
 		if (f1.getBody().getUserData() == "PACMAN"
 				&& f2.getBody().getUserData() == "PELLET") {
 			colliding = true;
-			if(rootGroup.getChildren().contains(pellets[1])){
-				System.out.println("Contaioned");
+
+			fixturesToRemove.add(f2);
+
+			// remove the pellet
+			ObjectBody b = (ObjectBody) f2.getBody();
+			for(int i=0; i<pellets.length; i++){
+				if(pellets[i].getId() == b.getID()){
+					pelletsToRemove.add(pellets[i]);
+					break;
+				}
 			}
-			//remove the pellet
-			//rootGroup.getChildren().remove(pellets[1]);
+
+
+
+
 			scorePanel.incrementScore(10);
 			System.out.println("pacman-pellet");
-		}
-		else if (f1.getBody().getUserData() == "PACMAN"
+		} else if (f1.getBody().getUserData() == "PACMAN"
 				&& f2.getBody().getUserData() == "BONUS_PELLET") {
-			//remove the bonus pellet
+			// remove the bonus pellet
 			colliding = true;
 			scorePanel.incrementScore(50);
 
@@ -50,12 +68,13 @@ public class CollisionContactListener implements ContactListener {
 		}
 
 		else if (f1.getBody().getUserData() == "PACMAN"
-				&& f2.getBody().getUserData() == "GHOST" || (f2.getBody().getUserData() == "GHOST"
-				&& f1.getBody().getUserData() == "GHOST")) {
-			//remove an extra pacman
+				&& f2.getBody().getUserData() == "GHOST"
+				|| (f2.getBody().getUserData() == "GHOST" && f1.getBody()
+				.getUserData() == "GHOST")) {
+			// remove an extra pacman
 			System.out.println("here");
 			scorePanel.decrementLives();
-			colliding = true;		
+			colliding = true;
 			System.out.println("pacman-ghost");
 		}
 	}
@@ -72,5 +91,13 @@ public class CollisionContactListener implements ContactListener {
 	public void postSolve(Contact contact, ContactImpulse impulse) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public ArrayList<Pellet> getPelletsToRemove() {
+		return pelletsToRemove;
+	}
+
+	public ArrayList<Fixture> getFixturesToRemove() {
+		return fixturesToRemove;
 	}
 }
