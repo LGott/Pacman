@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 
 public class Pacman extends Piece {
 	private Node node;
@@ -29,26 +30,29 @@ public class Pacman extends Piece {
 		// Create an UI for pacman - JavaFX code
 		Circle pacman = new Circle();
 		pacman.setRadius(radius);
+		//can subtract 5 to add a 'border' around the pacman, so that there is less overlap between pacman and pieces
+		//pacman.setRadius(radius - 5);
+		
 		Image img = new Image("/pacman.png");
 		ImagePattern imagePattern = new ImagePattern(img);
 		pacman.setFill(imagePattern);
 
 		// Set ball position on JavaFX scene. We need to convert JBox2D
 		// coordinates to JavaFX coordinates which are in pixels.
-		pacman.setLayoutX(Properties.toPixelPosX(getPosX()));
-		pacman.setLayoutY(Properties.toPixelPosY(getPosY()));
+		pacman.setLayoutX(Properties.jBoxToFxPosX(getPosX()));
+		pacman.setLayoutY(Properties.jBoxToFxPosY(getPosY()));
 		pacman.setCache(true); // Cache this object for better performance
 
 		// create a jbox2D circle shape
 		CircleShape cs = new CircleShape();
 		cs.m_radius = radius * 0.1f; // We need to convert radius to JBox2D
 										// equivalent
-		
+
 		Body body = createBodyAndFixture(bodyType, cs);
 		pacman.setUserData(body);
 		return pacman;
 	}
-	
+
 	public void resetLayoutX(float x) {
 		node.setLayoutX(x);
 	}
@@ -59,5 +63,10 @@ public class Pacman extends Piece {
 
 	public Node getNode() {
 		return node;
+	}
+	public void setImage(String image){
+		Image img = new Image(image);
+		ImagePattern imagePattern = new ImagePattern(img);
+		((Shape) node).setFill(imagePattern);
 	}
 }
