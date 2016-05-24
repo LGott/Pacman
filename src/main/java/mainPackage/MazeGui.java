@@ -1,5 +1,7 @@
 package mainPackage;
 
+import java.util.ArrayList;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -21,10 +23,6 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
 
-import org.jbox2d.dynamics.Body;
-import org.jbox2d.common.Vec2;
-import javafx.util.Duration;
-
 public class MazeGui extends Application {
 	private Group rootGroup;
 	private Scene scene;
@@ -41,7 +39,7 @@ public class MazeGui extends Application {
 
 	private int x = 0;
 	private CollisionContactListener contactListener;
-	private Pellet[] pellets = new Pellet[10];
+	private ArrayList<Pellet> pellets = new ArrayList<Pellet>();
 	private ScorePanel scorePanel = new ScorePanel();
 
 	@Override
@@ -115,15 +113,15 @@ public class MazeGui extends Application {
 				pacman2.resetLayoutX(xpos2);
 				pacman2.resetLayoutY(ypos2);
 				// move ghosts
-			
-for (Ghost g : ghosts) {
-					
+
+				for (Ghost g : ghosts) {
+
 					Body body = (Body) g.getNode().getUserData();
 					float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
 					float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 					g.resetLayoutX(xpos);
 					g.resetLayoutY(ypos);
-					
+
 				}
 				// }else{
 				// System.out.println("Collision");}
@@ -194,8 +192,9 @@ for (Ghost g : ghosts) {
 
 	private void createPellets() {
 		for (int j = 0, i = 10; i < 100; j++, i += 10) {
-			pellets[j] = new Pellet(i, 15, world, 10, "PELLET");
-			rootGroup.getChildren().add(pellets[j].getNode());
+			Pellet p = new Pellet(i, 15, world, 10, "PELLET");
+			pellets.add(p);
+			rootGroup.getChildren().add(p.getNode());
 		}
 		// for each pellet created increment numPellets
 	}
@@ -216,8 +215,9 @@ for (Ghost g : ghosts) {
 	
 	private void createBonusPellets() {
 		for (int i = 30; i < 100; i += 10) {
-			rootGroup.getChildren()
-					.add(new BonusPellet(15, i, world).getNode());
+			BonusPellet bp =new BonusPellet(15, i, world);
+			pellets.add(bp);
+			rootGroup.getChildren().add(bp.getNode());
 			// numPellets++;
 		}
 
@@ -237,17 +237,17 @@ for (Ghost g : ghosts) {
 					break;
 				case UP:
 					((Body) pacman1.getNode().getUserData())
-							.setLinearVelocity(new Vec2(0.0f, 20.0f));
+					.setLinearVelocity(new Vec2(0.0f, 20.0f));
 					pacman1.getNode().setRotate(270);
 					break;
 				case DOWN:
 					((Body) pacman1.getNode().getUserData())
-							.setLinearVelocity(new Vec2(0.0f, -20.0f));
+					.setLinearVelocity(new Vec2(0.0f, -20.0f));
 					pacman1.getNode().setRotate(90);
 					break;
 				case LEFT:
 					((Body) pacman1.getNode().getUserData())
-							.setLinearVelocity(new Vec2(-20.0f, 0.0f));
+					.setLinearVelocity(new Vec2(-20.0f, 0.0f));
 					pacman1.getNode().setRotate(180);
 					// want to redo the picture for this - so it doesn't have an
 					// eye?
@@ -258,27 +258,27 @@ for (Ghost g : ghosts) {
 					break;
 				case RIGHT:
 					((Body) pacman1.getNode().getUserData())
-							.setLinearVelocity(new Vec2(20.0f, 0.0f));
+					.setLinearVelocity(new Vec2(20.0f, 0.0f));
 					pacman1.getNode().setRotate(0);
 					break;
 				case S:// LEFT
 					((Body) pacman2.getNode().getUserData())
-							.setLinearVelocity(new Vec2(-20.0f, 0.0f));
+					.setLinearVelocity(new Vec2(-20.0f, 0.0f));
 					pacman2.getNode().setRotate(180);
 					break;
 				case D:// Down
 					((Body) pacman2.getNode().getUserData())
-							.setLinearVelocity(new Vec2(0.0f, -20.0f));
+					.setLinearVelocity(new Vec2(0.0f, -20.0f));
 					pacman2.getNode().setRotate(90);
 					break;
 				case F:// Right
 					((Body) pacman2.getNode().getUserData())
-							.setLinearVelocity(new Vec2(20.0f, 0.0f));
+					.setLinearVelocity(new Vec2(20.0f, 0.0f));
 					pacman2.getNode().setRotate(0);
 					break;
 				case E:// Up
 					((Body) pacman2.getNode().getUserData())
-							.setLinearVelocity(new Vec2(0.0f, 20.0f));
+					.setLinearVelocity(new Vec2(0.0f, 20.0f));
 					pacman2.getNode().setRotate(270);
 					break;
 				default:
