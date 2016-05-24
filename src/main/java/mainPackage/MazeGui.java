@@ -94,7 +94,7 @@ public class MazeGui extends Application {
 					// rootGroup.getChildren().remove(b);
 				}
 
-				for (YellowPellet p : contactListener.getPelletsToRemove()) {
+				for (Pellet p : contactListener.getPelletsToRemove()) {
 					rootGroup.getChildren().remove(p.getNode());
 				}
 
