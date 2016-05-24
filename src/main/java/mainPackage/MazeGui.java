@@ -199,6 +199,20 @@ public class MazeGui extends Application {
 		// for each pellet created increment numPellets
 	}
 
+	private void moveGhosts() {
+		for (Ghost g : ghosts) {
+			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
+			if(contactListener.isColliding()){
+				float xpos1 = Properties.jBoxToFxPosX(g.getPosX());
+				float ypos1 = Properties.jBoxToFxPosY(g.getPosY());
+			g.resetLayoutX(xpos1);
+				g.resetLayoutY(ypos1);
+			
+			}
+		}
+	}
+	
+	
 	private void createBonusPellets() {
 		for (int i = 30; i < 100; i += 10) {
 			rootGroup.getChildren()
@@ -212,10 +226,13 @@ public class MazeGui extends Application {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
 				switch (event.getCode()) {
+				
 				// need another 4 directional keys for other player. which ones?
 				case SHIFT:
 					System.out.println("Shift");
+				
 					timeline.playFromStart();
+					moveGhosts();
 					break;
 				case UP:
 					((Body) pacman1.getNode().getUserData())
