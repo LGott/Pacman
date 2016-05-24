@@ -21,6 +21,10 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
 
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.common.Vec2;
+import javafx.util.Duration;
+
 public class MazeGui extends Application {
 	private Group rootGroup;
 	private Scene scene;
@@ -29,27 +33,30 @@ public class MazeGui extends Application {
 	private WorldLogic world = new WorldLogic(gravity, doSleep);
 	private Pacman pacman1;
 	private Pacman pacman2;
-	private Ghost[] ghosts = new Ghost[4]; // HOW MANY??
+	private Ghost[] ghosts = new Ghost[4];
 	private int numPellets;
-	private int numBonusPellets;
+	// private int numBonusPellets; //I think they can be counted together, and
+	// when they're both all finished - you finished the round!
 	final Timeline timeline = new Timeline();
+
 	private int x = 0;
 	private CollisionContactListener contactListener;
-	private Pellet[] pellets= new Pellet[10];
-	private ScorePanel scorePanel= new ScorePanel();
+	private Pellet[] pellets = new Pellet[10];
+	private ScorePanel scorePanel = new ScorePanel();
+
 	@Override
 	public void start(Stage stage) throws Exception {
 		// TODO Auto-generated method stub
 		stage.setWidth(Properties.WIDTH);
 		stage.setHeight(Properties.HEIGHT);
 		stage.setTitle("Pacman");
-
 		stage.setResizable(false);
-
 
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
-		contactListener=new CollisionContactListener(rootGroup, pellets, scorePanel);
+
+		contactListener = new CollisionContactListener(rootGroup, pellets,
+				scorePanel);
 
 		Scene scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
 				Color.BLACK);
@@ -61,8 +68,6 @@ public class MazeGui extends Application {
 		stage.setScene(scene);
 		stage.show();
 	}
-
-
 
 	private void startSimulation() {
 
@@ -78,56 +83,55 @@ public class MazeGui extends Application {
 
 				// Create time step. Set Iteration count 8 for velocity and 3
 				// for positions
-				//	if(!contactListener.isColliding()){
+
+				// if(!contactListener.isColliding()){
 				world.step(1.0f / 60.f, 8, 3);
 				x++;
 
-				for(Fixture b : contactListener.getFixturesToRemove()){
+				for (Fixture b : contactListener.getFixturesToRemove()) {
 					world.destroyBody(b.getBody());
-					//rootGroup.getChildren().remove(b);
+					// rootGroup.getChildren().remove(b);
 				}
 
-				for(Pellet p : contactListener.getPelletsToRemove()){
+				for (Pellet p : contactListener.getPelletsToRemove()) {
 					rootGroup.getChildren().remove(p.getNode());
 				}
 
-
-				//clear for next step
+				// clear for next step
 				contactListener.getPelletsToRemove().clear();
 				contactListener.getFixturesToRemove().clear();
 
 				// Move pacman1 to the new position computed by JBox2D
 				Body pacBody1 = (Body) pacman1.getNode().getUserData();
-				float xpos1 = Properties.toPixelPosX(pacBody1.getPosition().x);
-				float ypos1 = Properties.toPixelPosY(pacBody1.getPosition().y);
+				float xpos1 = Properties.jBoxToFxPosX(pacBody1.getPosition().x);
+				float ypos1 = Properties.jBoxToFxPosY(pacBody1.getPosition().y);
 				pacman1.resetLayoutX(xpos1);
 				pacman1.resetLayoutY(ypos1);
 
 				// Move pacman2 to the new position computed by JBox2D
 				Body pacBody2 = (Body) pacman2.getNode().getUserData();
-				float xpos2 = Properties.toPixelPosX(pacBody2.getPosition().x);
-				float ypos2 = Properties.toPixelPosY(pacBody2.getPosition().y);
+				float xpos2 = Properties.jBoxToFxPosX(pacBody2.getPosition().x);
+				float ypos2 = Properties.jBoxToFxPosY(pacBody2.getPosition().y);
 				pacman2.resetLayoutX(xpos2);
 				pacman2.resetLayoutY(ypos2);
-
-				//move ghosts
+				// move ghosts
 				for (Ghost g : ghosts) {
-
+					System.out.println("Moving");
 					Body body = (Body) g.getNode().getUserData();
-					float xpos = Properties.toPixelPosX(body.getPosition().x);
-					float ypos = Properties.toPixelPosY(body.getPosition().y);
+					float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
+					float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 					g.resetLayoutX(xpos);
 					g.resetLayoutY(ypos);
-
+					System.out.printf("%4.2f %4.2f %4.2f\n", xpos, ypos,
+							body.getAngle());
 				}
-				//}else{
-				//	System.out.println("Collision");}
+				// }else{
+				// System.out.println("Collision");}
 
-
-
-				if(scorePanel.isGameOver()){
+				if (scorePanel.isGameOver()) {
 					System.out.println("Game over");
 					System.exit(0);
+
 				}
 			}
 		};
@@ -145,28 +149,30 @@ public class MazeGui extends Application {
 
 	private void createShapes() {
 		createWalls();
-		//createGround();
 		pacman1 = createPacman(50, 80);
 		pacman2 = createPacman(50, 20);
 		createGhosts();
 		createPellets();
 		createBonusPellets(); // should createPellets call createBonusPellets?
-
 	}
 
 	private void createWalls() {
-		//rootGroup.getChildren().add(new Wall(60, 90, world, 5, 100).getNode());
-		//rootGroup.getChildren().add(new Wall(60, 90, world, 100, 5).getNode());
-		rootGroup.getChildren().add(
-				new Wall(0, 5, world, 5, Properties.WIDTH).getNode());// bottom wall
-		rootGroup.getChildren().add(
-				new Wall(0, 100, world, 5, Properties.WIDTH).getNode());// ceiling
-		rootGroup.getChildren().add(
-				new Wall(98, 100, world,  Properties.HEIGHT,5)
-				.getNode());// right wall
-		rootGroup.getChildren().add(
-				new Wall(0, 100, world,  Properties.HEIGHT,5)
-				.getNode());// right wall
+
+		rootGroup.getChildren().add(new Wall(50, 60, world, 5, 10).getNode());
+		rootGroup.getChildren().add(new Wall(50, 60, world, 10, 5).getNode());
+
+		rootGroup.getChildren().add(new Wall(25, 80, world, 5, 2).getNode());
+		rootGroup.getChildren().add(new Wall(40, 80, world, 5, 2).getNode());
+
+		// left wall
+		rootGroup.getChildren().add(new Wall(1, 100, world, 1, 100).getNode());
+		// right wall
+		rootGroup.getChildren().add(new Wall(99, 100, world, 1, 100).getNode());
+		// bottom wall
+		rootGroup.getChildren().add(new Wall(0, 5, world, 100, 1).getNode());
+		// top wall
+		rootGroup.getChildren().add(new Wall(0, 100, world, 100, 1).getNode());
+
 	}
 
 	private Pacman createPacman(int x, int y) {
@@ -177,9 +183,9 @@ public class MazeGui extends Application {
 
 	private void createGhosts() {
 		ghosts[0] = new Ghost(30, 30, world, "/blueGhost.png");
-		ghosts[1] = new Ghost(50, 50, world, "/pinkGhost.png");
+		ghosts[1] = new Ghost(10, 10, world, "/pinkGhost.png");
 		ghosts[2] = new Ghost(80, 80, world, "/orangeGhost.png");
-		ghosts[3] = new Ghost(60, 60, world, "/redGhost.png");
+		ghosts[3] = new Ghost(70, 70, world, "/redGhost.png");
 
 		for (Ghost g : ghosts) {
 			rootGroup.getChildren().add(g.getNode());
@@ -187,17 +193,20 @@ public class MazeGui extends Application {
 	}
 
 	private void createPellets() {
-		for (int j=0, i = 10; i < 100; j++, i += 10) {
-			pellets[j]= new Pellet(i, 15, world, 10, "PELLET");
+		for (int j = 0, i = 10; i < 100; j++, i += 10) {
+			pellets[j] = new Pellet(i, 15, world, 10, "PELLET");
 			rootGroup.getChildren().add(pellets[j].getNode());
 		}
+		// for each pellet created increment numPellets
 	}
 
 	private void createBonusPellets() {
 		for (int i = 30; i < 100; i += 10) {
 			rootGroup.getChildren()
-			.add(new BonusPellet(15, i, world).getNode());
+					.add(new BonusPellet(15, i, world).getNode());
+			// numPellets++;
 		}
+
 	}
 
 	private void addKeyListeners(Scene scene) {
@@ -210,36 +219,50 @@ public class MazeGui extends Application {
 					timeline.playFromStart();
 					break;
 				case UP:
-					((Body) pacman1.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
-					//gravity = new Vec2(0.0f, 10.0f);
-					//world.setGravity(gravity);
+					((Body) pacman1.getNode().getUserData())
+							.setLinearVelocity(new Vec2(0.0f, 20.0f));
+					pacman1.getNode().setRotate(270);
 					break;
 				case DOWN:
-					((Body) pacman1.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, -20.0f));
-					//gravity = new Vec2(0.0f, -10.0f);
-					//world.setGravity(gravity);
+					((Body) pacman1.getNode().getUserData())
+							.setLinearVelocity(new Vec2(0.0f, -20.0f));
+					pacman1.getNode().setRotate(90);
 					break;
 				case LEFT:
-					((Body) pacman1.getNode().getUserData()).setLinearVelocity(new Vec2(-20.0f, 0.0f));
-					//gravity = new Vec2(-10.0f, 0.0f);
-					//world.setGravity(gravity);
+					((Body) pacman1.getNode().getUserData())
+							.setLinearVelocity(new Vec2(-20.0f, 0.0f));
+					pacman1.getNode().setRotate(180);
+					// want to redo the picture for this - so it doesn't have an
+					// eye?
+					// or you can change the image instead of rotation?
+					// pacman1.setImage("/pacmanLeft.png");
+					// but then you have to change images for all??
+
 					break;
 				case RIGHT:
-					((Body) pacman1.getNode().getUserData()).setLinearVelocity(new Vec2(20.0f, 0.0f));
-					//gravity = new Vec2(10.0f, 0.0f);
-					//world.setGravity(gravity);
+					((Body) pacman1.getNode().getUserData())
+							.setLinearVelocity(new Vec2(20.0f, 0.0f));
+					pacman1.getNode().setRotate(0);
 					break;
-				case S://LEFT
-					((Body) pacman2.getNode().getUserData()).setLinearVelocity(new Vec2(-20.0f, 0.0f));
+				case S:// LEFT
+					((Body) pacman2.getNode().getUserData())
+							.setLinearVelocity(new Vec2(-20.0f, 0.0f));
+					pacman2.getNode().setRotate(180);
 					break;
-				case D://Down
-					((Body) pacman2.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, -20.0f));
+				case D:// Down
+					((Body) pacman2.getNode().getUserData())
+							.setLinearVelocity(new Vec2(0.0f, -20.0f));
+					pacman2.getNode().setRotate(90);
 					break;
-				case F://Right
-					((Body) pacman2.getNode().getUserData()).setLinearVelocity(new Vec2(20.0f, 0.0f));
+				case F:// Right
+					((Body) pacman2.getNode().getUserData())
+							.setLinearVelocity(new Vec2(20.0f, 0.0f));
+					pacman2.getNode().setRotate(0);
 					break;
-				case E://Up
-					((Body) pacman2.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
+				case E:// Up
+					((Body) pacman2.getNode().getUserData())
+							.setLinearVelocity(new Vec2(0.0f, 20.0f));
+					pacman2.getNode().setRotate(270);
 					break;
 				default:
 					break;

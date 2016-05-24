@@ -34,8 +34,8 @@ public class Pellet extends Piece {
 		ImagePattern imagePattern = new ImagePattern(img);
 		pellet.setFill(imagePattern);
 
-		pellet.setLayoutX(Properties.toPixelPosX(getPosX()));
-		pellet.setLayoutY(Properties.toPixelPosY(getPosY()));
+		pellet.setLayoutX(Properties.jBoxToFxPosX(getPosX()));
+		pellet.setLayoutY(Properties.jBoxToFxPosY(getPosY()));
 		pellet.setCache(true); // Cache this object for better performance
 
 		// create a jbox2D circle shape
