@@ -115,7 +115,8 @@ public class MazeGui extends Application {
 				pacman2.resetLayoutX(xpos2);
 				pacman2.resetLayoutY(ypos2);
 				// move ghosts
-				for (Ghost g : ghosts) {
+			
+for (Ghost g : ghosts) {
 					
 					Body body = (Body) g.getNode().getUserData();
 					float xpos = Properties.jBoxToFxPosX(body.getPosition().x);

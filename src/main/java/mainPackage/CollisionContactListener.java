@@ -68,6 +68,12 @@ public class CollisionContactListener implements ContactListener {
 
 			colliding = true;
 			System.out.println("contacts " + obj1.getDescription() + " and " + obj2.getDescription());
+
+			float xpos = Properties.jBoxToFxPosX(f2.getBody().getPosition().x);
+			float ypos = Properties.jBoxToFxPosY(f2.getBody().getPosition().y);
+			f2.getBody().setAngularVelocity(xpos);
+			f2.getBody().setAngularVelocity(ypos);
+
 		}
 
 		else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "GHOST"
