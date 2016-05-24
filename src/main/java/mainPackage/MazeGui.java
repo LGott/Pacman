@@ -116,14 +116,13 @@ public class MazeGui extends Application {
 				pacman2.resetLayoutY(ypos2);
 				// move ghosts
 				for (Ghost g : ghosts) {
-					System.out.println("Moving");
+					
 					Body body = (Body) g.getNode().getUserData();
 					float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
 					float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 					g.resetLayoutX(xpos);
 					g.resetLayoutY(ypos);
-					System.out.printf("%4.2f %4.2f %4.2f\n", xpos, ypos,
-							body.getAngle());
+					
 				}
 				// }else{
 				// System.out.println("Collision");}
