@@ -41,6 +41,7 @@ public class MazeGui extends Application {
 	private CollisionContactListener contactListener;
 	private ArrayList<Pellet> pellets = new ArrayList<Pellet>();
 	private ScorePanel scorePanel = new ScorePanel();
+	private ArrayList<Pacman> pacmanArray = new ArrayList<Pacman>();
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -54,7 +55,7 @@ public class MazeGui extends Application {
 		rootGroup = new Group();
 
 		contactListener = new CollisionContactListener(rootGroup, pellets,
-				scorePanel);
+				scorePanel, pacmanArray);
 
 		Scene scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
 				Color.BLACK);
@@ -75,7 +76,10 @@ public class MazeGui extends Application {
 		// frame.
 
 		// Create an ActionEvent, on trigger it executes a world time step and
-		// moves the balls to new position
+		// moves the objects to new position
+
+		final long timeStart = System.currentTimeMillis();
+
 		EventHandler<ActionEvent> ae = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
 
@@ -96,15 +100,22 @@ public class MazeGui extends Application {
 				}
 
 				// clear for next step
+				contactListener.getPacmanColliding().clear();
 				contactListener.getPelletsToRemove().clear();
 				contactListener.getFixturesToRemove().clear();
 
-				// Move pacman1 to the new position computed by JBox2D
+				// animate pacman1
+				animatePacman(timeStart, pacman1);
+
 				Body pacBody1 = (Body) pacman1.getNode().getUserData();
+				// Move pacman1 to the new position computed by JBox2D
 				float xpos1 = Properties.jBoxToFxPosX(pacBody1.getPosition().x);
 				float ypos1 = Properties.jBoxToFxPosY(pacBody1.getPosition().y);
 				pacman1.resetLayoutX(xpos1);
 				pacman1.resetLayoutY(ypos1);
+
+				// animate pacman2
+				animatePacman(timeStart, pacman2);
 
 				// Move pacman2 to the new position computed by JBox2D
 				Body pacBody2 = (Body) pacman2.getNode().getUserData();
@@ -132,6 +143,17 @@ public class MazeGui extends Application {
 
 				}
 			}
+
+			private void animatePacman(final long timeStart, Pacman pacman) {
+				if (contactListener.isCollidingWithWall()
+						&& pacman.isColliding()) {
+					pacman.setOpenPacman();
+					System.out.println("touching walls");
+				} else {
+					double time = (System.currentTimeMillis() - timeStart) / 1000.0;
+					pacman.animatePacman(time);
+				}
+			}
 		};
 
 		/**
@@ -147,8 +169,8 @@ public class MazeGui extends Application {
 
 	private void createShapes() {
 		createWalls();
-		pacman1 = createPacman(50, 80);
-		pacman2 = createPacman(50, 20);
+		pacmanArray.add(pacman1 = createPacman(50, 80));
+		pacmanArray.add(pacman2 = createPacman(50, 20));
 		createGhosts();
 		createPellets();
 		createBonusPellets(); // should createPellets call createBonusPellets?
@@ -201,21 +223,21 @@ public class MazeGui extends Application {
 
 	private void moveGhosts() {
 		for (Ghost g : ghosts) {
-			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
-			if(contactListener.isColliding()){
+			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f,
+					20.0f));
+			if (contactListener.isColliding()) {
 				float xpos1 = Properties.jBoxToFxPosX(g.getPosX());
 				float ypos1 = Properties.jBoxToFxPosY(g.getPosY());
-			g.resetLayoutX(xpos1);
+				g.resetLayoutX(xpos1);
 				g.resetLayoutY(ypos1);
-			
+
 			}
 		}
 	}
-	
-	
+
 	private void createBonusPellets() {
 		for (int i = 30; i < 100; i += 10) {
-			BonusPellet bp =new BonusPellet(15, i, world);
+			BonusPellet bp = new BonusPellet(15, i, world);
 			pellets.add(bp);
 			rootGroup.getChildren().add(bp.getNode());
 			// numPellets++;
@@ -227,11 +249,11 @@ public class MazeGui extends Application {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
 				switch (event.getCode()) {
-				
+
 				// need another 4 directional keys for other player. which ones?
 				case SHIFT:
 					System.out.println("Shift");
-				
+
 					timeline.playFromStart();
 					moveGhosts();
 					break;
