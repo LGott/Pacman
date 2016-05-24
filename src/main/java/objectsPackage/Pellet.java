@@ -11,12 +11,13 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
 public class Pellet extends Piece {
-	protected Node node;
+
 	// radius in pixels
 	protected final int radius;
 	protected final BodyType bodyType = BodyType.STATIC;
 	protected Circle pellet;
 	protected String imgName;
+	private CircleShape cs;
 	
 
 	public Pellet(int posX, int posY, World world, String description, String imgName) {
@@ -29,9 +30,9 @@ public class Pellet extends Piece {
 	}
 
 	private Node create() {
-		setPellet();
+		setPelletProperties();
 		// create a jbox2D circle shape
-		CircleShape cs = new CircleShape();
+		cs = new CircleShape();
 		cs.m_radius = radius * 0.1f; // We need to convert radius to JBox2D
 		// equivalent
 		body = createBodyAndFixture(bodyType, cs);
@@ -40,7 +41,7 @@ public class Pellet extends Piece {
 		return pellet;
 	}
 
-	private void setPellet() {
+	private void setPelletProperties() {
 		// TODO Auto-generated method stub
 		pellet.setRadius(radius);
 		pellet.setLayoutX(Properties.jBoxToFxPosX(getPosX()));
@@ -54,12 +55,6 @@ public class Pellet extends Piece {
 		Image img = new Image(imgName);
 		ImagePattern imagePattern = new ImagePattern(img);
 		pellet.setFill(imagePattern);
-	}
-
-	@Override
-	public Node getNode() {
-		// TODO Auto-generated method stub
-		return node;
 	}
 
 }

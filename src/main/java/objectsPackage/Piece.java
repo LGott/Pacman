@@ -19,7 +19,7 @@ public abstract class Piece{
 	private int id;
 	private UniqueObject objectDescription;
 	protected Body body;
-
+	protected Node node;
 	public UniqueObject getObjectDescription() {
 		return objectDescription;
 	}
@@ -33,8 +33,6 @@ public abstract class Piece{
 		
 		
 	}
-
-	abstract Node getNode();
 
 	public Body createBodyAndFixture(BodyType bodyType, Shape shape) {
 
@@ -86,5 +84,9 @@ public abstract class Piece{
 	public void setUserData(String newDescription) {
 		// TODO Auto-generated method stub
 		objectDescription=new UniqueObject(this.id, newDescription);
+	}
+	
+	public Node getNode() {
+		return node;
 	}
 }

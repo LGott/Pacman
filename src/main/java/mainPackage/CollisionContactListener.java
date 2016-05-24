@@ -2,7 +2,6 @@ package mainPackage;
 
 import java.util.ArrayList;
 
-import javafx.scene.Group;
 import objectsPackage.Pellet;
 import objectsPackage.UniqueObject;
 
@@ -15,9 +14,7 @@ import org.jbox2d.dynamics.contacts.Contact;
 public class CollisionContactListener implements ContactListener {
 
 	private boolean colliding;
-	private Group rootGroup;
 	private ScorePanel scorePanel;
-
 	private ArrayList<Pellet> pellets;
 	private ArrayList<Fixture> fixturesToRemove;
 	private ArrayList<Pellet> pelletsToRemove;
@@ -26,11 +23,10 @@ public class CollisionContactListener implements ContactListener {
 		return colliding;
 	}
 
-	public CollisionContactListener(Group rootGroup, ArrayList<Pellet> pellet,
+	public CollisionContactListener(ArrayList<Pellet> pellet,
 			ScorePanel scorePanel) {
 
 		colliding = false;
-		this.rootGroup = rootGroup;
 		this.pellets = pellet;
 		this.scorePanel = scorePanel;
 		this.fixturesToRemove = new ArrayList<Fixture>();
