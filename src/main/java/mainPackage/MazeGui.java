@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import objectsPackage.BonusPellet;
+import objectsPackage.Edge;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
@@ -154,7 +155,7 @@ public class MazeGui extends Application {
 	private void createShapes() {
 		createWalls();
 		createPacmans();
-		createGhosts();
+		//createGhosts();
 		createPellets();
 		createBonusPellets(); // should createPellets call createBonusPellets?
 	}
@@ -162,6 +163,9 @@ public class MazeGui extends Application {
 	private void createWalls() {
 		createWall(50, 60, 5, 10);
 		createWall(50, 60, 10, 5);
+		new Edge(new Vec2(0, 70), new Vec2(100,70), world);
+		new Edge(new Vec2(0, 73), new Vec2(100,73), world);
+		//new Edge(new Vec2(,), new Vec2(,), world);
 		createWall(25, 80, 5, 2);
 		createWall(40, 80, 5, 2);
 		// left wall

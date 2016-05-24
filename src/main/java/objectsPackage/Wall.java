@@ -7,6 +7,7 @@ import javafx.scene.shape.RectangleBuilder;
 import mainPackage.Properties;
 
 import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
@@ -39,6 +40,7 @@ public class Wall extends Piece {
 				.height(Properties.jBoxtoPixelHeight(height) * 2)
 				.fill(Color.BLUE).build();
 		body = createBodyAndFixture(bodyType, ps);
+	
 		wall.setUserData(body);
 		super.setUserData();
 		return wall;
