@@ -153,7 +153,7 @@ public class MazeGui extends Application {
 	private void createShapes() {
 		createWalls();
 		createPacmans();
-		createGhosts();
+		//createGhosts();
 		createPellets();
 		createBonusPellets(); // should createPellets call createBonusPellets?
 	}

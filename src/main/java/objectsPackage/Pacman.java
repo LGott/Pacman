@@ -4,6 +4,7 @@ import mainPackage.Properties;
 
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
@@ -20,7 +21,11 @@ public class Pacman extends Piece {
 	private final int height = 3;
 	private final BodyType bodyType = BodyType.DYNAMIC;
 	private String image;
-
+	private Vec2 lastDirection;
+	private Vec2 currDirection;
+	private Vec2 nextDirection;
+	private int lastDegree;
+	
 	public Pacman(int posX, int posY, World world, String image) {
 		super(posX, posY, world, "PACMAN");
 		this.image = image;
@@ -61,6 +66,23 @@ public class Pacman extends Piece {
 		return node;
 	}
 
+	public void setDirection(Vec2 newDirection, int degree){
+		lastDirection = currDirection;
+		currDirection = newDirection;
+		
+		body.setLinearVelocity(currDirection);
+		node.setRotate(degree);
+		
+		//wait three seconds
+		lastDirection = currDirection;
+	}
+	
+	public void resetLocation(){
+	currDirection = lastDirection;
+	body.setLinearVelocity(currDirection);
+	node.setRotate(lastDegree);
+	}
+	
 	public void setImage(String image) {
 		Image img = new Image(image);
 		ImagePattern imagePattern = new ImagePattern(img);
