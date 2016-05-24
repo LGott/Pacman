@@ -278,7 +278,7 @@ public class MazeGui extends Application {
 
 					break;
 				case RIGHT:
-					pacmanBody2.setLinearVelocity(new Vec2(20.0f, 0.0f));
+					pacmanBody1.setLinearVelocity(new Vec2(20.0f, 0.0f));
 					pacman1.getNode().setRotate(0);
 					break;
 				case S:// LEFT
