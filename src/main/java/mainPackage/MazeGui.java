@@ -14,7 +14,7 @@ import javafx.util.Duration;
 import objectsPackage.BonusPellet;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
-import objectsPackage.Pellet;
+import objectsPackage.YellowPellet;
 import objectsPackage.Wall;
 
 import org.jbox2d.common.Vec2;
@@ -41,7 +41,7 @@ public class MazeGui extends Application {
 
 	private int x = 0;
 	private CollisionContactListener contactListener;
-	private Pellet[] pellets = new Pellet[10];
+	private YellowPellet[] pellets = new YellowPellet[10];
 	private ScorePanel scorePanel = new ScorePanel();
 
 	@Override
@@ -93,7 +93,7 @@ public class MazeGui extends Application {
 					// rootGroup.getChildren().remove(b);
 				}
 
-				for (Pellet p : contactListener.getPelletsToRemove()) {
+				for (YellowPellet p : contactListener.getPelletsToRemove()) {
 					rootGroup.getChildren().remove(p.getNode());
 				}
 
@@ -193,7 +193,7 @@ public class MazeGui extends Application {
 
 	private void createPellets() {
 		for (int j = 0, i = 10; i < 100; j++, i += 10) {
-			pellets[j] = new Pellet(i, 15, world, 10, "PELLET");
+			pellets[j] = new YellowPellet(i, 15, world);
 			rootGroup.getChildren().add(pellets[j].getNode());
 		}
 		// for each pellet created increment numPellets
