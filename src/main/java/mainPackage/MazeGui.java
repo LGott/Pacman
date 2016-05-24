@@ -17,6 +17,7 @@ import objectsPackage.BonusPellet;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
+import objectsPackage.YellowPellet;
 import objectsPackage.Wall;
 
 import org.jbox2d.common.Vec2;
@@ -31,40 +32,41 @@ public class MazeGui extends Application {
 	private WorldLogic world = new WorldLogic(gravity, doSleep);
 	private Pacman pacman1;
 	private Pacman pacman2;
+	private Body pacmanBody1;
+	private Body pacmanBody2;
 	private Ghost[] ghosts = new Ghost[4];
-	private int numPellets;
 	// private int numBonusPellets; //I think they can be counted together, and
 	// when they're both all finished - you finished the round!
 	final Timeline timeline = new Timeline();
-
-	private int x = 0;
 	private CollisionContactListener contactListener;
+
 	private ArrayList<Pellet> pellets = new ArrayList<Pellet>();
+
 	private ScorePanel scorePanel = new ScorePanel();
 
 	@Override
 	public void start(Stage stage) throws Exception {
 		// TODO Auto-generated method stub
-		stage.setWidth(Properties.WIDTH);
-		stage.setHeight(Properties.HEIGHT);
-		stage.setTitle("Pacman");
-		stage.setResizable(false);
-
+		setStageProperties(stage);
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
-
-		contactListener = new CollisionContactListener(rootGroup, pellets,
-				scorePanel);
-
-		Scene scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
+		contactListener = new CollisionContactListener(pellets, scorePanel);
+		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
 				Color.BLACK);
-
 		createShapes();
 		world.setContactListener(contactListener);
 		startSimulation();
 		addKeyListeners(scene);
 		stage.setScene(scene);
 		stage.show();
+	}
+
+	private void setStageProperties(Stage stage) {
+		// TODO Auto-generated method stub
+		stage.setWidth(Properties.WIDTH);
+		stage.setHeight(Properties.HEIGHT);
+		stage.setTitle("Pacman");
+		stage.setResizable(false);
 	}
 
 	private void startSimulation() {
@@ -78,14 +80,49 @@ public class MazeGui extends Application {
 		// moves the balls to new position
 		EventHandler<ActionEvent> ae = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
-
-				// Create time step. Set Iteration count 8 for velocity and 3
-				// for positions
-
-				// if(!contactListener.isColliding()){
 				world.step(1.0f / 60.f, 8, 3);
-				x++;
+				removeFixturesAndPellets();
 
+				// Move pacmans to the new position computed by JBox2D
+				movePacman(pacman1);
+				movePacman(pacman2);
+				// move ghosts
+				moveGhostsStep();
+				if (scorePanel.isGameOver()) {
+					System.out.println("Game over");
+					System.exit(0);
+
+				}
+			}
+
+			private void moveGhostsStep() {
+				// TODO Auto-generated method stub
+				for (Ghost g : ghosts) {
+					moveAGhost(g);
+
+				}
+			}
+
+			private void moveAGhost(Ghost g) {
+				// TODO Auto-generated method stub
+				Body body = (Body) g.getNode().getUserData();
+				float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
+				float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
+				g.resetLayoutX(xpos);
+				g.resetLayoutY(ypos);
+			}
+
+			private void movePacman(Pacman pacman) {
+				// TODO Auto-generated method stub
+				Body pacBody = (Body) pacman.getNode().getUserData();
+				float xpos = Properties.jBoxToFxPosX(pacBody.getPosition().x);
+				float ypos = Properties.jBoxToFxPosY(pacBody.getPosition().y);
+				pacman.resetLayoutX(xpos);
+				pacman.resetLayoutY(ypos);
+			}
+
+			private void removeFixturesAndPellets() {
+				// TODO Auto-generated method stub
 				for (Fixture b : contactListener.getFixturesToRemove()) {
 					world.destroyBody(b.getBody());
 					// rootGroup.getChildren().remove(b);
@@ -99,38 +136,6 @@ public class MazeGui extends Application {
 				contactListener.getPelletsToRemove().clear();
 				contactListener.getFixturesToRemove().clear();
 
-				// Move pacman1 to the new position computed by JBox2D
-				Body pacBody1 = (Body) pacman1.getNode().getUserData();
-				float xpos1 = Properties.jBoxToFxPosX(pacBody1.getPosition().x);
-				float ypos1 = Properties.jBoxToFxPosY(pacBody1.getPosition().y);
-				pacman1.resetLayoutX(xpos1);
-				pacman1.resetLayoutY(ypos1);
-
-				// Move pacman2 to the new position computed by JBox2D
-				Body pacBody2 = (Body) pacman2.getNode().getUserData();
-				float xpos2 = Properties.jBoxToFxPosX(pacBody2.getPosition().x);
-				float ypos2 = Properties.jBoxToFxPosY(pacBody2.getPosition().y);
-				pacman2.resetLayoutX(xpos2);
-				pacman2.resetLayoutY(ypos2);
-				// move ghosts
-
-				for (Ghost g : ghosts) {
-
-					Body body = (Body) g.getNode().getUserData();
-					float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
-					float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
-					g.resetLayoutX(xpos);
-					g.resetLayoutY(ypos);
-
-				}
-				// }else{
-				// System.out.println("Collision");}
-
-				if (scorePanel.isGameOver()) {
-					System.out.println("Game over");
-					System.exit(0);
-
-				}
 			}
 		};
 
@@ -147,30 +152,38 @@ public class MazeGui extends Application {
 
 	private void createShapes() {
 		createWalls();
-		pacman1 = createPacman(50, 80);
-		pacman2 = createPacman(50, 20);
+		createPacmans();
 		createGhosts();
 		createPellets();
 		createBonusPellets(); // should createPellets call createBonusPellets?
 	}
 
 	private void createWalls() {
-
-		rootGroup.getChildren().add(new Wall(50, 60, world, 5, 10).getNode());
-		rootGroup.getChildren().add(new Wall(50, 60, world, 10, 5).getNode());
-
-		rootGroup.getChildren().add(new Wall(25, 80, world, 5, 2).getNode());
-		rootGroup.getChildren().add(new Wall(40, 80, world, 5, 2).getNode());
-
+		createWall(50, 60, 5, 10);
+		createWall(50, 60, 10, 5);
+		createWall(25, 80, 5, 2);
+		createWall(40, 80, 5, 2);
 		// left wall
-		rootGroup.getChildren().add(new Wall(1, 100, world, 1, 100).getNode());
+		createWall(1, 100, 1, 100);
 		// right wall
-		rootGroup.getChildren().add(new Wall(99, 100, world, 1, 100).getNode());
+		createWall(99, 100, 1, 100);
 		// bottom wall
-		rootGroup.getChildren().add(new Wall(0, 5, world, 100, 1).getNode());
+		createWall(0, 5, 100, 1);
 		// top wall
-		rootGroup.getChildren().add(new Wall(0, 100, world, 100, 1).getNode());
+		createWall(0, 100, 100, 1);
 
+	}
+
+	public void createWall(int posX, int posY, int width, int height) {
+		rootGroup.getChildren().add(
+				new Wall(posX, posY, world, width, height).getNode());
+	}
+
+	public void createPacmans() {
+		pacman1 = createPacman(50, 80);
+		pacman2 = createPacman(50, 20);
+		pacmanBody1 = (Body) pacman1.getNode().getUserData();
+		pacmanBody2 = (Body) pacman2.getNode().getUserData();
 	}
 
 	private Pacman createPacman(int x, int y) {
@@ -191,63 +204,71 @@ public class MazeGui extends Application {
 	}
 
 	private void createPellets() {
-		for (int j = 0, i = 10; i < 100; j++, i += 10) {
-			Pellet p = new Pellet(i, 15, world, 10, "PELLET");
-			pellets.add(p);
-			rootGroup.getChildren().add(p.getNode());
+		for (int i = 10; i < 100; i += 10) {
+			createYellowPellet(i, 15);
 		}
-		// for each pellet created increment numPellets
+	}
+
+	private void createYellowPellet(int posX, int posY) {
+		Pellet p = new YellowPellet(posX, posY, world);
+		addPellet(p);
+	}
+
+	private void createBonusPellets() {
+		for (int i = 30; i < 100; i += 10) {
+			createBonusPellet(15, i);
+		}
+
+	}
+
+	private void createBonusPellet(int posX, int posY) {
+		// TODO Auto-generated method stub
+		Pellet bp = new BonusPellet(posX, posY, world);
+		addPellet(bp);
+	}
+
+	private void addPellet(Pellet p) {
+		pellets.add(p);
+		rootGroup.getChildren().add(p.getNode());
 	}
 
 	private void moveGhosts() {
 		for (Ghost g : ghosts) {
-			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
-			if(contactListener.isColliding()){
+			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f,
+					20.0f));
+			if (contactListener.isColliding()) {
 				float xpos1 = Properties.jBoxToFxPosX(g.getPosX());
 				float ypos1 = Properties.jBoxToFxPosY(g.getPosY());
-			g.resetLayoutX(xpos1);
+				g.resetLayoutX(xpos1);
 				g.resetLayoutY(ypos1);
-			
+
 			}
 		}
-	}
-	
-	
-	private void createBonusPellets() {
-		for (int i = 30; i < 100; i += 10) {
-			BonusPellet bp =new BonusPellet(15, i, world);
-			pellets.add(bp);
-			rootGroup.getChildren().add(bp.getNode());
-			// numPellets++;
-		}
-
 	}
 
 	private void addKeyListeners(Scene scene) {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
 				switch (event.getCode()) {
-				
+
 				// need another 4 directional keys for other player. which ones?
 				case SHIFT:
 					System.out.println("Shift");
-				
+
 					timeline.playFromStart();
 					moveGhosts();
 					break;
 				case UP:
-					((Body) pacman1.getNode().getUserData())
-					.setLinearVelocity(new Vec2(0.0f, 20.0f));
+					pacmanBody1.setLinearVelocity(new Vec2(0.0f, 20.0f));
 					pacman1.getNode().setRotate(270);
 					break;
 				case DOWN:
-					((Body) pacman1.getNode().getUserData())
-					.setLinearVelocity(new Vec2(0.0f, -20.0f));
+
+					pacmanBody1.setLinearVelocity(new Vec2(0.0f, -20.0f));
 					pacman1.getNode().setRotate(90);
 					break;
 				case LEFT:
-					((Body) pacman1.getNode().getUserData())
-					.setLinearVelocity(new Vec2(-20.0f, 0.0f));
+					pacmanBody1.setLinearVelocity(new Vec2(-20.0f, 0.0f));
 					pacman1.getNode().setRotate(180);
 					// want to redo the picture for this - so it doesn't have an
 					// eye?
@@ -257,28 +278,23 @@ public class MazeGui extends Application {
 
 					break;
 				case RIGHT:
-					((Body) pacman1.getNode().getUserData())
-					.setLinearVelocity(new Vec2(20.0f, 0.0f));
+					pacmanBody2.setLinearVelocity(new Vec2(20.0f, 0.0f));
 					pacman1.getNode().setRotate(0);
 					break;
 				case S:// LEFT
-					((Body) pacman2.getNode().getUserData())
-					.setLinearVelocity(new Vec2(-20.0f, 0.0f));
+					pacmanBody2.setLinearVelocity(new Vec2(-20.0f, 0.0f));
 					pacman2.getNode().setRotate(180);
 					break;
 				case D:// Down
-					((Body) pacman2.getNode().getUserData())
-					.setLinearVelocity(new Vec2(0.0f, -20.0f));
+					pacmanBody2.setLinearVelocity(new Vec2(0.0f, -20.0f));
 					pacman2.getNode().setRotate(90);
 					break;
 				case F:// Right
-					((Body) pacman2.getNode().getUserData())
-					.setLinearVelocity(new Vec2(20.0f, 0.0f));
+					pacmanBody2.setLinearVelocity(new Vec2(20.0f, 0.0f));
 					pacman2.getNode().setRotate(0);
 					break;
 				case E:// Up
-					((Body) pacman2.getNode().getUserData())
-					.setLinearVelocity(new Vec2(0.0f, 20.0f));
+					pacmanBody2.setLinearVelocity(new Vec2(0.0f, 20.0f));
 					pacman2.getNode().setRotate(270);
 					break;
 				default:
