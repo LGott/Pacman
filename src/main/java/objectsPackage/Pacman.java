@@ -42,7 +42,7 @@ public class Pacman extends Piece {
 		ps.setAsBox(width, height);
 
 		body = createBodyAndFixture(bodyType, ps);
-		// body.setUserData("PACMAN");
+		super.setUserData();
 
 		pacman.setUserData(body);
 		return pacman;
