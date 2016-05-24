@@ -53,7 +53,7 @@ public class MazeGui extends Application {
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
 
-		contactListener = new CollisionContactListener(rootGroup, pellets,
+		contactListener = new CollisionContactListener(pellets,
 				scorePanel);
 
 		Scene scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
