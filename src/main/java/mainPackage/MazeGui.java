@@ -1,5 +1,7 @@
 package mainPackage;
 
+import java.util.ArrayList;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -14,16 +16,13 @@ import javafx.util.Duration;
 import objectsPackage.BonusPellet;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
+import objectsPackage.Pellet;
 import objectsPackage.YellowPellet;
 import objectsPackage.Wall;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
-
-import org.jbox2d.dynamics.Body;
-import org.jbox2d.common.Vec2;
-import javafx.util.Duration;
 
 public class MazeGui extends Application {
 	private Group rootGroup;
@@ -41,7 +40,9 @@ public class MazeGui extends Application {
 
 	private int x = 0;
 	private CollisionContactListener contactListener;
-	private YellowPellet[] pellets = new YellowPellet[10];
+
+	private ArrayList<Pellet> pellets = new ArrayList<Pellet>();
+
 	private ScorePanel scorePanel = new ScorePanel();
 
 	@Override
@@ -115,14 +116,15 @@ public class MazeGui extends Application {
 				pacman2.resetLayoutX(xpos2);
 				pacman2.resetLayoutY(ypos2);
 				// move ghosts
+
 				for (Ghost g : ghosts) {
-					
+
 					Body body = (Body) g.getNode().getUserData();
 					float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
 					float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 					g.resetLayoutX(xpos);
 					g.resetLayoutY(ypos);
-					
+
 				}
 				// }else{
 				// System.out.println("Collision");}
@@ -193,16 +195,34 @@ public class MazeGui extends Application {
 
 	private void createPellets() {
 		for (int j = 0, i = 10; i < 100; j++, i += 10) {
-			pellets[j] = new YellowPellet(i, 15, world);
-			rootGroup.getChildren().add(pellets[j].getNode());
+
+			Pellet p = new YellowPellet(i, 15, world);
+			pellets.add(p);
+			rootGroup.getChildren().add(p.getNode());
+
 		}
 		// for each pellet created increment numPellets
 	}
 
+	private void moveGhosts() {
+		for (Ghost g : ghosts) {
+			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f,
+					20.0f));
+			if (contactListener.isColliding()) {
+				float xpos1 = Properties.jBoxToFxPosX(g.getPosX());
+				float ypos1 = Properties.jBoxToFxPosY(g.getPosY());
+				g.resetLayoutX(xpos1);
+				g.resetLayoutY(ypos1);
+
+			}
+		}
+	}
+
 	private void createBonusPellets() {
 		for (int i = 30; i < 100; i += 10) {
-			rootGroup.getChildren()
-					.add(new BonusPellet(15, i, world).getNode());
+			Pellet bp = new BonusPellet(15, i, world);
+			pellets.add(bp);
+			rootGroup.getChildren().add(bp.getNode());
 			// numPellets++;
 		}
 
@@ -212,10 +232,13 @@ public class MazeGui extends Application {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
 				switch (event.getCode()) {
+
 				// need another 4 directional keys for other player. which ones?
 				case SHIFT:
 					System.out.println("Shift");
+
 					timeline.playFromStart();
+					moveGhosts();
 					break;
 				case UP:
 					((Body) pacman1.getNode().getUserData())

@@ -3,6 +3,7 @@ package mainPackage;
 import java.util.ArrayList;
 
 import javafx.scene.Group;
+import objectsPackage.Pellet;
 import objectsPackage.YellowPellet;
 import objectsPackage.UniqueObject;
 
@@ -17,7 +18,8 @@ public class CollisionContactListener implements ContactListener {
 	private boolean colliding;
 	private Group rootGroup;
 	private ScorePanel scorePanel;
-	private YellowPellet[] pellets;
+
+	private ArrayList<Pellet> pellets;
 	private ArrayList<Fixture> fixturesToRemove;
 	private ArrayList<YellowPellet> pelletsToRemove;
 
@@ -25,11 +27,14 @@ public class CollisionContactListener implements ContactListener {
 		return colliding;
 	}
 
-	public CollisionContactListener(Group rootGroup, YellowPellet[] pellets,
+
+
+	public CollisionContactListener(Group rootGroup, ArrayList<Pellet> pellet,
 			ScorePanel scorePanel) {
+
 		colliding = false;
 		this.rootGroup = rootGroup;
-		this.pellets = pellets;
+		this.pellets = pellet;
 		this.scorePanel = scorePanel;
 		this.fixturesToRemove = new ArrayList<Fixture>();
 		this.pelletsToRemove = new ArrayList<YellowPellet>();
@@ -38,43 +43,59 @@ public class CollisionContactListener implements ContactListener {
 	public void beginContact(Contact contact) {
 		Fixture f1 = contact.getFixtureA();
 		Fixture f2 = contact.getFixtureB();
-		UniqueObject obj1= (UniqueObject)f1.getBody().getUserData();
-		UniqueObject obj2= (UniqueObject)f2.getBody().getUserData();
-		System.out.println("contacts "+ obj1.getDescription() +" and "+ obj2.getDescription());
-		if (obj1.getDescription() == "PACMAN"
-				&&obj2.getDescription() == "PELLET") {
+		UniqueObject obj1 = (UniqueObject) f1.getBody().getUserData();
+		UniqueObject obj2 = (UniqueObject) f2.getBody().getUserData();
+		System.out.println("contacts " + obj1.getDescription() + " and " + obj2.getDescription());
+		if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "PELLET") {
 			colliding = true;
 
-			fixturesToRemove.add(f2);
+			removePellet(f2, obj2);
 
-			 //remove the pellet
-			for(int i=0; i<pellets.length; i++){
-				if(pellets[i].getObjectDescription().getID() == obj2.getID()){
-					pelletsToRemove.add(pellets[i]);
-					break;
-				}
-			}
-			
 			scorePanel.incrementScore(10);
 			System.out.println("pacman-pellet");
-		} else if (obj1.getDescription()== "PACMAN"
-				&& obj2.getDescription() == "BONUS_PELLET") {
+		} else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "BONUS_PELLET") {
 			// remove the bonus pellet
 			colliding = true;
+
+			removePellet(f2, obj2);
+
 			scorePanel.incrementScore(50);
 
 			System.out.println("pacman-bonus pellet");
 		}
 
-		else if (obj1.getDescription() == "PACMAN"
-				&& obj2.getDescription() == "GHOST"
-				|| (f2.getBody().getUserData() == "GHOST" && f1.getBody()
-				.getUserData() == "GHOST")) {
+		else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST"
+				|| (f2.getBody().getUserData() == "GHOST" && f1.getBody().getUserData() == "GHOST")) {
+
+			colliding = true;
+			System.out.println("contacts " + obj1.getDescription() + " and " + obj2.getDescription());
+
+			float xpos = Properties.jBoxToFxPosX(f2.getBody().getPosition().x);
+			float ypos = Properties.jBoxToFxPosY(f2.getBody().getPosition().y);
+			f2.getBody().setAngularVelocity(xpos);
+			f2.getBody().setAngularVelocity(ypos);
+
+		}
+
+		else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "GHOST"
+				|| (f2.getBody().getUserData() == "GHOST" && f1.getBody().getUserData() == "GHOST")) {
 			// remove an extra pacman
 			System.out.println("here");
 			scorePanel.decrementLives();
 			colliding = true;
 			System.out.println("pacman-ghost");
+		}
+	}
+
+	private void removePellet(Fixture f2, UniqueObject obj2) {
+		fixturesToRemove.add(f2);
+
+		//remove the pellet
+		for(int i=0; i < pellets.size(); i++){
+			if(pellets.get(i).getObjectDescription().getID() == obj2.getID()){
+				pelletsToRemove.add((YellowPellet) pellets.get(i));
+				break;
+			}
 		}
 	}
 

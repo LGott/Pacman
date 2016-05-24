@@ -58,7 +58,7 @@ public abstract class Piece{
 		fixture = body.createFixture(fd);
 
 		return body;
-	} int getPosX() {
+	} public int getPosX() {
 		return posX;
 	}
 
