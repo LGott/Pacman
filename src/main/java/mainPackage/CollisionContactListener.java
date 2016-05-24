@@ -47,13 +47,14 @@ public class CollisionContactListener implements ContactListener {
 
 			fixturesToRemove.add(f2);
 
-			// remove the pellet
-//			for(int i=0; i<pellets.length; i++){
-//				if(pellets[i].getId() == b.getID()){
-//					pelletsToRemove.add(pellets[i]);
-//					break;
-//				}
-//			}
+			 //remove the pellet
+			for(int i=0; i<pellets.length; i++){
+				if(pellets[i].getObjectDescription().getID() == obj2.getID()){
+					pelletsToRemove.add(pellets[i]);
+					break;
+				}
+			}
+			
 			scorePanel.incrementScore(10);
 			System.out.println("pacman-pellet");
 		} else if (obj1.getDescription()== "PACMAN"
