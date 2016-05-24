@@ -7,6 +7,7 @@ import javafx.scene.shape.Circle;
 import mainPackage.Properties;
 
 import org.jbox2d.collision.shapes.CircleShape;
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
@@ -16,13 +17,14 @@ public class Pellet extends Piece {
 
 	private final int radius;
 	private final BodyType bodyType = BodyType.STATIC;
-	protected ObjectBody body;
+	
 	private Circle pellet;
 
-	public Pellet(int posX, int posY, World world, int radius) {
-		super(posX, posY, world);
+	public Pellet(int posX, int posY, World world, int radius, String description) {
+		super(posX, posY, world, description);
 		this.radius = radius;
 		node = create();
+		
 	}
 
 	private Node create() {
@@ -41,7 +43,8 @@ public class Pellet extends Piece {
 		cs.m_radius = radius * 0.1f; // We need to convert radius to JBox2D
 		// equivalent
 		body = createBodyAndFixture(bodyType, cs);
-		body.setUserData("PELLET");
+		//body.setUserData("PELLET");
+		super.setUserData();
 		pellet.setUserData(body);
 		return pellet;
 	}
@@ -49,6 +52,11 @@ public class Pellet extends Piece {
 	@Override
 	public Node getNode() {
 		return node;
+	}
+
+	public void setDescription(String string) {
+		// TODO Auto-generated method stub
+		super.setUserData(string);
 	}
 
 }

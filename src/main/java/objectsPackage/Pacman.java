@@ -19,7 +19,7 @@ public class Pacman extends Piece {
 	private final BodyType bodyType = BodyType.DYNAMIC;
 
 	public Pacman(int posX, int posY, World world) {
-		super(posX, posY, world);
+		super(posX, posY, world, "PACMAN");
 		node = create();
 	}
 
@@ -44,8 +44,9 @@ public class Pacman extends Piece {
 		cs.m_radius = radius * 0.1f; // We need to convert radius to JBox2D
 										// equivalent
 		
-		Body body = createBodyAndFixture(bodyType, cs);
-		body.setUserData("PACMAN");
+		body = createBodyAndFixture(bodyType, cs);
+	//	body.setUserData("PACMAN");
+		super.setUserData();
 		pacman.setUserData(body);
 		return pacman;
 	}

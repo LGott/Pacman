@@ -3,6 +3,7 @@ package objectsPackage;
 import javafx.scene.Node;
 
 import org.jbox2d.collision.shapes.Shape;
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
@@ -16,17 +17,26 @@ public abstract class Piece{
 	private Fixture fixture;
 	private static int lastID = 0;
 	private int id;
+	private UniqueObject objectDescription;
+	protected Body body;
 
-	public Piece(int posX, int posY, World world) {
+	public UniqueObject getObjectDescription() {
+		return objectDescription;
+	}
+
+	public Piece(int posX, int posY, World world, String description) {
 		this.posX = posX;
 		this.posY = posY;
 		this.world = world;
 		this.id = ++lastID;
+		objectDescription=new UniqueObject(this.id, description);
+		
+		
 	}
 
 	abstract Node getNode();
 
-	public ObjectBody createBodyAndFixture(BodyType bodyType, Shape shape) {
+	public Body createBodyAndFixture(BodyType bodyType, Shape shape) {
 
 		// Create an JBox2D body definition
 		BodyDef bd = new BodyDef();
@@ -43,7 +53,8 @@ public abstract class Piece{
 		fd.restitution = 0f;
 
 
-		ObjectBody body = new ObjectBody(bd, world, id);
+		Body body = new Body(bd, world);
+		body= world.createBody(bd);
 		fixture = body.createFixture(fd);
 
 		return body;
@@ -67,7 +78,13 @@ public abstract class Piece{
 		return fixture;
 	}
 
-	public int getId(){
-		return id;
+	public void setUserData() {
+		// TODO Auto-generated method stub
+		body.setUserData(objectDescription);
+	}
+
+	public void setUserData(String newDescription) {
+		// TODO Auto-generated method stub
+		objectDescription=new UniqueObject(this.id, newDescription);
 	}
 }

@@ -18,7 +18,7 @@ public class Ghost extends Piece {
 	private String image;
 
 	public Ghost(int posX, int posY, World world, String image) {
-		super(posX, posY, world);
+		super(posX, posY, world, "GHOST");
 		this.image = image;
 		node = create();
 	}
@@ -36,8 +36,9 @@ public class Ghost extends Piece {
 		PolygonShape ps = new PolygonShape();
 		ps.setAsBox(width * 0.1f, width * 0.1f);
 	
-		Body body = createBodyAndFixture(bodyType, ps);
-		body.setUserData("GHOST");
+		body = createBodyAndFixture(bodyType, ps);
+		//body.setUserData("GHOST");
+		super.setUserData();
 		ghost.setUserData(body);
 		return ghost;
 	}

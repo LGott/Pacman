@@ -3,8 +3,8 @@ package mainPackage;
 import java.util.ArrayList;
 
 import javafx.scene.Group;
-import objectsPackage.ObjectBody;
 import objectsPackage.Pellet;
+import objectsPackage.UniqueObject;
 
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
@@ -38,28 +38,26 @@ public class CollisionContactListener implements ContactListener {
 	public void beginContact(Contact contact) {
 		Fixture f1 = contact.getFixtureA();
 		Fixture f2 = contact.getFixtureB();
-		if (f1.getBody().getUserData() == "PACMAN"
-				&& f2.getBody().getUserData() == "PELLET") {
+		UniqueObject obj1= (UniqueObject)f1.getBody().getUserData();
+		UniqueObject obj2= (UniqueObject)f2.getBody().getUserData();
+		System.out.println("contacts "+ obj1.getDescription() +" and "+ obj2.getDescription());
+		if (obj1.getDescription() == "PACMAN"
+				&&obj2.getDescription() == "PELLET") {
 			colliding = true;
 
 			fixturesToRemove.add(f2);
 
 			// remove the pellet
-			ObjectBody b = (ObjectBody) f2.getBody();
-			for(int i=0; i<pellets.length; i++){
-				if(pellets[i].getId() == b.getID()){
-					pelletsToRemove.add(pellets[i]);
-					break;
-				}
-			}
-
-
-
-
+//			for(int i=0; i<pellets.length; i++){
+//				if(pellets[i].getId() == b.getID()){
+//					pelletsToRemove.add(pellets[i]);
+//					break;
+//				}
+//			}
 			scorePanel.incrementScore(10);
 			System.out.println("pacman-pellet");
-		} else if (f1.getBody().getUserData() == "PACMAN"
-				&& f2.getBody().getUserData() == "BONUS_PELLET") {
+		} else if (obj1.getDescription()== "PACMAN"
+				&& obj2.getDescription() == "BONUS_PELLET") {
 			// remove the bonus pellet
 			colliding = true;
 			scorePanel.incrementScore(50);
@@ -67,8 +65,8 @@ public class CollisionContactListener implements ContactListener {
 			System.out.println("pacman-bonus pellet");
 		}
 
-		else if (f1.getBody().getUserData() == "PACMAN"
-				&& f2.getBody().getUserData() == "GHOST"
+		else if (obj1.getDescription() == "PACMAN"
+				&& obj2.getDescription() == "GHOST"
 				|| (f2.getBody().getUserData() == "GHOST" && f1.getBody()
 				.getUserData() == "GHOST")) {
 			// remove an extra pacman

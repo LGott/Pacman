@@ -188,7 +188,7 @@ public class MazeGui extends Application {
 
 	private void createPellets() {
 		for (int j=0, i = 10; i < 100; j++, i += 10) {
-			pellets[j]= new Pellet(i, 15, world, 10);
+			pellets[j]= new Pellet(i, 15, world, 10, "PELLET");
 			rootGroup.getChildren().add(pellets[j].getNode());
 		}
 	}

@@ -16,9 +16,9 @@ public class Wall extends Piece {
 	private final int height;
 	private final int width;
 	private final BodyType bodyType = BodyType.STATIC;
-
+	
 	public Wall(int posX, int posY, World world, int height, int width) {
-		super(posX, posY, world);
+		super(posX, posY, world, "WALL");
 		this.height = height;
 		this.width = width;
 		node = create();
@@ -37,8 +37,9 @@ public class Wall extends Piece {
 		PolygonShape ps = new PolygonShape();
 		ps.setAsBox(width/2f, height/2f);
 
-		Body body = createBodyAndFixture(bodyType, ps);
+		body = createBodyAndFixture(bodyType, ps);
 		wall.setUserData(body);
+		super.setUserData();
 		return wall;
 	}
 
