@@ -52,8 +52,7 @@ public class MazeGui extends Application {
 		rootGroup = new Group();
 
 		contactListener = new CollisionContactListener(pellets, scorePanel);
-		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
-				Color.BLACK);
+		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
 		createShapes();
 		world.setContactListener(contactListener);
 		startSimulation();
@@ -176,8 +175,7 @@ public class MazeGui extends Application {
 	}
 
 	public void createWall(int posX, int posY, int width, int height) {
-		rootGroup.getChildren().add(
-				new Wall(posX, posY, world, width, height).getNode());
+		rootGroup.getChildren().add(new Wall(posX, posY, world, width, height).getNode());
 	}
 
 	public void createPacmans() {
@@ -188,7 +186,7 @@ public class MazeGui extends Application {
 	}
 
 	private Pacman createPacman(int x, int y) {
-		Pacman pacman = new Pacman(x, y, world);
+		Pacman pacman = new Pacman(x, y, world, "/pacman.png");
 		rootGroup.getChildren().add(pacman.getNode());
 		return pacman;
 	}
@@ -235,8 +233,7 @@ public class MazeGui extends Application {
 
 	private void moveGhosts() {
 		for (Ghost g : ghosts) {
-			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f,
-					20.0f));
+			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
 			if (contactListener.isColliding()) {
 				float xpos1 = Properties.jBoxToFxPosX(g.getPosX());
 				float ypos1 = Properties.jBoxToFxPosY(g.getPosY());
