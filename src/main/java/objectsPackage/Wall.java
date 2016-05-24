@@ -18,7 +18,7 @@ public class Wall extends Piece {
 	private final float width;
 	private final BodyType bodyType = BodyType.STATIC;
 
-	public Wall(int posX, int posY, World world, int height, int width) {
+	public Wall(int posX, int posY, World world, int width, int height) {
 		super(posX, posY, world, "WALL");
 
 		this.height = height;
