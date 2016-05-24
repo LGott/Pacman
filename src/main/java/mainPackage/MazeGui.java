@@ -170,6 +170,13 @@ public class MazeGui extends Application {
 	private void moveGhosts() {
 		for (Ghost g : ghosts) {
 			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
+			if(contactListener.isColliding()){
+				float xpos1 = Properties.jBoxToFxPosX(g.getPosX());
+				float ypos1 = Properties.jBoxToFxPosY(g.getPosY());
+			g.resetLayoutX(xpos1);
+				g.resetLayoutY(ypos1);
+			
+			}
 		}
 	}
 
