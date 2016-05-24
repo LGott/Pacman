@@ -32,7 +32,7 @@ public class Pacman extends Piece {
 		//can subtract 5 to add a 'border' around the pacman, so that there is less overlap between pacman and pieces
 		//pacman.setRadius(radius - 5);
 		
-		Image img = new Image("/pacman.png");
+		Image img = new Image(getClass().getResourceAsStream("/pacman.png"));
 		ImagePattern imagePattern = new ImagePattern(img);
 		pacman.setFill(imagePattern);
 
