@@ -64,11 +64,11 @@ public class MazeGui extends Application {
 		setStageProperties(stage);
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
-
+		setScorePanels();
 		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel1, scorePanel2, pacmanArray);
 		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
 
-		setScorePanels();
+	
 		pacmanLives = new ArrayList<Label>();
 		life = 0;
 		setPacmanLives();
@@ -106,8 +106,8 @@ public class MazeGui extends Application {
 		scoreLabel2.setTextFill(Color.YELLOW);
 		scoreValueLabel2 = new Label();
 		scoreValueLabel2.setTextFill(Color.YELLOW);
-		scoreValueLabel2.setTranslateX(60);
-		scoreValueLabel2.setTranslateY(25);
+		scoreValueLabel2.setTranslateX(75);
+		scoreValueLabel2.setTranslateY(45);
 
 		rootGroup.getChildren().add(scoreLabel);
 		rootGroup.getChildren().add(scoreValueLabel);
@@ -160,7 +160,7 @@ public class MazeGui extends Application {
 				world.step(1.0f / 60.f, 8, 3);
 				removeFixturesAndPellets();
 				scoreValueLabel.setText(String.valueOf(scorePanel1.getScore()));
-				scoreValueLabel.setText(String.valueOf(scorePanel2.getScore()));
+				scoreValueLabel2.setText(String.valueOf(scorePanel2.getScore()));
 				// Move pacmans to the new position computed by JBox2D
 				movePacman(pacman1);
 				movePacman(pacman2);
