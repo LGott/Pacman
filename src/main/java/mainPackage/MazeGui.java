@@ -205,20 +205,16 @@ public class MazeGui extends Application {
 		// WALLS
 		// top wall
 		createEdge(1, 72, 100, 1);
-		rootGroup.getChildren().add(
-				new Wall(0, 73, world, 100, 1, Color.BLUE).getNode());
+		createWall(0, 73, 100, 1);
 		// bottom wall
 		createEdge(0, 1, 100, 1);
-		rootGroup.getChildren().add(
-				new Wall(0, 5, world, 100, 1, Color.BLUE).getNode());
+		createWall(0, 5, 100, 1);
 		// right wall
 		createEdge(98, 100, 1, 100);
-		rootGroup.getChildren().add(
-				new Wall(98, 100, world, 1, 100, Color.BLUE).getNode());
+		createWall(98, 100, 1, 100);
 		// left wall
 		createEdge(1, 100, 1, 100);
-		rootGroup.getChildren().add(
-				new Wall(1, 100, world, 1, 100, Color.BLUE).getNode());
+		createWall(1, 100, 1, 100);
 	}
 
 	private void createEdge(int lowerX, int lowerY, int width, int height) {
