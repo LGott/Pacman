@@ -53,6 +53,7 @@ public class MazeGui extends Application {
 	private ArrayList<Label> pacmanLives;
 	private Label gameOverLabel;
 	private boolean gameOver;
+	private int life;
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -73,6 +74,7 @@ public class MazeGui extends Application {
 		scoreValueLabel.setTranslateY(25);
 
 		pacmanLives = new ArrayList<Label>();
+		life = 0;
 		setPacmanLives();
 		gameOverLabel = new Label("GAME OVER");
 		gameOverLabel.setFont(new Font(90));
@@ -140,10 +142,19 @@ public class MazeGui extends Application {
 				movePacman(pacman2);
 				// move ghosts
 				moveGhostsStep();
+
+				if (contactListener.isPacmanLost()) {
+
+					pacmanLives.get(life).setGraphic(null);
+				
+				}
+
+
 				if (scorePanel.isGameOver()) {
 					gameOverLabel.setVisible(true);
 					timeline.stop();
 				}
+				
 			}
 
 			private void moveGhostsStep() {
