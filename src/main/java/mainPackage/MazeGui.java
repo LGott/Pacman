@@ -106,7 +106,7 @@ public class MazeGui extends Application {
 		}
 		int value = 600;
 		for (Label pac : pacmanLives) {
-			Image image = new Image(getClass().getResourceAsStream("/pacman-opened.png"));
+			Image image = new Image(getClass().getResourceAsStream("/pacman.png"));
 			pac.setGraphic(new ImageView(image));
 			pac.setTranslateX(value);
 			pac.setTranslateY(25);
