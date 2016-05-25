@@ -1,39 +1,42 @@
 package objectsPackage;
 
-import mainPackage.Properties;
-
-import org.jbox2d.collision.shapes.CircleShape;
-import org.jbox2d.collision.shapes.PolygonShape;
-import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.BodyType;
-import org.jbox2d.dynamics.World;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import mainPackage.Properties;
+
+import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.World;
 
 public class Pacman extends Piece {
 	private Node node;
 	private final int width = 3; // square - same width and height
 	private final int height = 3;
 	private final BodyType bodyType = BodyType.DYNAMIC;
-	private String image;
+
+	private Image imageClose = new Image(getClass().getResourceAsStream("/pacman-closed.png"));
+	private Image imageOpen = new Image(getClass().getResourceAsStream("/pacman-opened.png"));
+	private Image[] images = new Image[] {imageClose, imageOpen};
+	private  int imgNum;
+	private boolean colliding = false;
+	private Image image;
 	private Vec2 lastDirection;
 	private Vec2 currDirection;
 	private Vec2 nextDirection;
 	private int lastDegree;
-	
-	public Pacman(int posX, int posY, World world, String image) {
+
+	public Pacman(int posX, int posY, World world) {
 		super(posX, posY, world, "PACMAN");
-		this.image = image;
 		node = create();
 	}
 
 	private Node create() {
-		Image img = new Image(image);
+		Image img = images[0];
 		ImagePattern imagePattern = new ImagePattern(img);
 
 		Rectangle pacman = new Rectangle((Properties.jBoxtoPixelWidth(width) * 2),
@@ -42,6 +45,7 @@ public class Pacman extends Piece {
 		pacman.setLayoutX(Properties.jBoxToFxPosX(getPosX()) - Properties.jBoxtoPixelWidth(width));
 		pacman.setLayoutY(Properties.jBoxToFxPosY(getPosY()) - Properties.jBoxtoPixelHeight(height));
 		pacman.setCache(true); // Cache this object for better performance
+
 
 		PolygonShape ps = new PolygonShape();
 		ps.setAsBox(width, height);
@@ -62,6 +66,7 @@ public class Pacman extends Piece {
 		node.setLayoutY(y - Properties.jBoxtoPixelWidth(height));
 	}
 
+	@Override
 	public Node getNode() {
 		return node;
 	}
@@ -69,23 +74,47 @@ public class Pacman extends Piece {
 	public void setDirection(Vec2 newDirection, int degree){
 		lastDirection = currDirection;
 		currDirection = newDirection;
-		
+
 		body.setLinearVelocity(currDirection);
 		node.setRotate(degree);
-		
+
 		//wait three seconds
 		lastDirection = currDirection;
 	}
-	
+
 	public void resetLocation(){
-	currDirection = lastDirection;
-	body.setLinearVelocity(currDirection);
-	node.setRotate(lastDegree);
+		currDirection = lastDirection;
+		body.setLinearVelocity(currDirection);
+		node.setRotate(lastDegree);
 	}
-	
-	public void setImage(String image) {
-		Image img = new Image(image);
+
+	public void setImage(Image image) {
+		Image img = image;
 		ImagePattern imagePattern = new ImagePattern(img);
 		((Shape) node).setFill(imagePattern);
+	}
+
+	public void animatePacman(double time){
+		double duration = 0.100;
+		int index = (int)((time % (images.length * duration)) / duration);
+		this.setImage(images[index]);
+		//		if(++imgNum == 3){
+		//			imgNum= 0;
+		//			this.setImage(images[imgNum]);
+		//		}else{
+		//			this.setImage(images[imgNum++]);
+		//		}
+	}
+
+
+	public void setOpenPacman(){
+		this.setImage(imageOpen);
+	}
+
+	public void setColliding(boolean col){
+		this.colliding = col;
+	}
+	public boolean isColliding(){
+		return colliding ;
 	}
 }

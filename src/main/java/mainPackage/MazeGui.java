@@ -17,8 +17,8 @@ import objectsPackage.BonusPellet;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
-import objectsPackage.YellowPellet;
 import objectsPackage.Wall;
+import objectsPackage.YellowPellet;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -43,6 +43,7 @@ public class MazeGui extends Application {
 	private ArrayList<Pellet> pellets = new ArrayList<Pellet>();
 
 	private ScorePanel scorePanel = new ScorePanel();
+	private ArrayList<Pacman> pacmanArray = new ArrayList<Pacman>();
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -51,8 +52,11 @@ public class MazeGui extends Application {
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
 
-		contactListener = new CollisionContactListener(pellets, scorePanel);
-		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
+		contactListener = new CollisionContactListener(rootGroup, pellets,
+				scorePanel, pacmanArray);
+		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
+				Color.BLACK);
+
 		createShapes();
 		world.setContactListener(contactListener);
 		startSimulation();
@@ -77,7 +81,10 @@ public class MazeGui extends Application {
 		// frame.
 
 		// Create an ActionEvent, on trigger it executes a world time step and
-		// moves the balls to new position
+		// moves the objects to new position
+
+		final long timeStart = System.currentTimeMillis();
+
 		EventHandler<ActionEvent> ae = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
 				world.step(1.0f / 60.f, 8, 3);
@@ -113,6 +120,7 @@ public class MazeGui extends Application {
 			}
 
 			private void movePacman(Pacman pacman) {
+				animatePacman(timeStart, pacman);
 				// TODO Auto-generated method stub
 				Body pacBody = (Body) pacman.getNode().getUserData();
 				float xpos = Properties.jBoxToFxPosX(pacBody.getPosition().x);
@@ -133,9 +141,21 @@ public class MazeGui extends Application {
 				}
 
 				// clear for next step
+				contactListener.getPacmanColliding().clear();
 				contactListener.getPelletsToRemove().clear();
 				contactListener.getFixturesToRemove().clear();
 
+			}
+
+			private void animatePacman(final long timeStart, Pacman pacman) {
+				if (contactListener.isCollidingWithWall()
+						&& pacman.isColliding()) {
+					pacman.setOpenPacman();
+					System.out.println("touching walls");
+				} else {
+					double time = (System.currentTimeMillis() - timeStart) / 1000.0;
+					pacman.animatePacman(time);
+				}
 			}
 		};
 
@@ -152,8 +172,8 @@ public class MazeGui extends Application {
 
 	private void createShapes() {
 		createWalls();
+		createGhosts();
 		createPacmans();
-		//createGhosts();
 		createPellets();
 		createBonusPellets(); // should createPellets call createBonusPellets?
 	}
@@ -175,18 +195,19 @@ public class MazeGui extends Application {
 	}
 
 	public void createWall(int posX, int posY, int width, int height) {
-		rootGroup.getChildren().add(new Wall(posX, posY, world, width, height).getNode());
+		rootGroup.getChildren().add(
+				new Wall(posX, posY, world, width, height).getNode());
 	}
 
 	public void createPacmans() {
-		pacman1 = createPacman(50, 80);
-		pacman2 = createPacman(50, 20);
+		pacmanArray.add(pacman1 = createPacman(50, 80));
+		pacmanArray.add(pacman2 = createPacman(50, 20));
 		pacmanBody1 = (Body) pacman1.getNode().getUserData();
 		pacmanBody2 = (Body) pacman2.getNode().getUserData();
 	}
 
 	private Pacman createPacman(int x, int y) {
-		Pacman pacman = new Pacman(x, y, world, "/pacman.png");
+		Pacman pacman = new Pacman(x, y, world);
 		rootGroup.getChildren().add(pacman.getNode());
 		return pacman;
 	}
@@ -233,7 +254,8 @@ public class MazeGui extends Application {
 
 	private void moveGhosts() {
 		for (Ghost g : ghosts) {
-			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
+			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f,
+					20.0f));
 			if (contactListener.isColliding()) {
 				float xpos1 = Properties.jBoxToFxPosX(g.getPosX());
 				float ypos1 = Properties.jBoxToFxPosY(g.getPosY());
