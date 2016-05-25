@@ -149,6 +149,7 @@ public class MazeGui extends Application {
 				float ypos = Properties.jBoxToFxPosY(pacBody.getPosition().y);
 				pacman.resetLayoutX(xpos);
 				pacman.resetLayoutY(ypos);
+				pacman.resetSpeed();
 			}
 
 			private void removeFixturesAndPellets() {
@@ -352,52 +353,33 @@ public class MazeGui extends Application {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
 				switch (event.getCode()) {
-
-				// need another 4 directional keys for other player. which ones?
 				case SHIFT:
-					System.out.println("Shift");
-
 					timeline.playFromStart();
 					moveGhosts();
 					break;
 				case UP:
-					pacmanBody1.setLinearVelocity(new Vec2(0.0f, 20.0f));
-					pacman1.getNode().setRotate(270);
+					pacman1.setDirection(new Vec2(0.0f, 20.0f), 270);
 					break;
 				case DOWN:
-
-					pacmanBody1.setLinearVelocity(new Vec2(0.0f, -20.0f));
-					pacman1.getNode().setRotate(90);
+					pacman1.setDirection(new Vec2(0.0f, -20.0f), 90);
 					break;
 				case LEFT:
-					pacmanBody1.setLinearVelocity(new Vec2(-20.0f, 0.0f));
-					pacman1.getNode().setRotate(180);
-					// want to redo the picture for this - so it doesn't have an
-					// eye?
-					// or you can change the image instead of rotation?
-					// pacman1.setImage("/pacmanLeft.png");
-					// but then you have to change images for all??
-
+					pacman1.setDirection(new Vec2(-20.0f, 0.0f), 180);
 					break;
 				case RIGHT:
-					pacmanBody1.setLinearVelocity(new Vec2(20.0f, 0.0f));
-					pacman1.getNode().setRotate(0);
+					pacman1.setDirection(new Vec2(20.0f, 0.0f), 0);
 					break;
 				case S:// LEFT
-					pacmanBody2.setLinearVelocity(new Vec2(-20.0f, 0.0f));
-					pacman2.getNode().setRotate(180);
+					pacman2.setDirection(new Vec2(-20.0f, 0.0f), 180);
 					break;
 				case D:// Down
-					pacmanBody2.setLinearVelocity(new Vec2(0.0f, -20.0f));
-					pacman2.getNode().setRotate(90);
+					pacman2.setDirection(new Vec2(0.0f, -20.0f), 90);
 					break;
 				case F:// Right
-					pacmanBody2.setLinearVelocity(new Vec2(20.0f, 0.0f));
-					pacman2.getNode().setRotate(0);
+					pacman2.setDirection(new Vec2(20.0f, 0.0f), 0);
 					break;
 				case E:// Up
-					pacmanBody2.setLinearVelocity(new Vec2(0.0f, 20.0f));
-					pacman2.getNode().setRotate(270);
+					pacman2.setDirection(new Vec2(0.0f, 20.0f), 270);
 					break;
 				default:
 					break;
