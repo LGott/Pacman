@@ -111,4 +111,7 @@ public class Pacman extends Piece {
 	public boolean isColliding() {
 		return colliding;
 	}
+	public String getName(){
+		return this.name;
+	}
 }

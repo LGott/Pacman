@@ -73,7 +73,7 @@ public class CollisionContactListener implements ContactListener {
 			colliding = true;
 
 			removePellet(f2, obj2);
-
+    		
 			scorePanel.incrementScore(50);
 
 			// System.out.println("pacman-bonus pellet");
