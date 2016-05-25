@@ -76,7 +76,7 @@ public class CollisionContactListener implements ContactListener {
 		else if (obj1.getDescription() == "WALL"
 				&& obj2.getDescription() == "GHOST"
 				|| (f2.getBody().getUserData() == "GHOST" && f1.getBody()
-				.getUserData() == "GHOST")) {
+						.getUserData() == "GHOST")) {
 
 			colliding = true;
 			System.out.println("contacts " + obj1.getDescription() + " and "
@@ -91,13 +91,13 @@ public class CollisionContactListener implements ContactListener {
 
 		else if (obj1.getDescription() == "PACMAN"
 				&& obj2.getDescription() == "GHOST"
-				|| (f2.getBody().getUserData() == "GHOST" && f1.getBody()
-				.getUserData() == "GHOST")) {
+				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "GHOST")
+				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "PACMAN")) {
 			// remove an extra pacman
 			// System.out.println("here");
 			scorePanel.decrementLives();
 
-			// System.out.println("pacman-ghost");
+			System.out.println("pacman-ghost            are colliding");
 		} else if (obj1.getDescription() == "WALL"
 				&& obj2.getDescription() == "PACMAN") {
 			collidingWithWall = true;

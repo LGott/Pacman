@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import objectsPackage.BonusPellet;
@@ -47,6 +48,8 @@ public class MazeGui extends Application {
 	private ArrayList<Pacman> pacmanArray = new ArrayList<Pacman>();
 	private Label scoreLabel;
 	private Label scoreValueLabel;
+	private Label gameOverLabel;
+	private boolean gameOver;
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -67,8 +70,16 @@ public class MazeGui extends Application {
 		scoreValueLabel.setTextFill(Color.YELLOW);
 		scoreValueLabel.setTranslateX(60);
 		scoreValueLabel.setTranslateY(25);
+		gameOverLabel = new Label("GAME OVER");
+		gameOverLabel.setFont(new Font(90));
+		gameOverLabel.setTranslateX(120);
+		gameOverLabel.setTranslateY(150);
+		gameOverLabel.setTextFill(Color.WHITE);
+		gameOverLabel.setVisible(false);
 		rootGroup.getChildren().add(scoreLabel);
 		rootGroup.getChildren().add(scoreValueLabel);
+		rootGroup.getChildren().add(gameOverLabel);
+		gameOver = false;
 		createShapes();
 		world.setContactListener(contactListener);
 		startSimulation();
@@ -101,7 +112,6 @@ public class MazeGui extends Application {
 			public void handle(ActionEvent t) {
 				world.step(1.0f / 60.f, 8, 3);
 				removeFixturesAndPellets();
-				System.out.println("Latest score" +scorePanel.getScore());
 				scoreValueLabel.setText(String.valueOf(scorePanel.getScore()));
 				// Move pacmans to the new position computed by JBox2D
 				movePacman(pacman1);
@@ -109,9 +119,8 @@ public class MazeGui extends Application {
 				// move ghosts
 				moveGhostsStep();
 				if (scorePanel.isGameOver()) {
-					System.out.println("Game over");
-					System.exit(0);
-
+					gameOverLabel.setVisible(true);
+					timeline.stop();
 				}
 			}
 

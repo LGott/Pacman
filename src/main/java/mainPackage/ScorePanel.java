@@ -25,10 +25,10 @@ public class ScorePanel {
 
 	public void incrementScore(int score) {
 		this.score += score;
-		System.out.println("score incremented"+ score);
 	}
 	public void decrementLives(){
 		lives--;
+		System.out.println("lives decremented");
 		System.out.println("decremented");
 		if(lives==0){
 			gameOver=true;
