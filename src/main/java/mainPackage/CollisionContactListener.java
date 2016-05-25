@@ -30,9 +30,10 @@ public class CollisionContactListener implements ContactListener {
 		return colliding;
 	}
 
-	public boolean isPacmanLost(){
+	public boolean isPacmanLost() {
 		return this.pacmanLost;
 	}
+
 	public CollisionContactListener(Group rootGroup, ArrayList<Pellet> pellet, ScorePanel scorePanel,
 			ArrayList<Pacman> pacmanArray) {
 
@@ -96,11 +97,9 @@ public class CollisionContactListener implements ContactListener {
 			// remove an extra pacman
 			// System.out.println("here");
 			scorePanel.decrementLives();
-         pacmanLost= true;
-			
-			
-			
+			pacmanLost = true;
 			System.out.println("pacman-ghost   are colliding");
+
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "PACMAN") {
 			collidingWithWall = true;
 			for (int i = 0; i < pacmanArray.size(); i++) {
@@ -113,6 +112,10 @@ public class CollisionContactListener implements ContactListener {
 			System.out.println("pacman-wall");
 		}
 
+	}
+
+	public void setPacmanLoss(boolean lost) {
+		pacmanLost = lost;
 	}
 
 	public ArrayList<Integer> getPacmanColliding() {

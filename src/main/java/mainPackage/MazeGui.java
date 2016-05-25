@@ -144,17 +144,18 @@ public class MazeGui extends Application {
 				moveGhostsStep();
 
 				if (contactListener.isPacmanLost()) {
-
+					contactListener.setPacmanLoss(false);
 					pacmanLives.get(life).setGraphic(null);
-				
+					if (life < 3) {
+						life++;
+					}
 				}
-
 
 				if (scorePanel.isGameOver()) {
 					gameOverLabel.setVisible(true);
 					timeline.stop();
 				}
-				
+
 			}
 
 			private void moveGhostsStep() {
