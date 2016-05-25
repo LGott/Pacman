@@ -104,14 +104,17 @@ public class MazeGui extends Application {
 		for (int i = 0; i < 3; i++) {
 			pacmanLives.add(new Label(""));
 		}
-		int value = 600;
+		int value = 630;
 		for (Label pac : pacmanLives) {
 			Image image = new Image(getClass().getResourceAsStream("/pacman.png"));
-			pac.setGraphic(new ImageView(image));
+			ImageView img = new ImageView(image);
+			img.setFitWidth(25);
+			img.setPreserveRatio(true);
+			pac.setGraphic(img);
 			pac.setTranslateX(value);
 			pac.setTranslateY(25);
 			rootGroup.getChildren().add(pac);
-			value -= 75;
+			value -= 45;
 		}
 	}
 
