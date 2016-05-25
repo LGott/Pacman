@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import objectsPackage.BonusPellet;
+import objectsPackage.Edge;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
@@ -200,79 +201,29 @@ public class MazeGui extends Application {
 		createBonusPellets(); // should createPellets call createBonusPellets?
 	}
 
-	/*
-	 * private void createWalls() { createWall(50, 60, 5, 10); createWall(50,
-	 * 60, 10, 5); createWall(25, 80, 5, 2); createWall(40, 80, 5, 2); // left
-	 * wall createWall(1, 100, 1, 100); // right wall createWall(99, 100, 1,
-	 * 100); // bottom wall createWall(0, 5, 100, 1); // top wall createWall(0,
-	 * 100, 100, 1);
-	 * 
-	 * }
-	 */
 	private void createWalls() {
-		// vertical center
-		// rootGroup.getChildren().add(new Wall(50, 52, world, 1,
-		// 48).getNode());
-		// horizontal center
-		// rootGroup.getChildren().add(new Wall(50, 50, world, 50,
-		// 1).getNode());
-
-		// south of center box // verticals
+		// WALLS
+		// top wall
+		createEdge(1, 72, 100, 1);
 		rootGroup.getChildren().add(
-				new Wall(50, 9, world, 1, 6, Color.ORANGE).getNode());
-		rootGroup.getChildren().add(
-				new Wall(30, 18, world, 1, 5, Color.ORANGE).getNode());
-		rootGroup.getChildren().add(
-				new Wall(10, 18, world, 1, 5, Color.ORANGE).getNode());
-		rootGroup.getChildren().add(
-				new Wall(50, 36, world, 1, 5, Color.ORANGE).getNode());
-		rootGroup.getChildren().add(
-				new Wall(89, 18, world, 1, 5, Color.ORANGE).getNode());
-
-		// south of center box //horizontal
-		rootGroup.getChildren().add(
-				new Wall(15, 23, world, 6, 1, Color.YELLOW).getNode());
-		rootGroup.getChildren().add(
-				new Wall(30, 14, world, 12, 1, Color.YELLOW).getNode());
-		rootGroup.getChildren().add(
-				new Wall(50, 23, world, 12, 1, Color.YELLOW).getNode());
-
-		rootGroup.getChildren().add(
-				new Wall(84, 23, world, 6, 1, Color.YELLOW).getNode());
-		rootGroup.getChildren().add(
-				new Wall(70, 14, world, 11, 1, Color.YELLOW).getNode());
-
-		// box
-		// center left vertical
-		rootGroup.getChildren().add(
-				new Wall(39, 54, world, 1, 4, Color.RED).getNode());
-		// center right vertical
-		rootGroup.getChildren().add(
-				new Wall(61, 54, world, 1, 4, Color.RED).getNode());
-		// center bottom horizontal
-		rootGroup.getChildren().add(
-				new Wall(50, 49, world, 12, 1, Color.RED).getNode());
-		// center top left horizontal
-		rootGroup.getChildren().add(
-				new Wall(42, 59, world, 4, 1, Color.RED).getNode());
-		// center top left horizontal
-		rootGroup.getChildren().add(
-				new Wall(58, 59, world, 4, 1, Color.RED).getNode());
-
-		// WALLS! DON'T TOUCH!
-		// left wall
-		rootGroup.getChildren().add(
-				new Wall(1, 100, world, 1, 100, Color.BLUE).getNode());
-		// right wall
-		rootGroup.getChildren().add(
-				new Wall(98, 100, world, 1, 100, Color.BLUE).getNode());
+				new Wall(0, 73, world, 100, 1, Color.BLUE).getNode());
 		// bottom wall
+		createEdge(0, 1, 100, 1);
 		rootGroup.getChildren().add(
 				new Wall(0, 5, world, 100, 1, Color.BLUE).getNode());
-		// top wall
+		// right wall
+		createEdge(98, 100, 1, 100);
 		rootGroup.getChildren().add(
-				new Wall(0, 100, world, 100, 1, Color.BLUE).getNode());
+				new Wall(98, 100, world, 1, 100, Color.BLUE).getNode());
+		// left wall
+		createEdge(1, 100, 1, 100);
+		rootGroup.getChildren().add(
+				new Wall(1, 100, world, 1, 100, Color.BLUE).getNode());
+	}
 
+	private void createEdge(int lowerX, int lowerY, int width, int height) {
+		new Edge(new Vec2(lowerX, lowerY), new Vec2(lowerX + width, lowerY
+				+ height), world);
 	}
 
 	public void createWall(int posX, int posY, int width, int height) {
