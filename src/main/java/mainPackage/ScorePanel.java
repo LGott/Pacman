@@ -25,6 +25,7 @@ public class ScorePanel {
 
 	public void incrementScore(int score) {
 		this.score += score;
+		System.out.println("score incremented"+ score);
 	}
 	public void decrementLives(){
 		lives--;
