@@ -17,6 +17,7 @@ public class CollisionContactListener implements ContactListener {
 
 	private boolean colliding;
 	private ScorePanel scorePanel;
+	private ScorePanel scorePanel2;
 	private ArrayList<Pellet> pellets;
 	private ArrayList<Fixture> fixturesToRemove;
 	private ArrayList<Pellet> pelletsToRemove;
@@ -34,12 +35,13 @@ public class CollisionContactListener implements ContactListener {
 		return this.pacmanLost;
 	}
 
-	public CollisionContactListener(Group rootGroup, ArrayList<Pellet> pellet, ScorePanel scorePanel,
+	public CollisionContactListener(Group rootGroup, ArrayList<Pellet> pellet, ScorePanel scorePanel, ScorePanel scorePanel2,
 			ArrayList<Pacman> pacmanArray) {
 
 		colliding = false;
 		this.pellets = pellet;
 		this.scorePanel = scorePanel;
+		this.scorePanel2 = scorePanel2;
 		this.fixturesToRemove = new ArrayList<Fixture>();
 		this.pelletsToRemove = new ArrayList<Pellet>();
 		this.pacmanArray = pacmanArray;
@@ -64,7 +66,6 @@ public class CollisionContactListener implements ContactListener {
 			colliding = true;
 
 			removePellet(f2, obj2);
-
 			scorePanel.incrementScore(10);
 			System.out.println("pacman-pellet");
 		} else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "BONUS_PELLET") {
@@ -96,6 +97,7 @@ public class CollisionContactListener implements ContactListener {
 				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "PACMAN")) {
 			// remove an extra pacman
 			// System.out.println("here");
+			
 			scorePanel.decrementLives();
 			pacmanLost = true;
 			System.out.println("pacman-ghost   are colliding");

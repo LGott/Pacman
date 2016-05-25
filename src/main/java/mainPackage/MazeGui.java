@@ -46,10 +46,13 @@ public class MazeGui extends Application {
 
 	private ArrayList<Pellet> pellets = new ArrayList<Pellet>();
 
-	private ScorePanel scorePanel = new ScorePanel();
+	private ScorePanel scorePanel1 = new ScorePanel();
+	private ScorePanel scorePanel2 = new ScorePanel();
 	private ArrayList<Pacman> pacmanArray = new ArrayList<Pacman>();
 	private Label scoreLabel;
 	private Label scoreValueLabel;
+	private Label scoreLabel2;
+	private Label scoreValueLabel2;
 	private ArrayList<Label> pacmanLives;
 	private Label gameOverLabel;
 	private boolean gameOver;
@@ -62,17 +65,10 @@ public class MazeGui extends Application {
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
 
-		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel, pacmanArray);
+		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel1, scorePanel2, pacmanArray);
 		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
-		scoreLabel = new Label("Score: ");
-		scoreLabel.setTranslateX(25);
-		scoreLabel.setTranslateY(25);
-		scoreLabel.setTextFill(Color.YELLOW);
-		scoreValueLabel = new Label();
-		scoreValueLabel.setTextFill(Color.YELLOW);
-		scoreValueLabel.setTranslateX(60);
-		scoreValueLabel.setTranslateY(25);
 
+		setScorePanels();
 		pacmanLives = new ArrayList<Label>();
 		life = 0;
 		setPacmanLives();
@@ -82,9 +78,9 @@ public class MazeGui extends Application {
 		gameOverLabel.setTranslateY(150);
 		gameOverLabel.setTextFill(Color.WHITE);
 		gameOverLabel.setVisible(false);
-		rootGroup.getChildren().add(scoreLabel);
-		rootGroup.getChildren().add(scoreValueLabel);
+
 		rootGroup.getChildren().add(gameOverLabel);
+
 		gameOver = false;
 		createShapes();
 		world.setContactListener(contactListener);
@@ -92,6 +88,33 @@ public class MazeGui extends Application {
 		addKeyListeners(scene);
 		stage.setScene(scene);
 		stage.show();
+	}
+
+	private void setScorePanels() {
+		scoreLabel = new Label("Score: ");
+		scoreLabel.setTranslateX(25);
+		scoreLabel.setTranslateY(25);
+		scoreLabel.setTextFill(Color.YELLOW);
+		scoreValueLabel = new Label();
+		scoreValueLabel.setTextFill(Color.YELLOW);
+		scoreValueLabel.setTranslateX(70);
+		scoreValueLabel.setTranslateY(25);
+
+		scoreLabel2 = new Label("Score: ");
+		scoreLabel2.setTranslateX(25);
+		scoreLabel2.setTranslateY(45);
+		scoreLabel2.setTextFill(Color.YELLOW);
+		scoreValueLabel2 = new Label();
+		scoreValueLabel2.setTextFill(Color.YELLOW);
+		scoreValueLabel2.setTranslateX(60);
+		scoreValueLabel2.setTranslateY(25);
+
+		rootGroup.getChildren().add(scoreLabel);
+		rootGroup.getChildren().add(scoreValueLabel);
+
+		rootGroup.getChildren().add(scoreLabel2);
+		rootGroup.getChildren().add(scoreValueLabel2);
+
 	}
 
 	private void setStageProperties(Stage stage) {
@@ -136,7 +159,8 @@ public class MazeGui extends Application {
 			public void handle(ActionEvent t) {
 				world.step(1.0f / 60.f, 8, 3);
 				removeFixturesAndPellets();
-				scoreValueLabel.setText(String.valueOf(scorePanel.getScore()));
+				scoreValueLabel.setText(String.valueOf(scorePanel1.getScore()));
+				scoreValueLabel.setText(String.valueOf(scorePanel2.getScore()));
 				// Move pacmans to the new position computed by JBox2D
 				movePacman(pacman1);
 				movePacman(pacman2);
@@ -151,7 +175,7 @@ public class MazeGui extends Application {
 					}
 				}
 
-				if (scorePanel.isGameOver()) {
+				if (scorePanel1.isGameOver()) {
 					gameOverLabel.setVisible(true);
 					timeline.stop();
 				}
