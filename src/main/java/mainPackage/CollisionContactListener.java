@@ -23,13 +23,19 @@ public class CollisionContactListener implements ContactListener {
 	private boolean collidingWithWall;
 	private ArrayList<Integer> pacmanColliding;
 	private ArrayList<Pacman> pacmanArray;
+	private Group group;
+	private boolean pacmanLost;
 
 	public boolean isColliding() {
 		return colliding;
 	}
 
-	public CollisionContactListener(Group rootGroup, ArrayList<Pellet> pellet,
-			ScorePanel scorePanel, ArrayList<Pacman> pacmanArray) {
+	public boolean isPacmanLost() {
+		return this.pacmanLost;
+	}
+
+	public CollisionContactListener(Group rootGroup, ArrayList<Pellet> pellet, ScorePanel scorePanel,
+			ArrayList<Pacman> pacmanArray) {
 
 		colliding = false;
 		this.pellets = pellet;
@@ -38,6 +44,8 @@ public class CollisionContactListener implements ContactListener {
 		this.pelletsToRemove = new ArrayList<Pellet>();
 		this.pacmanArray = pacmanArray;
 		this.pacmanColliding = new ArrayList<Integer>();
+		this.group = rootGroup;
+		this.pacmanLost = false;
 	}
 
 	public void beginContact(Contact contact) {
@@ -50,19 +58,16 @@ public class CollisionContactListener implements ContactListener {
 		// System.out.println("contacts " + obj1.getDescription() + " and " +
 		// obj2.getDescription());
 
-		if (obj1.getDescription() == "PACMAN"
-				&& obj2.getDescription() == "PELLET") {
+		if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "PELLET") {
 
-			System.out.println("contacts " + obj1.getDescription() + " and "
-					+ obj2.getDescription());
+			System.out.println("contacts " + obj1.getDescription() + " and " + obj2.getDescription());
 			colliding = true;
 
 			removePellet(f2, obj2);
 
 			scorePanel.incrementScore(10);
 			System.out.println("pacman-pellet");
-		} else if (obj1.getDescription() == "PACMAN"
-				&& obj2.getDescription() == "BONUS_PELLET") {
+		} else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "BONUS_PELLET") {
 			// remove the bonus pellet
 			colliding = true;
 
@@ -73,14 +78,11 @@ public class CollisionContactListener implements ContactListener {
 			// System.out.println("pacman-bonus pellet");
 		}
 
-		else if (obj1.getDescription() == "WALL"
-				&& obj2.getDescription() == "GHOST"
-				|| (f2.getBody().getUserData() == "GHOST" && f1.getBody()
-						.getUserData() == "GHOST")) {
+		else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST"
+				|| (f2.getBody().getUserData() == "GHOST" && f1.getBody().getUserData() == "GHOST")) {
 
 			colliding = true;
-			System.out.println("contacts " + obj1.getDescription() + " and "
-					+ obj2.getDescription());
+			System.out.println("contacts " + obj1.getDescription() + " and " + obj2.getDescription());
 
 			float xpos = Properties.jBoxToFxPosX(f2.getBody().getPosition().x);
 			float ypos = Properties.jBoxToFxPosY(f2.getBody().getPosition().y);
@@ -89,21 +91,19 @@ public class CollisionContactListener implements ContactListener {
 
 		}
 
-		else if (obj1.getDescription() == "PACMAN"
-				&& obj2.getDescription() == "GHOST"
+		else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "GHOST"
 				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "GHOST")
 				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "PACMAN")) {
 			// remove an extra pacman
 			// System.out.println("here");
 			scorePanel.decrementLives();
+			pacmanLost = true;
+			System.out.println("pacman-ghost   are colliding");
 
-			System.out.println("pacman-ghost            are colliding");
-		} else if (obj1.getDescription() == "WALL"
-				&& obj2.getDescription() == "PACMAN") {
+		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "PACMAN") {
 			collidingWithWall = true;
 			for (int i = 0; i < pacmanArray.size(); i++) {
-				if (pacmanArray.get(i).getObjectDescription().getID() == obj2
-						.getID()) {
+				if (pacmanArray.get(i).getObjectDescription().getID() == obj2.getID()) {
 					pacmanArray.get(i).setColliding(true);
 					break;
 				}
@@ -112,6 +112,10 @@ public class CollisionContactListener implements ContactListener {
 			System.out.println("pacman-wall");
 		}
 
+	}
+
+	public void setPacmanLoss(boolean lost) {
+		pacmanLost = lost;
 	}
 
 	public ArrayList<Integer> getPacmanColliding() {
@@ -139,13 +143,11 @@ public class CollisionContactListener implements ContactListener {
 		UniqueObject obj1 = (UniqueObject) f1.getBody().getUserData();
 		UniqueObject obj2 = (UniqueObject) f2.getBody().getUserData();
 
-		if (obj1.getDescription() == "WALL"
-				&& obj2.getDescription() == "PACMAN") {
+		if (obj1.getDescription() == "WALL" && obj2.getDescription() == "PACMAN") {
 
 			collidingWithWall = false;
 			for (int i = 0; i < pacmanArray.size(); i++) {
-				if (pacmanArray.get(i).getObjectDescription().getID() == obj2
-						.getID()) {
+				if (pacmanArray.get(i).getObjectDescription().getID() == obj2.getID()) {
 					pacmanArray.get(i).setColliding(false);
 					break;
 				}
