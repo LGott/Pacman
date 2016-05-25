@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import objectsPackage.BonusPellet;
+import objectsPackage.Edge;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
@@ -154,7 +155,7 @@ public class MazeGui extends Application {
 	private void createShapes() {
 		createWalls();
 		createPacmans();
-		createGhosts();
+		// createGhosts();
 		createPellets();
 		createBonusPellets(); // should createPellets call createBonusPellets?
 	}
@@ -185,6 +186,7 @@ public class MazeGui extends Application {
 				new Wall(10, 18, world, 1, 5, Color.ORANGE).getNode());
 		rootGroup.getChildren().add(
 				new Wall(50, 36, world, 1, 5, Color.ORANGE).getNode());
+		new Edge(new Vec2(90, 23), new Vec2(90, 14), world);
 		rootGroup.getChildren().add(
 				new Wall(89, 18, world, 1, 5, Color.ORANGE).getNode());
 
@@ -218,11 +220,17 @@ public class MazeGui extends Application {
 		rootGroup.getChildren().add(
 				new Wall(58, 59, world, 4, 1, Color.RED).getNode());
 
+		new Edge(new Vec2(97, 100), new Vec2(97, 0), world);
+		new Edge(new Vec2(91, 100), new Vec2(91, 0), world);
+
+		
+		
 		// WALLS! DON'T TOUCH!
 		// left wall
 		rootGroup.getChildren().add(
 				new Wall(1, 100, world, 1, 100, Color.BLUE).getNode());
 		// right wall
+		new Edge(new Vec2(98, 100), new Vec2(98, 0), world);
 		rootGroup.getChildren().add(
 				new Wall(98, 100, world, 1, 100, Color.BLUE).getNode());
 		// bottom wall
@@ -230,7 +238,7 @@ public class MazeGui extends Application {
 				new Wall(0, 5, world, 100, 1, Color.BLUE).getNode());
 		// top wall
 		rootGroup.getChildren().add(
-				new Wall(0, 100, world, 100, 1, Color.BLUE).getNode());
+				new Wall(0, 99, world, 100, 1, Color.BLUE).getNode());
 
 	}
 
@@ -241,8 +249,8 @@ public class MazeGui extends Application {
 	}
 
 	public void createPacmans() {
-		pacman1 = createPacman(50, 80);
-		pacman2 = createPacman(50, 20);
+		pacman1 = createPacman(94, 74);
+		pacman2 = createPacman(50, 18);
 		pacmanBody1 = (Body) pacman1.getNode().getUserData();
 		pacmanBody2 = (Body) pacman2.getNode().getUserData();
 	}
@@ -266,7 +274,7 @@ public class MazeGui extends Application {
 
 	private void createPellets() {
 		for (int i = 10; i < 100; i += 10) {
-			createYellowPellet(i, 15);
+			createYellowPellet(i, 18);
 		}
 	}
 
