@@ -52,10 +52,8 @@ public class MazeGui extends Application {
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
 
-		contactListener = new CollisionContactListener(rootGroup, pellets,
-				scorePanel, pacmanArray);
-		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
-				Color.BLACK);
+		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel, pacmanArray);
+		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
 
 		createShapes();
 		world.setContactListener(contactListener);
@@ -148,8 +146,7 @@ public class MazeGui extends Application {
 			}
 
 			private void animatePacman(final long timeStart, Pacman pacman) {
-				if (contactListener.isCollidingWithWall()
-						&& pacman.isColliding()) {
+				if (contactListener.isCollidingWithWall() && pacman.isColliding()) {
 					pacman.setOpenPacman();
 					System.out.println("touching walls");
 				} else {
@@ -178,25 +175,64 @@ public class MazeGui extends Application {
 		createBonusPellets(); // should createPellets call createBonusPellets?
 	}
 
+	/*
+	 * private void createWalls() { createWall(50, 60, 5, 10); createWall(50,
+	 * 60, 10, 5); createWall(25, 80, 5, 2); createWall(40, 80, 5, 2); // left
+	 * wall createWall(1, 100, 1, 100); // right wall createWall(99, 100, 1,
+	 * 100); // bottom wall createWall(0, 5, 100, 1); // top wall createWall(0,
+	 * 100, 100, 1);
+	 * 
+	 * }
+	 */
 	private void createWalls() {
-		createWall(50, 60, 5, 10);
-		createWall(50, 60, 10, 5);
-		createWall(25, 80, 5, 2);
-		createWall(40, 80, 5, 2);
+		// vertical center
+		// rootGroup.getChildren().add(new Wall(50, 52, world, 1,
+		// 48).getNode());
+		// horizontal center
+		// rootGroup.getChildren().add(new Wall(50, 50, world, 50,
+		// 1).getNode());
+
+		// south of center box // verticals
+		rootGroup.getChildren().add(new Wall(50, 9, world, 1, 6, Color.ORANGE).getNode());
+		rootGroup.getChildren().add(new Wall(30, 18, world, 1, 5, Color.ORANGE).getNode());
+		rootGroup.getChildren().add(new Wall(10, 18, world, 1, 5, Color.ORANGE).getNode());
+		rootGroup.getChildren().add(new Wall(50, 36, world, 1, 5, Color.ORANGE).getNode());
+		rootGroup.getChildren().add(new Wall(89, 18, world, 1, 5, Color.ORANGE).getNode());
+
+		// south of center box //horizontal
+		rootGroup.getChildren().add(new Wall(15, 23, world, 6, 1, Color.YELLOW).getNode());
+		rootGroup.getChildren().add(new Wall(30, 14, world, 12, 1, Color.YELLOW).getNode());
+		rootGroup.getChildren().add(new Wall(50, 23, world, 12, 1, Color.YELLOW).getNode());
+
+		rootGroup.getChildren().add(new Wall(84, 23, world, 6, 1, Color.YELLOW).getNode());
+		rootGroup.getChildren().add(new Wall(70, 14, world, 11, 1, Color.YELLOW).getNode());
+
+		// box
+		// center left vertical
+		rootGroup.getChildren().add(new Wall(39, 54, world, 1, 4, Color.RED).getNode());
+		// center right vertical
+		rootGroup.getChildren().add(new Wall(61, 54, world, 1, 4, Color.RED).getNode());
+		// center bottom horizontal
+		rootGroup.getChildren().add(new Wall(50, 49, world, 12, 1, Color.RED).getNode());
+		// center top left horizontal
+		rootGroup.getChildren().add(new Wall(42, 59, world, 4, 1, Color.RED).getNode());
+		// center top left horizontal
+		rootGroup.getChildren().add(new Wall(58, 59, world, 4, 1, Color.RED).getNode());
+
+		// WALLS! DON'T TOUCH!
 		// left wall
-		createWall(1, 100, 1, 100);
+		rootGroup.getChildren().add(new Wall(1, 100, world, 1, 100, Color.BLUE).getNode());
 		// right wall
-		createWall(99, 100, 1, 100);
+		rootGroup.getChildren().add(new Wall(98, 100, world, 1, 100, Color.BLUE).getNode());
 		// bottom wall
-		createWall(0, 5, 100, 1);
+		rootGroup.getChildren().add(new Wall(0, 5, world, 100, 1, Color.BLUE).getNode());
 		// top wall
-		createWall(0, 100, 100, 1);
+		rootGroup.getChildren().add(new Wall(0, 100, world, 100, 1, Color.BLUE).getNode());
 
 	}
 
 	public void createWall(int posX, int posY, int width, int height) {
-		rootGroup.getChildren().add(
-				new Wall(posX, posY, world, width, height).getNode());
+		rootGroup.getChildren().add(new Wall(posX, posY, world, width, height, Color.MAGENTA).getNode());
 	}
 
 	public void createPacmans() {
@@ -254,8 +290,7 @@ public class MazeGui extends Application {
 
 	private void moveGhosts() {
 		for (Ghost g : ghosts) {
-			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f,
-					20.0f));
+			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
 			if (contactListener.isColliding()) {
 				float xpos1 = Properties.jBoxToFxPosX(g.getPosX());
 				float ypos1 = Properties.jBoxToFxPosY(g.getPosY());
