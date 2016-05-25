@@ -68,7 +68,6 @@ public class MazeGui extends Application {
 		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel1, scorePanel2, pacmanArray);
 		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
 
-	
 		pacmanLives = new ArrayList<Label>();
 		life = 0;
 		setPacmanLives();
@@ -319,14 +318,14 @@ public class MazeGui extends Application {
 	}
 
 	public void createPacmans() {
-		pacmanArray.add(pacman1 = createPacman(50, 80));
-		pacmanArray.add(pacman2 = createPacman(50, 20));
+		pacmanArray.add(pacman1 = createPacman(50, 80, "pacman1"));
+		pacmanArray.add(pacman2 = createPacman(50, 20, "pacman2"));
 		pacmanBody1 = (Body) pacman1.getNode().getUserData();
 		pacmanBody2 = (Body) pacman2.getNode().getUserData();
 	}
 
-	private Pacman createPacman(int x, int y) {
-		Pacman pacman = new Pacman(x, y, world);
+	private Pacman createPacman(int x, int y, String name) {
+		Pacman pacman = new Pacman(x, y, world, name);
 		rootGroup.getChildren().add(pacman.getNode());
 		return pacman;
 	}

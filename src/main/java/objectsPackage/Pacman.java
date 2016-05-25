@@ -18,35 +18,32 @@ public class Pacman extends Piece {
 	private final int height = 3;
 	private final BodyType bodyType = BodyType.DYNAMIC;
 
-	private Image imageClose = new Image(getClass().getResourceAsStream(
-			"/pacman-closed.png"));
-	private Image imageOpen = new Image(getClass().getResourceAsStream(
-			"/pacman-opened.png"));
+	private Image imageClose = new Image(getClass().getResourceAsStream("/pacman-closed.png"));
+	private Image imageOpen = new Image(getClass().getResourceAsStream("/pacman-opened.png"));
 	private Image[] images = new Image[] { imageClose, imageOpen };
 	private int imgNum;
 	private boolean colliding = false;
 	private Image image;
-	//starts moving to the left
+	// starts moving to the left
 	private Vec2 currDirection = new Vec2(-20.0f, 0.0f);
 	private int currDegree = 180;
+	private String name;
 
-	public Pacman(int posX, int posY, World world) {
+	public Pacman(int posX, int posY, World world, String name) {
 		super(posX, posY, world, "PACMAN");
 		node = create();
+		this.name = name;
 	}
 
 	private Node create() {
 		Image img = images[0];
 		ImagePattern imagePattern = new ImagePattern(img);
 
-		Rectangle pacman = new Rectangle(
-				(Properties.jBoxtoPixelWidth(width) * 2),
+		Rectangle pacman = new Rectangle((Properties.jBoxtoPixelWidth(width) * 2),
 				(Properties.jBoxtoPixelHeight(height) * 2));
 		pacman.setFill(imagePattern);
-		pacman.setLayoutX(Properties.jBoxToFxPosX(getPosX())
-				- Properties.jBoxtoPixelWidth(width));
-		pacman.setLayoutY(Properties.jBoxToFxPosY(getPosY())
-				- Properties.jBoxtoPixelHeight(height));
+		pacman.setLayoutX(Properties.jBoxToFxPosX(getPosX()) - Properties.jBoxtoPixelWidth(width));
+		pacman.setLayoutY(Properties.jBoxToFxPosY(getPosY()) - Properties.jBoxtoPixelHeight(height));
 		pacman.setCache(true); // Cache this object for better performance
 
 		PolygonShape ps = new PolygonShape();
