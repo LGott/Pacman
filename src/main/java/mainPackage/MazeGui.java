@@ -62,8 +62,8 @@ public class MazeGui extends Application {
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
 		group = rootGroup.getChildren();
-		contactListener = new CollisionContactListener(rootGroup, pellets,
-				scorePanel, pacmanArray);
+		contactListener = new CollisionContactListener(pellets, scorePanel,
+				pacmanArray);
 		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
 				Color.BLACK);
 		scoreLabel = new Label("Score: ");

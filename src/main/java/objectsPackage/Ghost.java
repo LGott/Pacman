@@ -11,7 +11,6 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
-
 public class Ghost extends Piece {
 
 	private final int width = 3; // square - same width and height
@@ -63,14 +62,14 @@ public class Ghost extends Piece {
 	public void changeDirection() {
 		// TODO Auto-generated method stub
 		i++;
-		if(i%10==0){
+		if (i % 10 == 0) {
 			body.setLinearVelocity(new Vec2(-50.0f, 0.0f));
-		}else if(i%20==0){
+		} else if (i % 20 == 0) {
 			body.setLinearVelocity(new Vec2(50.0f, 0.0f));
-			
-		}else if(i%30==0){
+
+		} else if (i % 30 == 0) {
 			body.setLinearVelocity(new Vec2(0.0f, 50.0f));
-		}else if(i%40==0){
+		} else if (i % 40 == 0) {
 			body.setLinearVelocity(new Vec2(0.0f, -50.0f));
 		}
 	}
