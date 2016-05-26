@@ -25,7 +25,6 @@ import objectsPackage.Pacman;
 import objectsPackage.Pellet;
 import objectsPackage.Wall;
 import objectsPackage.YellowPellet;
-
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
@@ -53,7 +52,8 @@ public class MazeGui extends Application {
 	private ArrayList<Label> pacmanLives;
 	private Label gameOverLabel;
 	private int life;
-	private ObservableList<Node> group; 
+	private ObservableList<Node> group;
+	private final long timeStart = System.currentTimeMillis();
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -61,9 +61,11 @@ public class MazeGui extends Application {
 		setStageProperties(stage);
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
-		group= rootGroup.getChildren();
-		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel, pacmanArray);
-		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
+		group = rootGroup.getChildren();
+		contactListener = new CollisionContactListener(rootGroup, pellets,
+				scorePanel, pacmanArray);
+		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
+				Color.BLACK);
 		scoreLabel = new Label("Score: ");
 		scoreLabel.setTranslateX(25);
 		scoreLabel.setTranslateY(25);
@@ -107,7 +109,8 @@ public class MazeGui extends Application {
 		}
 		int value = 630;
 		for (Label pac : pacmanLives) {
-			Image image = new Image(getClass().getResourceAsStream("/pacman.png"));
+			Image image = new Image(getClass().getResourceAsStream(
+					"/pacman.png"));
 			ImageView img = new ImageView(image);
 			img.setFitWidth(25);
 			img.setPreserveRatio(true);
@@ -129,8 +132,6 @@ public class MazeGui extends Application {
 		// Create an ActionEvent, on trigger it executes a world time step and
 		// moves the objects to new position
 
-		final long timeStart = System.currentTimeMillis();
-
 		EventHandler<ActionEvent> ae = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
 				world.step(1.0f / 60.f, 8, 3);
@@ -140,75 +141,16 @@ public class MazeGui extends Application {
 				movePacman(pacman1);
 				movePacman(pacman2);
 				moveGhostsStep();
-
 				if (contactListener.isPacmanLost()) {
 					contactListener.setPacmanLoss(false);
 					pacmanLives.get(life).setGraphic(null);
 					if (life < 3) {
-						//life++;
+						// life++;
 					}
 				}
-
 				if (scorePanel.isGameOver()) {
 					gameOverLabel.setVisible(true);
 					timeline.stop();
-				}
-
-			}
-
-			private void moveGhostsStep() {
-				// TODO Auto-generated method stub
-				for (Ghost g : ghosts) {
-					moveAGhost(g);
-
-				}
-			}
-
-			private void moveAGhost(Ghost g) {
-				// TODO Auto-generated method stub
-				Body body = (Body) g.getNode().getUserData();
-				float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
-				float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
-				g.resetLayoutX(xpos);
-				g.resetLayoutY(ypos);
-			}
-
-			private void movePacman(Pacman pacman) {
-				animatePacman(timeStart, pacman);
-				// TODO Auto-generated method stub
-				Body pacBody = (Body) pacman.getNode().getUserData();
-				float xpos = Properties.jBoxToFxPosX(pacBody.getPosition().x);
-				float ypos = Properties.jBoxToFxPosY(pacBody.getPosition().y);
-				pacman.resetLayoutX(xpos);
-				pacman.resetLayoutY(ypos);
-				pacman.resetSpeed();
-			}
-
-			private void removeFixturesAndPellets() {
-				// TODO Auto-generated method stub
-				for (Fixture b : contactListener.getFixturesToRemove()) {
-					world.destroyBody(b.getBody());
-					// rootGroup.getChildren().remove(b);
-				}
-
-				for (Pellet p : contactListener.getPelletsToRemove()) {
-					group.remove(p.getNode());
-				}
-
-				// clear for next step
-				contactListener.getPacmanColliding().clear();
-				contactListener.getPelletsToRemove().clear();
-				contactListener.getFixturesToRemove().clear();
-
-			}
-
-			private void animatePacman(final long timeStart, Pacman pacman) {
-				if (contactListener.isCollidingWithWall() && pacman.isColliding()) {
-					pacman.setOpenPacman();
-					System.out.println("touching walls");
-				} else {
-					double time = (System.currentTimeMillis() - timeStart) / 1000.0;
-					pacman.animatePacman(time);
 				}
 			}
 		};
@@ -222,6 +164,63 @@ public class MazeGui extends Application {
 		timeline.getKeyFrames().add(frame);
 
 		// TODO Auto-generated method stub
+	}
+
+	private void moveGhostsStep() {
+		// TODO Auto-generated method stub
+		for (Ghost g : ghosts) {
+			moveAGhost(g);
+
+		}
+	}
+
+	private void moveAGhost(Ghost g) {
+		// TODO Auto-generated method stub
+		Body body = (Body) g.getNode().getUserData();
+		body.setLinearVelocity(new Vec2(-20.0f, 0.0f));
+		g.changeDirection();
+		float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
+		float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
+		g.resetLayoutX(xpos);
+		g.resetLayoutY(ypos);
+	}
+
+	private void movePacman(Pacman pacman) {
+		animatePacman(timeStart, pacman);
+		// TODO Auto-generated method stub
+		Body pacBody = (Body) pacman.getNode().getUserData();
+		float xpos = Properties.jBoxToFxPosX(pacBody.getPosition().x);
+		float ypos = Properties.jBoxToFxPosY(pacBody.getPosition().y);
+		pacman.resetLayoutX(xpos);
+		pacman.resetLayoutY(ypos);
+		pacman.resetSpeed();
+	}
+
+	private void removeFixturesAndPellets() {
+		// TODO Auto-generated method stub
+		for (Fixture b : contactListener.getFixturesToRemove()) {
+			world.destroyBody(b.getBody());
+			// rootGroup.getChildren().remove(b);
+		}
+
+		for (Pellet p : contactListener.getPelletsToRemove()) {
+			group.remove(p.getNode());
+		}
+
+		// clear for next step
+		contactListener.getPacmanColliding().clear();
+		contactListener.getPelletsToRemove().clear();
+		contactListener.getFixturesToRemove().clear();
+
+	}
+
+	private void animatePacman(final long timeStart, Pacman pacman) {
+		if (contactListener.isCollidingWithWall() && pacman.isColliding()) {
+			pacman.setOpenPacman();
+		} else {
+			double time = (System.currentTimeMillis() - timeStart) / 1000.0;
+			pacman.animatePacman(time);
+		}
 	}
 
 	private void createShapes() {
@@ -281,7 +280,8 @@ public class MazeGui extends Application {
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
-		group.add(new Wall(posX, posY, world, width, height, Color.MAGENTA).getNode());
+		group.add(new Wall(posX, posY, world, width, height, Color.MAGENTA)
+				.getNode());
 	}
 
 	private void createPacmans() {
@@ -335,50 +335,37 @@ public class MazeGui extends Application {
 		group.add(p.getNode());
 	}
 
-	private void moveGhosts() {
-		for (Ghost g : ghosts) {
-			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
-			if (contactListener.isColliding()) {
-				float xpos1 = Properties.jBoxToFxPosX(g.getPosX());
-				float ypos1 = Properties.jBoxToFxPosY(g.getPosY());
-				g.resetLayoutX(xpos1);
-				g.resetLayoutY(ypos1);
-
-			}
-		}
-	}
-
 	private void addKeyListeners(Scene scene) {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
 				switch (event.getCode()) {
 				case SHIFT:
 					timeline.playFromStart();
-					moveGhosts();
+					moveGhostsStep();
 					break;
 				case UP:
-					pacman1.setDirection(new Vec2(0.0f, 20.0f), 270);
+					pacman1.setDirection(0.0f, 20.0f, 270);
 					break;
 				case DOWN:
-					pacman1.setDirection(new Vec2(0.0f, -20.0f), 90);
+					pacman1.setDirection(0.0f, -20.0f, 90);
 					break;
 				case LEFT:
-					pacman1.setDirection(new Vec2(-20.0f, 0.0f), 180);
+					pacman1.setDirection(-20.0f, 0.0f, 180);
 					break;
 				case RIGHT:
-					pacman1.setDirection(new Vec2(20.0f, 0.0f), 0);
+					pacman1.setDirection(20.0f, 0.0f, 0);
 					break;
 				case S:// LEFT
-					pacman2.setDirection(new Vec2(-20.0f, 0.0f), 180);
+					pacman2.setDirection(-20.0f, 0.0f, 180);
 					break;
 				case D:// Down
-					pacman2.setDirection(new Vec2(0.0f, -20.0f), 90);
+					pacman2.setDirection(0.0f, -20.0f, 90);
 					break;
 				case F:// Right
-					pacman2.setDirection(new Vec2(20.0f, 0.0f), 0);
+					pacman2.setDirection(20.0f, 0.0f, 0);
 					break;
 				case E:// Up
-					pacman2.setDirection(new Vec2(0.0f, 20.0f), 270);
+					pacman2.setDirection(0.0f, 20.0f, 270);
 					break;
 				default:
 					break;

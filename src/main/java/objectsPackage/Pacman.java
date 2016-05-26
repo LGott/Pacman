@@ -73,7 +73,8 @@ public class Pacman extends Piece {
 		return node;
 	}
 
-	public void setDirection(Vec2 newDirection, int degree) {
+	public void setDirection(float horizontal, float vertical, int degree) {
+		Vec2 newDirection= new Vec2(horizontal, vertical);
 		currDirection = newDirection;
 		currDegree = degree;
 		body.setLinearVelocity(currDirection);
