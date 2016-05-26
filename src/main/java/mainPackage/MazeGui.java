@@ -235,7 +235,7 @@ public class MazeGui extends Application {
 	}
 
 	private void createWalls() {
-		// wall (x,y) = 1/2 edge (x,y)
+		// wall (x,y) = 1/2 from edge (x,y)
 		// WALLS
 		// top wall
 		createWall(0, 85, 100, 1);
@@ -254,12 +254,35 @@ public class MazeGui extends Application {
 		createWall(25, 36, 3, 10);
 
 		// north
-		createWall(34, 61, 6, 3);
+		createWall(34, 60, 6, 3);
+		createWall(67, 60, 6, 3);
 		createWall(50, 65, 3, 8);
 		createWall(50, 74, 15, 3);
+
+		// south
+		createWall(50, 29, 15, 3);
+		createWall(43, 23, 3, 3);
+		createWall(57, 23, 3, 3);
+		createWall(37, 9, 3, 3);
+		createWall(50, 9, 3, 3);
+		createWall(63, 9, 3, 3);
+
+		// east
+		createWall(81, 74, 8, 3);
+		createWall(81, 47, 8, 3);
+		createWall(81, 16, 8, 3);
+		createWall(92, 60, 5, 3);
+		createWall(92, 31, 5, 5);
+
+		createWall(76, 67, 3, 10);
+		createWall(76, 38, 3, 12);
+
+		// center
+		createWall(50, 49, 9, 1);
+		createWall(50, 40, 9, 1);
 	}
 
-	public void createWall(int posX, int posY, int width, int height) {
+	private void createWall(int posX, int posY, int width, int height) {
 		rootGroup.getChildren().add(new Wall(posX, posY, world, width, height, Color.MAGENTA).getNode());
 	}
 
@@ -278,7 +301,7 @@ public class MazeGui extends Application {
 
 	private void createGhosts() {
 		ghosts[0] = new Ghost(30, 30, world, "/blueGhost.png");
-		ghosts[1] = new Ghost(10, 10, world, "/pinkGhost.png");
+		ghosts[1] = new Ghost(50, 45, world, "/pinkGhost.png");
 		ghosts[2] = new Ghost(80, 80, world, "/orangeGhost.png");
 		ghosts[3] = new Ghost(70, 70, world, "/redGhost.png");
 
