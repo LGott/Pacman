@@ -257,10 +257,27 @@ public class MazeGui extends Application {
 		createWall(34, 61, 6, 3);
 		createWall(50, 65, 3, 8);
 		createWall(50, 74, 15, 3);
+
+		// south
+		createWall(50, 29, 15, 3);
+		createWall(37, 9, 3, 3, Color.BROWN);
+		createWall(50, 11, 3, 5, Color.IVORY);
+		createWall(63, 9, 3, 3, Color.WHEAT);
+
+		createWall(38, 23, 3, 3, Color.BROWN);
+		createWall(62, 23, 3, 3, Color.IVORY);
+
+		// MIDDLE?
+		createWall(44, 43, 6, 6, Color.LIGHTCORAL);
+		createWall(56, 43, 6, 6, Color.CORNSILK);
 	}
 
 	public void createWall(int posX, int posY, int width, int height) {
 		rootGroup.getChildren().add(new Wall(posX, posY, world, width, height, Color.MAGENTA).getNode());
+	}
+
+	public void createWall(int posX, int posY, int width, int height, Color c) {
+		rootGroup.getChildren().add(new Wall(posX, posY, world, width, height, c).getNode());
 	}
 
 	private void createPacmans() {
