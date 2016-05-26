@@ -18,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import objectsPackage.BonusPellet;
+import objectsPackage.Edge;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
@@ -140,7 +141,6 @@ public class MazeGui extends Application {
 				// Move pacmans to the new position computed by JBox2D
 				movePacman(pacman1);
 				movePacman(pacman2);
-				// move ghosts
 				moveGhostsStep();
 
 				if (contactListener.isPacmanLost()) {
@@ -231,70 +231,39 @@ public class MazeGui extends Application {
 		createGhosts();
 		createPacmans();
 		createPellets();
-		createBonusPellets(); // should createPellets call createBonusPellets?
+		createBonusPellets();
 	}
 
-	/*
-	 * private void createWalls() { createWall(50, 60, 5, 10); createWall(50,
-	 * 60, 10, 5); createWall(25, 80, 5, 2); createWall(40, 80, 5, 2); // left
-	 * wall createWall(1, 100, 1, 100); // right wall createWall(99, 100, 1,
-	 * 100); // bottom wall createWall(0, 5, 100, 1); // top wall createWall(0,
-	 * 100, 100, 1);
-	 * 
-	 * }
-	 */
 	private void createWalls() {
-		// vertical center
-		// rootGroup.getChildren().add(new Wall(50, 52, world, 1,
-		// 48).getNode());
-		// horizontal center
-		// rootGroup.getChildren().add(new Wall(50, 50, world, 50,
-		// 1).getNode());
-
-		// south of center box // verticals
-		rootGroup.getChildren().add(new Wall(50, 9, world, 1, 6, Color.ORANGE).getNode());
-		rootGroup.getChildren().add(new Wall(30, 18, world, 1, 5, Color.ORANGE).getNode());
-		rootGroup.getChildren().add(new Wall(10, 18, world, 1, 5, Color.ORANGE).getNode());
-		rootGroup.getChildren().add(new Wall(50, 36, world, 1, 5, Color.ORANGE).getNode());
-		rootGroup.getChildren().add(new Wall(89, 18, world, 1, 5, Color.ORANGE).getNode());
-
-		// south of center box //horizontal
-		rootGroup.getChildren().add(new Wall(15, 23, world, 6, 1, Color.YELLOW).getNode());
-		rootGroup.getChildren().add(new Wall(30, 14, world, 12, 1, Color.YELLOW).getNode());
-		rootGroup.getChildren().add(new Wall(50, 23, world, 12, 1, Color.YELLOW).getNode());
-
-		rootGroup.getChildren().add(new Wall(84, 23, world, 6, 1, Color.YELLOW).getNode());
-		rootGroup.getChildren().add(new Wall(70, 14, world, 11, 1, Color.YELLOW).getNode());
-
-		// box
-		// center left vertical
-		rootGroup.getChildren().add(new Wall(39, 54, world, 1, 4, Color.RED).getNode());
-		// center right vertical
-		rootGroup.getChildren().add(new Wall(61, 54, world, 1, 4, Color.RED).getNode());
-		// center bottom horizontal
-		rootGroup.getChildren().add(new Wall(50, 49, world, 12, 1, Color.RED).getNode());
-		// center top left horizontal
-		rootGroup.getChildren().add(new Wall(42, 59, world, 4, 1, Color.RED).getNode());
-		// center top left horizontal
-		rootGroup.getChildren().add(new Wall(58, 59, world, 4, 1, Color.RED).getNode());
-
-		// WALLS! DON'T TOUCH!
-		// left wall
-		rootGroup.getChildren().add(new Wall(1, 100, world, 1, 100, Color.BLUE).getNode());
-		// right wall
-		rootGroup.getChildren().add(new Wall(98, 100, world, 1, 100, Color.BLUE).getNode());
-		// bottom wall
-		rootGroup.getChildren().add(new Wall(0, 5, world, 100, 1, Color.BLUE).getNode());
+		// wall (x,y) = 1/2 edge (x,y)
+		// WALLS
 		// top wall
-		rootGroup.getChildren().add(new Wall(0, 100, world, 100, 1, Color.BLUE).getNode());
+		createWall(0, 85, 100, 1);
+		// bottom wall
+		createWall(0, 5, 100, 1);
+		// right wall
+		createWall(99, 37, 2, 100);
+		// left wall
+		createWall(0, 50, 2, 100);
 
+		// west
+		createWall(18, 16, 9, 3);
+		createWall(12, 69, 3, 8);
+		createWall(12, 40, 3, 14);
+		createWall(25, 65, 3, 12);
+		createWall(25, 36, 3, 10);
+
+		// north
+		createWall(34, 61, 6, 3);
+		createWall(50, 65, 3, 8);
+		createWall(50, 74, 15, 3);
 	}
 
 	public void createWall(int posX, int posY, int width, int height) {
 		rootGroup.getChildren().add(new Wall(posX, posY, world, width, height, Color.MAGENTA).getNode());
 	}
 
-	public void createPacmans() {
+	private void createPacmans() {
 		pacmanArray.add(pacman1 = createPacman(50, 80));
 		pacmanArray.add(pacman2 = createPacman(50, 20));
 		pacmanBody1 = (Body) pacman1.getNode().getUserData();
@@ -320,7 +289,7 @@ public class MazeGui extends Application {
 
 	private void createPellets() {
 		for (int i = 10; i < 100; i += 10) {
-			createYellowPellet(i, 15);
+			createYellowPellet(i, 9);
 		}
 	}
 
@@ -331,7 +300,7 @@ public class MazeGui extends Application {
 
 	private void createBonusPellets() {
 		for (int i = 30; i < 100; i += 10) {
-			createBonusPellet(15, i);
+			createBonusPellet(5, i);
 		}
 
 	}
