@@ -126,7 +126,7 @@ public class MazeGui extends Application {
 		stage.setResizable(false);
 	}
 
-	//Display the pacman labels in the correct position
+	// Display the pacman labels in the correct position
 	private void setPacmanLives() {
 		int x = 630;
 		int y = 25;
@@ -146,7 +146,8 @@ public class MazeGui extends Application {
 			x += 45;
 		}
 	}
-//Set the attributes 
+
+	// Set the attributes
 	private void pacLives(Label pac, int x, int y) {
 
 		Image image = new Image(getClass().getResourceAsStream("/pacman.png"));
@@ -195,6 +196,7 @@ public class MazeGui extends Application {
 				}
 
 				if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
+					gameOver = true;
 					gameOverLabel.setVisible(true);
 					timeline.stop();
 				}
