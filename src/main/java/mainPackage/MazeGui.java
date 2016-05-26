@@ -45,12 +45,17 @@ public class MazeGui extends Application {
 
 	private ArrayList<Pellet> pellets = new ArrayList<Pellet>();
 
-	private ScorePanel scorePanel = new ScorePanel();
+	private ScorePanel scorePanel1 = new ScorePanel();
+	private ScorePanel scorePanel2 = new ScorePanel();
 	private ArrayList<Pacman> pacmanArray = new ArrayList<Pacman>();
 	private Label scoreLabel;
 	private Label scoreValueLabel;
-	private ArrayList<Label> pacmanLives;
+	private Label scoreLabel2;
+	private Label scoreValueLabel2;
+	private ArrayList<Label> pacmanLives1;
+	private ArrayList<Label> pacmanLives2;
 	private Label gameOverLabel;
+	private boolean gameOver;
 	private int life;
 	private ObservableList<Node> group;
 	private final long timeStart = System.currentTimeMillis();
@@ -60,22 +65,15 @@ public class MazeGui extends Application {
 		// TODO Auto-generated method stub
 		setStageProperties(stage);
 		// Create a group for holding all objects on the screen.
+	
 		rootGroup = new Group();
+		setScorePanels();
 		group = rootGroup.getChildren();
-		contactListener = new CollisionContactListener(pellets, scorePanel,
-				pacmanArray);
-		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
-				Color.BLACK);
-		scoreLabel = new Label("Score: ");
-		scoreLabel.setTranslateX(25);
-		scoreLabel.setTranslateY(25);
-		scoreLabel.setTextFill(Color.YELLOW);
-		scoreValueLabel = new Label();
-		scoreValueLabel.setTextFill(Color.YELLOW);
-		scoreValueLabel.setTranslateX(60);
-		scoreValueLabel.setTranslateY(25);
+		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel1, scorePanel2, pacmanArray);
+		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
 
-		pacmanLives = new ArrayList<Label>();
+		pacmanLives1 = new ArrayList<Label>();
+		pacmanLives2 = new ArrayList<Label>();
 		life = 0;
 		setPacmanLives();
 		gameOverLabel = new Label("GAME OVER");
@@ -84,15 +82,42 @@ public class MazeGui extends Application {
 		gameOverLabel.setTranslateY(150);
 		gameOverLabel.setTextFill(Color.WHITE);
 		gameOverLabel.setVisible(false);
-		group.add(scoreLabel);
-		group.add(scoreValueLabel);
-		group.add(gameOverLabel);
+
+		rootGroup.getChildren().add(gameOverLabel);
+		gameOver = false;
 		createShapes();
 		world.setContactListener(contactListener);
 		startSimulation();
 		addKeyListeners(scene);
 		stage.setScene(scene);
 		stage.show();
+	}
+
+	private void setScorePanels() {
+		scoreLabel = new Label("Score: ");
+		scoreLabel.setTranslateX(25);
+		scoreLabel.setTranslateY(25);
+		scoreLabel.setTextFill(Color.YELLOW);
+		scoreValueLabel = new Label();
+		scoreValueLabel.setTextFill(Color.YELLOW);
+		scoreValueLabel.setTranslateX(70);
+		scoreValueLabel.setTranslateY(25);
+
+		scoreLabel2 = new Label("Score: ");
+		scoreLabel2.setTranslateX(25);
+		scoreLabel2.setTranslateY(45);
+		scoreLabel2.setTextFill(Color.YELLOW);
+		scoreValueLabel2 = new Label();
+		scoreValueLabel2.setTextFill(Color.YELLOW);
+		scoreValueLabel2.setTranslateX(75);
+		scoreValueLabel2.setTranslateY(45);
+
+		rootGroup.getChildren().add(scoreLabel);
+		rootGroup.getChildren().add(scoreValueLabel);
+
+		rootGroup.getChildren().add(scoreLabel2);
+		rootGroup.getChildren().add(scoreValueLabel2);
+
 	}
 
 	private void setStageProperties(Stage stage) {
@@ -103,23 +128,39 @@ public class MazeGui extends Application {
 		stage.setResizable(false);
 	}
 
+	// Display the pacman labels in the correct position
 	private void setPacmanLives() {
+		int x = 630;
+		int y = 25;
+
 		for (int i = 0; i < 3; i++) {
-			pacmanLives.add(new Label(""));
+			pacmanLives1.add(new Label(""));
+			pacmanLives2.add(new Label(""));
 		}
-		int value = 630;
-		for (Label pac : pacmanLives) {
-			Image image = new Image(getClass().getResourceAsStream(
-					"/pacman.png"));
-			ImageView img = new ImageView(image);
-			img.setFitWidth(25);
-			img.setPreserveRatio(true);
-			pac.setGraphic(img);
-			pac.setTranslateX(value);
-			pac.setTranslateY(25);
-			rootGroup.getChildren().add(pac);
-			value -= 45;
+
+		for (Label pac : pacmanLives1) {
+			pacLives(pac, x, y);
+			x -= 45;
 		}
+		x = 250;
+		for (Label pac2 : pacmanLives2) {
+			pacLives(pac2, x, y);
+			x += 45;
+		}
+	}
+
+	// Set the attributes
+	private void pacLives(Label pac, int x, int y) {
+
+		Image image = new Image(getClass().getResourceAsStream("/pacman.png"));
+		ImageView img = new ImageView(image);
+		img.setFitWidth(25);
+		img.setPreserveRatio(true);
+		pac.setGraphic(img);
+		pac.setTranslateX(x);
+		pac.setTranslateY(y);
+		rootGroup.getChildren().add(pac);
+
 	}
 
 	private void startSimulation() {
@@ -136,25 +177,24 @@ public class MazeGui extends Application {
 			public void handle(ActionEvent t) {
 				world.step(1.0f / 60.f, 8, 3);
 				removeFixturesAndPellets();
-				scoreValueLabel.setText(String.valueOf(scorePanel.getScore()));
+				scoreValueLabel.setText(String.valueOf(pacman1.getScore()));
 				// Move pacmans to the new position computed by JBox2D
 				movePacman(pacman1);
 				movePacman(pacman2);
 				moveGhostsStep();
 				if (contactListener.isPacmanLost()) {
 					contactListener.setPacmanLoss(false);
-					pacmanLives.get(life).setGraphic(null);
+					pacmanLives1.get(life).setGraphic(null);
 					if (life < 3) {
-						// life++;
+						life++;
 					}
 				}
-				if (scorePanel.isGameOver()) {
+				if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
 					gameOverLabel.setVisible(true);
 					timeline.stop();
 				}
 			}
 		};
-
 		/**
 		 * Set ActionEvent and duration to the KeyFrame. The ActionEvent is
 		 * trigged when KeyFrame execution is over.
@@ -170,7 +210,6 @@ public class MazeGui extends Application {
 		// TODO Auto-generated method stub
 		for (Ghost g : ghosts) {
 			moveAGhost(g);
-
 		}
 	}
 
@@ -280,18 +319,17 @@ public class MazeGui extends Application {
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
-		group.add(new Wall(posX, posY, world, width, height, Color.MAGENTA)
-				.getNode());
+		group.add(new Wall(posX, posY, world, width, height, Color.MAGENTA).getNode());
 	}
 
-	private void createPacmans() {
-		pacmanArray.add(pacman1 = createPacman(50, 80));
-		pacmanArray.add(pacman2 = createPacman(50, 22));
+	public void createPacmans() {
+		pacmanArray.add(pacman1 = createPacman(50, 80, "pacman1"));
+		pacmanArray.add(pacman2 = createPacman(50, 22, "pacman2"));
 	}
 
-	private Pacman createPacman(int x, int y) {
-		Pacman pacman = new Pacman(x, y, world);
-		group.add(pacman.getNode());
+	private Pacman createPacman(int x, int y, String name) {
+		Pacman pacman = new Pacman(x, y, world, name);
+		rootGroup.getChildren().add(pacman.getNode());
 		return pacman;
 	}
 
