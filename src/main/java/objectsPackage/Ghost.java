@@ -21,6 +21,8 @@ public class Ghost extends Piece {
 	private Image img;
 	private ImagePattern imagePattern;
 	private int i;
+	private enum Status{RIGHT, LEFT, UP, DOWN}
+	private Status status= Status.UP;
 
 	public Ghost(int posX, int posY, World world, String image) {
 		super(posX, posY, world, "GHOST");
@@ -72,6 +74,27 @@ public class Ghost extends Piece {
 		} else if (i % 40 == 0) {
 			body.setLinearVelocity(new Vec2(0.0f, -50.0f));
 		}
+	}
+
+	public void turnGhost() {
+		// TODO Auto-generated method stub
+		if(status.equals(Status.RIGHT)){
+			System.out.println("turning right");
+			body.applyLinearImpulse(new Vec2(0.0f, 20.0f), body.getWorldCenter());
+			status=Status.RIGHT;
+		}else if(status.equals(Status.UP)){
+			System.out.println("turning down");
+			body.applyLinearImpulse(new Vec2(-20.0f, 0.0f), body.getWorldCenter());
+			status=Status.DOWN;
+		}else if(status.equals(Status.DOWN)){
+			System.out.println("turning left");
+			body.applyLinearImpulse(new Vec2(0.0f, -20.0f), body.getWorldCenter());
+			status=Status.LEFT;
+		}else if(status.equals(Status.LEFT))
+			System.out.println("turning up");
+			body.applyLinearImpulse(new Vec2(20.0f, 0.0f), body.getWorldCenter());
+			status=Status.UP;
+		
 	}
 
 }

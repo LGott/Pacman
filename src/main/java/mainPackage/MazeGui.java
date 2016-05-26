@@ -37,7 +37,7 @@ public class MazeGui extends Application {
 	private WorldLogic world = new WorldLogic(gravity, doSleep);
 	private Pacman pacman1;
 	private Pacman pacman2;
-	private Ghost[] ghosts = new Ghost[4];
+	private ArrayList<Ghost> ghosts = new ArrayList<Ghost>();
 	// private int numBonusPellets; //I think they can be counted together, and
 	// when they're both all finished - you finished the round!
 	final Timeline timeline = new Timeline();
@@ -63,7 +63,7 @@ public class MazeGui extends Application {
 		rootGroup = new Group();
 		group = rootGroup.getChildren();
 		contactListener = new CollisionContactListener(pellets, scorePanel,
-				pacmanArray);
+				pacmanArray, ghosts);
 		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
 				Color.BLACK);
 		scoreLabel = new Label("Score: ");
@@ -177,8 +177,8 @@ public class MazeGui extends Application {
 	private void moveAGhost(Ghost g) {
 		// TODO Auto-generated method stub
 		Body body = (Body) g.getNode().getUserData();
-		body.setLinearVelocity(new Vec2(-20.0f, 0.0f));
-		g.changeDirection();
+
+		// g.changeDirection();
 		float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
 		float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 		g.resetLayoutX(xpos);
@@ -296,10 +296,10 @@ public class MazeGui extends Application {
 	}
 
 	private void createGhosts() {
-		ghosts[0] = new Ghost(30, 30, world, "/blueGhost.png");
-		ghosts[1] = new Ghost(50, 45, world, "/pinkGhost.png");
-		ghosts[2] = new Ghost(80, 80, world, "/orangeGhost.png");
-		ghosts[3] = new Ghost(70, 70, world, "/redGhost.png");
+		ghosts.add(new Ghost(30, 30, world, "/blueGhost.png"));
+		ghosts.add(new Ghost(50, 45, world, "/pinkGhost.png"));
+		ghosts.add(new Ghost(80, 80, world, "/orangeGhost.png"));
+		ghosts.add(new Ghost(70, 70, world, "/redGhost.png"));
 
 		for (Ghost g : ghosts) {
 			group.add(g.getNode());
@@ -341,6 +341,12 @@ public class MazeGui extends Application {
 				switch (event.getCode()) {
 				case SHIFT:
 					timeline.playFromStart();
+					for (Ghost g : ghosts) {
+						Body body = (Body) g.getNode().getUserData();
+						body.setLinearVelocity(new Vec2(20.0f, 0.0f));
+
+					}
+
 					moveGhostsStep();
 					break;
 				case UP:

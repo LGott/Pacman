@@ -3,6 +3,7 @@ package mainPackage;
 import java.util.ArrayList;
 
 import javafx.scene.Group;
+import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
 import objectsPackage.UniqueObject;
@@ -25,7 +26,7 @@ public class CollisionContactListener implements ContactListener {
 	private ArrayList<Integer> pacmanColliding;
 	private ArrayList<Pacman> pacmanArray;
 	private boolean pacmanLost;
-
+private ArrayList<Ghost> ghosts;
 	public boolean isColliding() {
 		return colliding;
 	}
@@ -35,7 +36,7 @@ public class CollisionContactListener implements ContactListener {
 	}
 
 	public CollisionContactListener(ArrayList<Pellet> pellet,
-			ScorePanel scorePanel, ArrayList<Pacman> pacmanArray) {
+			ScorePanel scorePanel, ArrayList<Pacman> pacmanArray, ArrayList<Ghost> ghosts) {
 
 		colliding = false;
 		this.pellets = pellet;
@@ -45,6 +46,7 @@ public class CollisionContactListener implements ContactListener {
 		this.pacmanArray = pacmanArray;
 		pacmanColliding = new ArrayList<Integer>();
 		pacmanLost = false;
+		this.ghosts=ghosts;
 	}
 
 	public void beginContact(Contact contact) {
@@ -67,16 +69,24 @@ public class CollisionContactListener implements ContactListener {
 			scorePanel.incrementScore(50);
 		}
 		else if (obj1.getDescription() == "WALL"
-				&& obj2.getDescription() == "GHOST"
-				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "GHOST")) {
-//			float xpos = Properties.jBoxToFxPosX(f2.getBody().getPosition().x);
+				&& obj2.getDescription() == "GHOST") {
+
+			//			float xpos = Properties.jBoxToFxPosX(f2.getBody().getPosition().x);
 //			float ypos = Properties.jBoxToFxPosY(f2.getBody().getPosition().y);
 //			f2.getBody().setAngularVelocity(xpos);
 //			f2.getBody().applyTorque(20);
 //			f2.getBody().setAngularVelocity(20);
 //			f2.getBody().setLinearVelocity(new Vec2(20.0f, 0.0f));
+			turnGhost(obj2);
+			
 			
 
+		}else if(obj2.getDescription() == "WALL"
+				&& obj1.getDescription() == "GHOST"){
+			turnGhost(obj1);
+		}
+		else if(obj1.getDescription() == "GHOST" && obj2.getDescription() == "GHOST"){
+			
 		}
 
 		else if (obj1.getDescription() == "PACMAN"
@@ -103,6 +113,19 @@ public class CollisionContactListener implements ContactListener {
 			System.out.println("pacman-wall");
 		}
 
+	}
+
+	private void turnGhost(UniqueObject obj) {
+		// TODO Auto-generated method stub
+		for(Ghost g: ghosts){
+			if(g.getObjectDescription().getID()==obj.getID()){
+				g.turnGhost();
+				break;
+			}
+		}
+		
+		
+		
 	}
 
 	public void setPacmanLoss(boolean lost) {
