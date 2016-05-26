@@ -107,9 +107,9 @@ public class CollisionContactListener implements ContactListener {
 			pacmanLost = true;
 
 			Pacman pac = identifyPacman(obj1);
-			if (pac.getLives() > 0) {
-				pac.decrementLives();
-			}
+	//		if (pac.getLives() > 0) {
+		//		pac.decrementLives();
+		//	}
 
 			System.out.println("pacman-ghost   are colliding");
 
