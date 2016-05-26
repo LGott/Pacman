@@ -158,8 +158,8 @@ public class MazeGui extends Application {
 			public void handle(ActionEvent t) {
 				world.step(1.0f / 60.f, 8, 3);
 				removeFixturesAndPellets();
-				scoreValueLabel.setText(String.valueOf(scorePanel1.getScore()));
-				scoreValueLabel2.setText(String.valueOf(scorePanel2.getScore()));
+				scoreValueLabel.setText(String.valueOf(pacman1.getScore()));
+				scoreValueLabel2.setText(String.valueOf(pacman1.getScore()));
 				// Move pacmans to the new position computed by JBox2D
 				movePacman(pacman1);
 				movePacman(pacman2);
@@ -174,11 +174,10 @@ public class MazeGui extends Application {
 					}
 				}
 
-				if (scorePanel1.isGameOver()) {
+				if (pacman1.getLives()<=0 || pacman2.getLives()<=0) {
 					gameOverLabel.setVisible(true);
 					timeline.stop();
 				}
-
 			}
 
 			private void moveGhostsStep() {

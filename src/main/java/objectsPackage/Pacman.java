@@ -28,11 +28,15 @@ public class Pacman extends Piece {
 	private Vec2 currDirection = new Vec2(-20.0f, 0.0f);
 	private int currDegree = 180;
 	private String name;
+	private int score;
+	private int lives;
 
 	public Pacman(int posX, int posY, World world, String name) {
 		super(posX, posY, world, "PACMAN");
 		node = create();
 		this.name = name;
+		this.score = 0;
+		this.lives = 3;
 	}
 
 	private Node create() {
@@ -100,6 +104,25 @@ public class Pacman extends Piece {
 		// }
 	}
 
+	public int getScore() {
+		return this.score;
+	}
+
+	public void incrementScore(int score) {
+		this.score += score;
+	}
+
+	public void decrementLives() {
+		lives--;
+		System.out.println("lives decremented");
+		System.out.println("decremented");
+
+	}
+
+	public int getLives() {
+		return this.lives;
+	}
+
 	public void setOpenPacman() {
 		this.setImage(imageOpen);
 	}
@@ -111,7 +134,8 @@ public class Pacman extends Piece {
 	public boolean isColliding() {
 		return colliding;
 	}
-	public String getName(){
+
+	public String getName() {
 		return this.name;
 	}
 }
