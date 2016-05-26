@@ -126,32 +126,38 @@ public class MazeGui extends Application {
 		stage.setResizable(false);
 	}
 
+	//Display the pacman labels in the correct position
 	private void setPacmanLives() {
+		int x = 630;
+		int y = 25;
+
 		for (int i = 0; i < 3; i++) {
 			pacmanLives1.add(new Label(""));
 			pacmanLives2.add(new Label(""));
 		}
 
 		for (Label pac : pacmanLives1) {
-			pacLives(pac,25);}
-		
-			for (Label pac2 : pacmanLives2) {
-				pacLives(pac2, 45);
-			}
-		
+			pacLives(pac, x, y);
+			x -= 45;
+		}
+		x = 250;
+		for (Label pac2 : pacmanLives2) {
+			pacLives(pac2, x, y);
+			x += 45;
+		}
 	}
+//Set the attributes 
+	private void pacLives(Label pac, int x, int y) {
 
-	private void pacLives(Label pac, int y) {
-		int value = 630;
 		Image image = new Image(getClass().getResourceAsStream("/pacman.png"));
 		ImageView img = new ImageView(image);
 		img.setFitWidth(25);
 		img.setPreserveRatio(true);
 		pac.setGraphic(img);
-		pac.setTranslateX(value);
+		pac.setTranslateX(x);
 		pac.setTranslateY(y);
 		rootGroup.getChildren().add(pac);
-		value -= 45;
+
 	}
 
 	private void startSimulation() {
@@ -181,7 +187,7 @@ public class MazeGui extends Application {
 				if (contactListener.isPacmanLost()) {
 					contactListener.setPacmanLoss(false);
 					pacmanLives1.get(life).setGraphic(null); // Take away the
-															// label
+																// label
 
 					if (life < 3) {
 						life++;
