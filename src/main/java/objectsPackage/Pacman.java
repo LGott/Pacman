@@ -23,9 +23,7 @@ public class Pacman extends Piece {
 	private Image imageOpen = new Image(getClass().getResourceAsStream(
 			"/pacman-opened.png"));
 	private Image[] images = new Image[] { imageClose, imageOpen };
-	private int imgNum;
 	private boolean colliding = false;
-	private Image image;
 	//starts moving to the left
 	private Vec2 currDirection = new Vec2(-20.0f, 0.0f);
 	private int currDegree = 180;
@@ -73,11 +71,11 @@ public class Pacman extends Piece {
 		return node;
 	}
 
-	public void setDirection(Vec2 newDirection, int degree) {
+	public void setDirection(float horizontal, float vertical, int degree) {
+		Vec2 newDirection= new Vec2(horizontal, vertical);
 		currDirection = newDirection;
 		currDegree = degree;
-		body.setLinearVelocity(currDirection);
-		node.setRotate(degree);
+		resetSpeed();
 	}
 
 	public void resetSpeed() {

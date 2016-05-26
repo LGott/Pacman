@@ -7,9 +7,9 @@ import javafx.scene.shape.Rectangle;
 import mainPackage.Properties;
 
 import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
-
 
 public class Ghost extends Piece {
 
@@ -20,6 +20,7 @@ public class Ghost extends Piece {
 	private PolygonShape ps;
 	private Image img;
 	private ImagePattern imagePattern;
+	private int i;
 
 	public Ghost(int posX, int posY, World world, String image) {
 		super(posX, posY, world, "GHOST");
@@ -56,6 +57,21 @@ public class Ghost extends Piece {
 
 	public void resetLayoutY(float y) {
 		node.setLayoutY(y - Properties.jBoxtoPixelWidth(height));
+	}
+
+	public void changeDirection() {
+		// TODO Auto-generated method stub
+		i++;
+		if (i % 10 == 0) {
+			body.setLinearVelocity(new Vec2(-50.0f, 0.0f));
+		} else if (i % 20 == 0) {
+			body.setLinearVelocity(new Vec2(50.0f, 0.0f));
+
+		} else if (i % 30 == 0) {
+			body.setLinearVelocity(new Vec2(0.0f, 50.0f));
+		} else if (i % 40 == 0) {
+			body.setLinearVelocity(new Vec2(0.0f, -50.0f));
+		}
 	}
 
 }
