@@ -6,7 +6,8 @@ public class ScorePanel {
 	private boolean gameOver;
 
 	public boolean isGameOver() {
-		return gameOver;
+		// return gameOver;
+		return false;
 	}
 
 	public void setGameOver(boolean gameOver) {
@@ -15,8 +16,8 @@ public class ScorePanel {
 
 	public ScorePanel() {
 		score = 0;
-		lives=3;
-		gameOver=false;
+		lives = 3;
+		gameOver = false;
 	}
 
 	public int getScore() {
@@ -26,12 +27,13 @@ public class ScorePanel {
 	public void incrementScore(int score) {
 		this.score += score;
 	}
-	public void decrementLives(){
+
+	public void decrementLives() {
 		lives--;
 		System.out.println("lives decremented");
 		System.out.println("decremented");
-		if(lives==0){
-			gameOver=true;
+		if (lives == 0) {
+			gameOver = true;
 		}
 	}
 }
