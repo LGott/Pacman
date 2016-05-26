@@ -53,7 +53,8 @@ public class MazeGui extends Application {
 	private Label scoreValueLabel;
 	private Label scoreLabel2;
 	private Label scoreValueLabel2;
-	private ArrayList<Label> pacmanLives;
+	private ArrayList<Label> pacmanLives1;
+	private ArrayList<Label> pacmanLives2;
 	private Label gameOverLabel;
 	private boolean gameOver;
 	private int life;
@@ -68,7 +69,8 @@ public class MazeGui extends Application {
 		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel1, scorePanel2, pacmanArray);
 		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
 
-		pacmanLives = new ArrayList<Label>();
+		pacmanLives1 = new ArrayList<Label>();
+		pacmanLives2 = new ArrayList<Label>();
 		life = 0;
 		setPacmanLives();
 		gameOverLabel = new Label("GAME OVER");
@@ -126,20 +128,30 @@ public class MazeGui extends Application {
 
 	private void setPacmanLives() {
 		for (int i = 0; i < 3; i++) {
-			pacmanLives.add(new Label(""));
+			pacmanLives1.add(new Label(""));
+			pacmanLives2.add(new Label(""));
 		}
+
+		for (Label pac : pacmanLives1) {
+			pacLives(pac,25);}
+		
+			for (Label pac2 : pacmanLives2) {
+				pacLives(pac2, 45);
+			}
+		
+	}
+
+	private void pacLives(Label pac, int y) {
 		int value = 630;
-		for (Label pac : pacmanLives) {
-			Image image = new Image(getClass().getResourceAsStream("/pacman.png"));
-			ImageView img = new ImageView(image);
-			img.setFitWidth(25);
-			img.setPreserveRatio(true);
-			pac.setGraphic(img);
-			pac.setTranslateX(value);
-			pac.setTranslateY(25);
-			rootGroup.getChildren().add(pac);
-			value -= 45;
-		}
+		Image image = new Image(getClass().getResourceAsStream("/pacman.png"));
+		ImageView img = new ImageView(image);
+		img.setFitWidth(25);
+		img.setPreserveRatio(true);
+		pac.setGraphic(img);
+		pac.setTranslateX(value);
+		pac.setTranslateY(y);
+		rootGroup.getChildren().add(pac);
+		value -= 45;
 	}
 
 	private void startSimulation() {
@@ -168,13 +180,15 @@ public class MazeGui extends Application {
 
 				if (contactListener.isPacmanLost()) {
 					contactListener.setPacmanLoss(false);
-					pacmanLives.get(life).setGraphic(null);
+					pacmanLives1.get(life).setGraphic(null); // Take away the
+															// label
+
 					if (life < 3) {
 						life++;
 					}
 				}
 
-				if (pacman1.getLives()<=0 || pacman2.getLives()<=0) {
+				if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
 					gameOverLabel.setVisible(true);
 					timeline.stop();
 				}

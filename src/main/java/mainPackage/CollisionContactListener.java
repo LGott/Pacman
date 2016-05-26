@@ -66,12 +66,11 @@ public class CollisionContactListener implements ContactListener {
 			colliding = true;
 
 			removePellet(f2, obj2);
-			
-			//Find the correct pacman and increment it's score
+
+			// Find the correct pacman and increment it's score
 			Pacman pac = identifyPacman(obj1);
 			pac.incrementScore(10);
-			
-			
+
 			System.out.println("pacman-pellet");
 		} else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "BONUS_PELLET") {
 			// remove the bonus pellet
@@ -106,6 +105,10 @@ public class CollisionContactListener implements ContactListener {
 			// System.out.println("here");
 
 			pacmanLost = true;
+			
+			Pacman pac = identifyPacman(obj1);
+			pac.decrementLives();
+		
 			System.out.println("pacman-ghost   are colliding");
 
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "PACMAN") {
