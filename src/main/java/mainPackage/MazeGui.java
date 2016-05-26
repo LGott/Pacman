@@ -202,33 +202,29 @@ public class MazeGui extends Application {
 		// wall (x,y) = 1/2 edge (x,y)
 		// WALLS
 		// top wall
-		createWall(0, 85, 100, 1, Color.GREEN);
+		createWall(0, 85, 100, 1);
 		// bottom wall
-		createWall(0, 5, 100, 1, Color.GREEN);
+		createWall(0, 5, 100, 1);
 		// right wall
-		createWall(99, 37, 2, 100, Color.GREEN);
+		createWall(99, 37, 2, 100);
 		// left wall
-		createWall(0, 50, 2, 100, Color.GREEN);
+		createWall(0, 50, 2, 100);
 
 		// west
-		createWall(18, 16, 9, 3, Color.GREEN);
-		createWall(12, 69, 3, 8, Color.GREEN);
-		createWall(12, 40, 3, 14, Color.GREEN);
-		createWall(25, 65, 3, 12, Color.GREEN);
-		createWall(25, 36, 3, 10, Color.GREEN);
+		createWall(18, 16, 9, 3);
+		createWall(12, 69, 3, 8);
+		createWall(12, 40, 3, 14);
+		createWall(25, 65, 3, 12);
+		createWall(25, 36, 3, 10);
 
 		// north
-		createWall(34, 61, 6, 3, Color.GREEN);
-		createWall(50, 65, 3, 8, Color.GREEN);
-		createWall(50, 74, 15, 3, Color.GREEN);
+		createWall(34, 61, 6, 3);
+		createWall(50, 65, 3, 8);
+		createWall(50, 74, 15, 3);
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
 		rootGroup.getChildren().add(new Wall(posX, posY, world, width, height, Color.MAGENTA).getNode());
-	}
-
-	private void createWall(int posX, int posY, int width, int height, Color c) {
-		rootGroup.getChildren().add(new Wall(posX, posY, world, width, height, c).getNode());
 	}
 
 	private void createPacmans() {
