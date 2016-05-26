@@ -59,10 +59,8 @@ public class MazeGui extends Application {
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
 
-		contactListener = new CollisionContactListener(rootGroup, pellets,
-				scorePanel, pacmanArray);
-		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
-				Color.BLACK);
+		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel, pacmanArray);
+		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
 		scoreLabel = new Label("Score: ");
 		scoreLabel.setTranslateX(25);
 		scoreLabel.setTranslateY(25);
@@ -117,7 +115,6 @@ public class MazeGui extends Application {
 				// Move pacmans to the new position computed by JBox2D
 				movePacman(pacman1);
 				movePacman(pacman2);
-				// move ghosts
 				moveGhostsStep();
 				if (scorePanel.isGameOver()) {
 					gameOverLabel.setVisible(true);
@@ -171,8 +168,7 @@ public class MazeGui extends Application {
 			}
 
 			private void animatePacman(final long timeStart, Pacman pacman) {
-				if (contactListener.isCollidingWithWall()
-						&& pacman.isColliding()) {
+				if (contactListener.isCollidingWithWall() && pacman.isColliding()) {
 					pacman.setOpenPacman();
 					System.out.println("touching walls");
 				} else {
@@ -195,40 +191,47 @@ public class MazeGui extends Application {
 
 	private void createShapes() {
 		createWalls();
-		createGhosts();
+		// createGhosts();
 		createPacmans();
-		createPellets();
-		createBonusPellets(); // should createPellets call createBonusPellets?
+		// createPellets();
+		// createBonusPellets(); // should createPellets call
+		// createBonusPellets?
 	}
 
 	private void createWalls() {
+		// wall (x,y) = 1/2 edge (x,y)
 		// WALLS
 		// top wall
-		createEdge(1, 72, 100, 1);
-		createWall(0, 73, 100, 1);
+		createWall(0, 85, 100, 1, Color.GREEN);
 		// bottom wall
-		createEdge(0, 1, 100, 1);
-		createWall(0, 5, 100, 1);
+		createWall(0, 5, 100, 1, Color.GREEN);
 		// right wall
-		createEdge(98, 100, 1, 100);
-		createWall(98, 100, 1, 100);
+		createWall(99, 37, 2, 100, Color.GREEN);
 		// left wall
-		createEdge(1, 100, 1, 100);
-		createWall(1, 100, 1, 100);
+		createWall(0, 50, 2, 100, Color.GREEN);
+
+		// west
+		createWall(18, 16, 9, 3, Color.GREEN);
+		createWall(12, 69, 3, 8, Color.GREEN);
+		createWall(12, 40, 3, 14, Color.GREEN);
+		createWall(25, 65, 3, 12, Color.GREEN);
+		createWall(25, 36, 3, 10, Color.GREEN);
+
+		// north
+		createWall(34, 61, 6, 3, Color.GREEN);
+		createWall(50, 65, 3, 8, Color.GREEN);
+		createWall(50, 74, 15, 3, Color.GREEN);
 	}
 
-	private void createEdge(int lowerX, int lowerY, int width, int height) {
-		new Edge(new Vec2(lowerX, lowerY), new Vec2(lowerX + width, lowerY
-				+ height), world);
+	private void createWall(int posX, int posY, int width, int height) {
+		rootGroup.getChildren().add(new Wall(posX, posY, world, width, height, Color.MAGENTA).getNode());
 	}
 
-	public void createWall(int posX, int posY, int width, int height) {
-		rootGroup.getChildren().add(
-				new Wall(posX, posY, world, width, height, Color.MAGENTA)
-						.getNode());
+	private void createWall(int posX, int posY, int width, int height, Color c) {
+		rootGroup.getChildren().add(new Wall(posX, posY, world, width, height, c).getNode());
 	}
 
-	public void createPacmans() {
+	private void createPacmans() {
 		pacmanArray.add(pacman1 = createPacman(50, 80));
 		pacmanArray.add(pacman2 = createPacman(50, 20));
 		pacmanBody1 = (Body) pacman1.getNode().getUserData();
@@ -283,8 +286,7 @@ public class MazeGui extends Application {
 
 	private void moveGhosts() {
 		for (Ghost g : ghosts) {
-			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f,
-					20.0f));
+			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
 			if (contactListener.isColliding()) {
 				float xpos1 = Properties.jBoxToFxPosX(g.getPosX());
 				float ypos1 = Properties.jBoxToFxPosY(g.getPosY());
