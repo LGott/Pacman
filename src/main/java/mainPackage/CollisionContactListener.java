@@ -63,13 +63,13 @@ public class CollisionContactListener implements ContactListener {
 
 		if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "PELLET") {
 
-			System.out.println("contacts " + obj1.getDescription() + " and " + obj2.getDescription());
+			//System.out.println("contacts " + obj1.getDescription() + " and " + obj2.getDescription());
 			colliding = true;
 
 			removePellet(f2, obj2);
 
 			scorePanel.incrementScore(10);
-			System.out.println("pacman-pellet");
+			//System.out.println("pacman-pellet");
 		} else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "BONUS_PELLET") {
 			// remove the bonus pellet
 			colliding = true;
@@ -108,7 +108,7 @@ public class CollisionContactListener implements ContactListener {
 			// System.out.println("here");
 			scorePanel.decrementLives();
 			pacmanLost = true;
-			System.out.println("pacman-ghost   are colliding");
+			//System.out.println("pacman-ghost   are colliding");
 
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "PACMAN") {
 			collidingWithWall = true;
@@ -119,7 +119,7 @@ public class CollisionContactListener implements ContactListener {
 				}
 			}
 
-			System.out.println("pacman-wall");
+			//System.out.println("pacman-wall");
 		}
 
 	}

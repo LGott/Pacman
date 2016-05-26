@@ -39,8 +39,6 @@ public class MazeGui extends Application {
 	private Body pacmanBody1;
 	private Body pacmanBody2;
 	private Ghost[] ghosts = new Ghost[4];
-	// private int numBonusPellets; //I think they can be counted together, and
-	// when they're both all finished - you finished the round!
 	final Timeline timeline = new Timeline();
 	private CollisionContactListener contactListener;
 
@@ -172,7 +170,10 @@ public class MazeGui extends Application {
 				float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 				g.resetLayoutX(xpos);
 				g.resetLayoutY(ypos);
+				//if (contactListener.isColliding()) 
+				//g.changeDirection();	
 				g.resetSpeed();
+				
 			}
 
 			private void movePacman(Pacman pacman) {
@@ -207,7 +208,7 @@ public class MazeGui extends Application {
 			private void animatePacman(final long timeStart, Pacman pacman) {
 				if (contactListener.isCollidingWithWall() && pacman.isColliding()) {
 					pacman.setOpenPacman();
-					System.out.println("touching walls");
+					//System.out.println("touching walls");
 				} else {
 					double time = (System.currentTimeMillis() - timeStart) / 1000.0;
 					pacman.animatePacman(time);
