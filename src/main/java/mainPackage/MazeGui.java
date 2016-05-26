@@ -10,6 +10,8 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -49,8 +51,10 @@ public class MazeGui extends Application {
 	private ArrayList<Pacman> pacmanArray = new ArrayList<Pacman>();
 	private Label scoreLabel;
 	private Label scoreValueLabel;
+	private ArrayList<Label> pacmanLives;
 	private Label gameOverLabel;
 	private boolean gameOver;
+	private int life;
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -69,6 +73,10 @@ public class MazeGui extends Application {
 		scoreValueLabel.setTextFill(Color.YELLOW);
 		scoreValueLabel.setTranslateX(60);
 		scoreValueLabel.setTranslateY(25);
+
+		pacmanLives = new ArrayList<Label>();
+		life = 0;
+		setPacmanLives();
 		gameOverLabel = new Label("GAME OVER");
 		gameOverLabel.setFont(new Font(90));
 		gameOverLabel.setTranslateX(120);
@@ -95,6 +103,24 @@ public class MazeGui extends Application {
 		stage.setResizable(false);
 	}
 
+	private void setPacmanLives() {
+		for (int i = 0; i < 3; i++) {
+			pacmanLives.add(new Label(""));
+		}
+		int value = 630;
+		for (Label pac : pacmanLives) {
+			Image image = new Image(getClass().getResourceAsStream("/pacman.png"));
+			ImageView img = new ImageView(image);
+			img.setFitWidth(25);
+			img.setPreserveRatio(true);
+			pac.setGraphic(img);
+			pac.setTranslateX(value);
+			pac.setTranslateY(25);
+			rootGroup.getChildren().add(pac);
+			value -= 45;
+		}
+	}
+
 	private void startSimulation() {
 
 		timeline.setCycleCount(Timeline.INDEFINITE);
@@ -116,10 +142,20 @@ public class MazeGui extends Application {
 				movePacman(pacman1);
 				movePacman(pacman2);
 				moveGhostsStep();
+
+				if (contactListener.isPacmanLost()) {
+					contactListener.setPacmanLoss(false);
+					pacmanLives.get(life).setGraphic(null);
+					if (life < 3) {
+						life++;
+					}
+				}
+
 				if (scorePanel.isGameOver()) {
 					gameOverLabel.setVisible(true);
 					timeline.stop();
 				}
+
 			}
 
 			private void moveGhostsStep() {
@@ -147,6 +183,7 @@ public class MazeGui extends Application {
 				float ypos = Properties.jBoxToFxPosY(pacBody.getPosition().y);
 				pacman.resetLayoutX(xpos);
 				pacman.resetLayoutY(ypos);
+				pacman.resetSpeed();
 			}
 
 			private void removeFixturesAndPellets() {
@@ -191,11 +228,10 @@ public class MazeGui extends Application {
 
 	private void createShapes() {
 		createWalls();
-		// createGhosts();
+		createGhosts();
 		createPacmans();
-		// createPellets();
-		// createBonusPellets(); // should createPellets call
-		// createBonusPellets?
+		createPellets();
+		createBonusPellets();
 	}
 
 	private void createWalls() {
@@ -223,7 +259,7 @@ public class MazeGui extends Application {
 		createWall(50, 74, 15, 3);
 	}
 
-	private void createWall(int posX, int posY, int width, int height) {
+	public void createWall(int posX, int posY, int width, int height) {
 		rootGroup.getChildren().add(new Wall(posX, posY, world, width, height, Color.MAGENTA).getNode());
 	}
 
@@ -253,7 +289,7 @@ public class MazeGui extends Application {
 
 	private void createPellets() {
 		for (int i = 10; i < 100; i += 10) {
-			createYellowPellet(i, 15);
+			createYellowPellet(i, 9);
 		}
 	}
 
@@ -264,7 +300,7 @@ public class MazeGui extends Application {
 
 	private void createBonusPellets() {
 		for (int i = 30; i < 100; i += 10) {
-			createBonusPellet(15, i);
+			createBonusPellet(5, i);
 		}
 
 	}
@@ -297,52 +333,33 @@ public class MazeGui extends Application {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
 				switch (event.getCode()) {
-
-				// need another 4 directional keys for other player. which ones?
 				case SHIFT:
-					System.out.println("Shift");
-
 					timeline.playFromStart();
 					moveGhosts();
 					break;
 				case UP:
-					pacmanBody1.setLinearVelocity(new Vec2(0.0f, 20.0f));
-					pacman1.getNode().setRotate(270);
+					pacman1.setDirection(new Vec2(0.0f, 20.0f), 270);
 					break;
 				case DOWN:
-
-					pacmanBody1.setLinearVelocity(new Vec2(0.0f, -20.0f));
-					pacman1.getNode().setRotate(90);
+					pacman1.setDirection(new Vec2(0.0f, -20.0f), 90);
 					break;
 				case LEFT:
-					pacmanBody1.setLinearVelocity(new Vec2(-20.0f, 0.0f));
-					pacman1.getNode().setRotate(180);
-					// want to redo the picture for this - so it doesn't have an
-					// eye?
-					// or you can change the image instead of rotation?
-					// pacman1.setImage("/pacmanLeft.png");
-					// but then you have to change images for all??
-
+					pacman1.setDirection(new Vec2(-20.0f, 0.0f), 180);
 					break;
 				case RIGHT:
-					pacmanBody1.setLinearVelocity(new Vec2(20.0f, 0.0f));
-					pacman1.getNode().setRotate(0);
+					pacman1.setDirection(new Vec2(20.0f, 0.0f), 0);
 					break;
 				case S:// LEFT
-					pacmanBody2.setLinearVelocity(new Vec2(-20.0f, 0.0f));
-					pacman2.getNode().setRotate(180);
+					pacman2.setDirection(new Vec2(-20.0f, 0.0f), 180);
 					break;
 				case D:// Down
-					pacmanBody2.setLinearVelocity(new Vec2(0.0f, -20.0f));
-					pacman2.getNode().setRotate(90);
+					pacman2.setDirection(new Vec2(0.0f, -20.0f), 90);
 					break;
 				case F:// Right
-					pacmanBody2.setLinearVelocity(new Vec2(20.0f, 0.0f));
-					pacman2.getNode().setRotate(0);
+					pacman2.setDirection(new Vec2(20.0f, 0.0f), 0);
 					break;
 				case E:// Up
-					pacmanBody2.setLinearVelocity(new Vec2(0.0f, 20.0f));
-					pacman2.getNode().setRotate(270);
+					pacman2.setDirection(new Vec2(0.0f, 20.0f), 270);
 					break;
 				default:
 					break;
