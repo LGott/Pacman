@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -18,7 +20,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import objectsPackage.BonusPellet;
-import objectsPackage.Edge;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
@@ -37,8 +38,6 @@ public class MazeGui extends Application {
 	private WorldLogic world = new WorldLogic(gravity, doSleep);
 	private Pacman pacman1;
 	private Pacman pacman2;
-	private Body pacmanBody1;
-	private Body pacmanBody2;
 	private Ghost[] ghosts = new Ghost[4];
 	// private int numBonusPellets; //I think they can be counted together, and
 	// when they're both all finished - you finished the round!
@@ -53,8 +52,8 @@ public class MazeGui extends Application {
 	private Label scoreValueLabel;
 	private ArrayList<Label> pacmanLives;
 	private Label gameOverLabel;
-	private boolean gameOver;
 	private int life;
+	private ObservableList<Node> group; 
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -62,7 +61,7 @@ public class MazeGui extends Application {
 		setStageProperties(stage);
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
-
+		group= rootGroup.getChildren();
 		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel, pacmanArray);
 		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
 		scoreLabel = new Label("Score: ");
@@ -83,10 +82,9 @@ public class MazeGui extends Application {
 		gameOverLabel.setTranslateY(150);
 		gameOverLabel.setTextFill(Color.WHITE);
 		gameOverLabel.setVisible(false);
-		rootGroup.getChildren().add(scoreLabel);
-		rootGroup.getChildren().add(scoreValueLabel);
-		rootGroup.getChildren().add(gameOverLabel);
-		gameOver = false;
+		group.add(scoreLabel);
+		group.add(scoreValueLabel);
+		group.add(gameOverLabel);
 		createShapes();
 		world.setContactListener(contactListener);
 		startSimulation();
@@ -147,7 +145,7 @@ public class MazeGui extends Application {
 					contactListener.setPacmanLoss(false);
 					pacmanLives.get(life).setGraphic(null);
 					if (life < 3) {
-						life++;
+						//life++;
 					}
 				}
 
@@ -194,7 +192,7 @@ public class MazeGui extends Application {
 				}
 
 				for (Pellet p : contactListener.getPelletsToRemove()) {
-					rootGroup.getChildren().remove(p.getNode());
+					group.remove(p.getNode());
 				}
 
 				// clear for next step
@@ -283,19 +281,17 @@ public class MazeGui extends Application {
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
-		rootGroup.getChildren().add(new Wall(posX, posY, world, width, height, Color.MAGENTA).getNode());
+		group.add(new Wall(posX, posY, world, width, height, Color.MAGENTA).getNode());
 	}
 
 	private void createPacmans() {
 		pacmanArray.add(pacman1 = createPacman(50, 80));
 		pacmanArray.add(pacman2 = createPacman(50, 20));
-		pacmanBody1 = (Body) pacman1.getNode().getUserData();
-		pacmanBody2 = (Body) pacman2.getNode().getUserData();
 	}
 
 	private Pacman createPacman(int x, int y) {
 		Pacman pacman = new Pacman(x, y, world);
-		rootGroup.getChildren().add(pacman.getNode());
+		group.add(pacman.getNode());
 		return pacman;
 	}
 
@@ -306,7 +302,7 @@ public class MazeGui extends Application {
 		ghosts[3] = new Ghost(70, 70, world, "/redGhost.png");
 
 		for (Ghost g : ghosts) {
-			rootGroup.getChildren().add(g.getNode());
+			group.add(g.getNode());
 		}
 	}
 
@@ -336,7 +332,7 @@ public class MazeGui extends Application {
 
 	private void addPellet(Pellet p) {
 		pellets.add(p);
-		rootGroup.getChildren().add(p.getNode());
+		group.add(p.getNode());
 	}
 
 	private void moveGhosts() {
