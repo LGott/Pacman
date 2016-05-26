@@ -307,8 +307,29 @@ public class MazeGui extends Application {
 	}
 
 	private void createPellets() {
-		for (int i = 10; i < 100; i += 10) {
+		//bottom line across
+		for (int i = 6; i < 31; i += 8) {
 			createYellowPellet(i, 9);
+			}
+		createYellowPellet(44, 9);
+		createYellowPellet(56, 9);
+		for (int i = 70; i < 100; i += 8) {
+			createYellowPellet(i, 9);
+		}
+		
+		//second to bottom across
+		createYellowPellet(6, 16);
+		for (int i = 29; i < 75; i += 7) {
+			createYellowPellet(i, 16);
+		}	
+		createYellowPellet(93, 16);
+		
+		//third to bottom across
+		for (int i = 6; i < 40; i += 7) {
+			createYellowPellet(i, 23);
+		}
+		for (int i = 65; i < 95; i += 7) {
+			createYellowPellet(i, 23);
 		}
 	}
 
