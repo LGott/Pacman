@@ -17,7 +17,7 @@ public abstract class Piece{
 	private Fixture fixture;
 	private static int lastID = 0;
 	private int id;
-	private UniqueObject objectDescription;
+	protected UniqueObject objectDescription;
 	protected Body body;
 	protected Node node;
 	public UniqueObject getObjectDescription() {

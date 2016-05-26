@@ -177,7 +177,7 @@ public class MazeGui extends Application {
 	private void moveAGhost(Ghost g) {
 		// TODO Auto-generated method stub
 		Body body = (Body) g.getNode().getUserData();
-
+		//g.turnGhost();
 		// g.changeDirection();
 		float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
 		float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
