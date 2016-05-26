@@ -3,6 +3,7 @@ package mainPackage;
 import java.util.ArrayList;
 
 import javafx.scene.Group;
+import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
 import objectsPackage.UniqueObject;
@@ -23,6 +24,7 @@ public class CollisionContactListener implements ContactListener {
 	private boolean collidingWithWall;
 	private ArrayList<Integer> pacmanColliding;
 	private ArrayList<Pacman> pacmanArray;
+	private Ghost[] ghostArray;
 	private Group group;
 	private boolean pacmanLost;
 
@@ -35,7 +37,7 @@ public class CollisionContactListener implements ContactListener {
 	}
 
 	public CollisionContactListener(Group rootGroup, ArrayList<Pellet> pellet, ScorePanel scorePanel,
-			ArrayList<Pacman> pacmanArray) {
+			ArrayList<Pacman> pacmanArray, Ghost[] ghosts) {
 
 		colliding = false;
 		this.pellets = pellet;
@@ -43,6 +45,7 @@ public class CollisionContactListener implements ContactListener {
 		this.fixturesToRemove = new ArrayList<Fixture>();
 		this.pelletsToRemove = new ArrayList<Pellet>();
 		this.pacmanArray = pacmanArray;
+		this.ghostArray = ghosts;
 		this.pacmanColliding = new ArrayList<Integer>();
 		this.group = rootGroup;
 		this.pacmanLost = false;
@@ -78,21 +81,28 @@ public class CollisionContactListener implements ContactListener {
 			// System.out.println("pacman-bonus pellet");
 		}
 
-		else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST"
-				|| (f2.getBody().getUserData() == "GHOST" && f1.getBody().getUserData() == "GHOST")) {
+		else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST" 
+				|| obj2.getDescription() == "WALL" && obj1.getDescription() == "GHOST") {
 
 			colliding = true;
 			System.out.println("contacts " + obj1.getDescription() + " and " + obj2.getDescription());
 
-			float xpos = Properties.jBoxToFxPosX(f2.getBody().getPosition().x);
-			float ypos = Properties.jBoxToFxPosY(f2.getBody().getPosition().y);
-			f2.getBody().setAngularVelocity(xpos);
-			f2.getBody().setAngularVelocity(ypos);
-
+			//float xpos = Properties.jBoxToFxPosX(f2.getBody().getPosition().x);
+			//float ypos = Properties.jBoxToFxPosY(f2.getBody().getPosition().y);
+			//f2.getBody().setAngularVelocity(xpos);
+			//f2.getBody().setAngularVelocity(ypos);
+			
+			for (int i = 0; i < ghostArray.length; i++) {
+				if (ghostArray[i].getObjectDescription().getID() == obj1.getID() || ghostArray[i].getObjectDescription().getID() == obj2.getID()) {
+					ghostArray[i].changeDirection();
+					break;
+				}
+			}
+			
 		}
 
 		else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "GHOST"
-				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "GHOST")
+				//|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "GHOST")
 				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "PACMAN")) {
 			// remove an extra pacman
 			// System.out.println("here");
@@ -143,11 +153,13 @@ public class CollisionContactListener implements ContactListener {
 		UniqueObject obj1 = (UniqueObject) f1.getBody().getUserData();
 		UniqueObject obj2 = (UniqueObject) f2.getBody().getUserData();
 
-		if (obj1.getDescription() == "WALL" && obj2.getDescription() == "PACMAN") {
+		if (obj1.getDescription() == "WALL" && obj2.getDescription() == "PACMAN" 
+				|| obj2.getDescription() == "WALL" && obj1.getDescription() == "PACMAN") {
 
 			collidingWithWall = false;
 			for (int i = 0; i < pacmanArray.size(); i++) {
-				if (pacmanArray.get(i).getObjectDescription().getID() == obj2.getID()) {
+				if (pacmanArray.get(i).getObjectDescription().getID() == obj1.getID()
+					||	pacmanArray.get(i).getObjectDescription().getID() == obj2.getID()) {
 					pacmanArray.get(i).setColliding(false);
 					break;
 				}

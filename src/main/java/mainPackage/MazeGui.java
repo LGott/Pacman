@@ -62,7 +62,7 @@ public class MazeGui extends Application {
 		// Create a group for holding all objects on the screen.
 		rootGroup = new Group();
 
-		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel, pacmanArray);
+		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel, pacmanArray, ghosts);
 		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
 		scoreLabel = new Label("Score: ");
 		scoreLabel.setTranslateX(25);
@@ -162,7 +162,6 @@ public class MazeGui extends Application {
 				// TODO Auto-generated method stub
 				for (Ghost g : ghosts) {
 					moveAGhost(g);
-
 				}
 			}
 
@@ -173,6 +172,7 @@ public class MazeGui extends Application {
 				float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 				g.resetLayoutX(xpos);
 				g.resetLayoutY(ypos);
+				g.resetSpeed();
 			}
 
 			private void movePacman(Pacman pacman) {
@@ -346,20 +346,20 @@ public class MazeGui extends Application {
 		pellets.add(p);
 		rootGroup.getChildren().add(p.getNode());
 	}
-
+	
 	private void moveGhosts() {
 		for (Ghost g : ghosts) {
-			((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
-			if (contactListener.isColliding()) {
-				float xpos1 = Properties.jBoxToFxPosX(g.getPosX());
-				float ypos1 = Properties.jBoxToFxPosY(g.getPosY());
-				g.resetLayoutX(xpos1);
-				g.resetLayoutY(ypos1);
+			//((Body) g.getNode().getUserData()).setLinearVelocity(new Vec2(0.0f, 20.0f));
+			//if (contactListener.isColliding()) {
+			g.changeDirection();	
+				//float xpos1 = Properties.jBoxToFxPosX(g.getPosX());
+				//float ypos1 = Properties.jBoxToFxPosY(g.getPosY());
+				//g.resetLayoutX(xpos1);
+				//g.resetLayoutY(ypos1);
 
-			}
+			//}
 		}
 	}
-
 	private void addKeyListeners(Scene scene) {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
