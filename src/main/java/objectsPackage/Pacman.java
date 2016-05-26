@@ -29,17 +29,19 @@ public class Pacman extends Piece {
 	//starts moving to the left
 	private Vec2 currDirection = new Vec2(-20.0f, 0.0f);
 	private int currDegree = 180;
+	private PolygonShape ps;
+	private Rectangle pacman;
 
 	public Pacman(int posX, int posY, World world) {
 		super(posX, posY, world, "PACMAN");
 		node = create();
-	}
+			}
 
 	private Node create() {
 		Image img = images[0];
 		ImagePattern imagePattern = new ImagePattern(img);
 
-		Rectangle pacman = new Rectangle(
+		pacman = new Rectangle(
 				(Properties.jBoxtoPixelWidth(width) * 2),
 				(Properties.jBoxtoPixelHeight(height) * 2));
 		pacman.setFill(imagePattern);
@@ -49,7 +51,7 @@ public class Pacman extends Piece {
 				- Properties.jBoxtoPixelHeight(height));
 		pacman.setCache(true); // Cache this object for better performance
 
-		PolygonShape ps = new PolygonShape();
+		ps = new PolygonShape();
 		ps.setAsBox(width, height);
 
 		body = createBodyAndFixture(bodyType, ps);
@@ -114,4 +116,31 @@ public class Pacman extends Piece {
 	public boolean isColliding() {
 		return colliding;
 	}
+	
+	public void initialPosition(){
+		System.out.println("INITIAL POSITION");
+		//world.destroyBody(body);
+		//body = createBodyAndFixture(bodyType, ps);
+		//super.setUserData();
+
+		//pacman.setUserData(body);
+		//node = pacman;
+		//body.setLinearVelocity(new Vec2((initialX - getPosX())*60 , (initialY - getPosY())*60));
+		//body.setLinearVelocity(new Vec2(100 , 100));
+		
+		//body.m_xf.set(new Vec2(0, 0), 0);
+		//body.m_xf.set(body.getWorldCenter(), 0);
+		body.setTransform(new Vec2(initialX, initialY), 0);
+		//resetLayoutX(Properties.jBoxToFxPosX(initialX));
+		//resetLayoutY(Properties.jBoxToFxPosY(initialY));
+		//resetLayoutX(Properties.jBoxToFxPosX(0));
+		//resetLayoutY(Properties.jBoxToFxPosY(0));
+		
+		try {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
 }

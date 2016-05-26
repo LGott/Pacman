@@ -7,6 +7,7 @@ import javafx.scene.shape.Rectangle;
 import mainPackage.Properties;
 
 import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
@@ -28,7 +29,7 @@ public class Ghost extends Piece {
 		img = new Image(image);
 		imagePattern = new ImagePattern(img);
 		node = create();
-	}
+			}
 
 	private Node create() {
 		ghost = new Rectangle((Properties.jBoxtoPixelWidth(width) * 2),

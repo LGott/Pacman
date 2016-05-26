@@ -95,8 +95,15 @@ public class CollisionContactListener implements ContactListener {
 				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "PACMAN")) {
 			// remove an extra pacman
 			// System.out.println("here");
-			scorePanel.decrementLives();
-
+			//scorePanel.decrementLives();
+			for (int i = 0; i < pacmanArray.size(); i++) {
+				if (pacmanArray.get(i).getObjectDescription().getID() == obj1
+						.getID() || pacmanArray.get(i).getObjectDescription().getID() == obj2
+						.getID()) {
+					pacmanArray.get(i).initialPosition();
+					break;
+				}
+			}
 			System.out.println("pacman-ghost            are colliding");
 		} else if (obj1.getDescription() == "WALL"
 				&& obj2.getDescription() == "PACMAN") {
