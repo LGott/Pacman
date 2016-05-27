@@ -38,7 +38,8 @@ public class MazeGui extends Application {
 	private WorldLogic world = new WorldLogic(gravity, doSleep);
 	private Pacman pacman1;
 	private Pacman pacman2;
-	private Ghost[] ghosts = new Ghost[4];
+	private ArrayList<Ghost> ghosts;
+
 	// private int numBonusPellets; //I think they can be counted together, and
 	// when they're both all finished - you finished the round!
 	final Timeline timeline = new Timeline();
@@ -70,8 +71,9 @@ public class MazeGui extends Application {
 		rootGroup = new Group();
 		setScorePanels();
 		group = rootGroup.getChildren();
+		this.ghosts = new ArrayList<Ghost>();
 		contactListener = new CollisionContactListener(rootGroup, pellets,
-				scorePanel1, scorePanel2, pacmanArray);
+				scorePanel1, scorePanel2, pacmanArray, ghosts);
 		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
 				Color.BLACK);
 
@@ -232,14 +234,13 @@ public class MazeGui extends Application {
 		pacmanArray.add(pacman2);
 		contactListener.resetPacmanArray(pacmanArray);
 
-		//reset ghosts
-		for(Ghost g : ghosts){
+		// reset ghosts
+		for (Ghost g : ghosts) {
 			group.remove(g.getNode());
 			world.destroyBody(g.getFixture().getBody());
 		}
+		ghosts.clear();
 		createGhosts();
-
-
 
 	}
 
@@ -253,8 +254,7 @@ public class MazeGui extends Application {
 	private void moveAGhost(Ghost g) {
 		// TODO Auto-generated method stub
 		Body body = (Body) g.getNode().getUserData();
-		body.setLinearVelocity(new Vec2(-20.0f, 0.0f));
-
+		// body.setLinearVelocity(new Vec2(-20.0f, 0.0f));
 		float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
 		float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 		g.resetLayoutX(xpos);
@@ -310,50 +310,50 @@ public class MazeGui extends Application {
 
 	private void createWalls() {
 		// wall (x,y) = 1/2 from edge (x,y)
-		// WALLS
+		// WALLS DON'T TOUCH!
 		// top wall
-		createWall(0, 85, 100, 1);
+		createWall(0, 84, 100, 1);
 		// bottom wall
-		createWall(0, 5, 100, 1);
+		createWall(0, 4, 100, 1);
 		// right wall
-		createWall(99, 37, 2, 100);
+		createWall(99, 37, 1, 74);
 		// left wall
-		createWall(0, 50, 2, 100);
+		createWall(0, 37, 1, 74);
 
-		// west
-		createWall(18, 16, 9, 3);
-		createWall(12, 69, 3, 8);
-		createWall(12, 40, 3, 14);
-		createWall(25, 65, 3, 12);
-		createWall(25, 36, 3, 10);
+		// west DON'T TOUCH
+		createWall(11, 15, 3, 3);
+		createWall(24, 15, 3, 3);
+		createWall(11, 68, 3, 8);
+		createWall(11, 39, 3, 14);
+		createWall(24, 64, 3, 12);
+		createWall(24, 35, 3, 10);
 
-		// north
-		createWall(34, 60, 6, 3);
-		createWall(67, 60, 6, 3);
+		// north DON'T TOUCH
+		createWall(37, 60, 3, 3);
+		createWall(63, 60, 3, 3);
+		createWall(50, 73, 16, 3);
 		createWall(50, 65, 3, 8);
-		createWall(50, 74, 15, 3);
 
-		// south
-		createWall(50, 29, 15, 3);
-		createWall(43, 23, 3, 3);
-		createWall(57, 23, 3, 3);
-		createWall(37, 9, 3, 3);
-		createWall(50, 9, 3, 3);
-		createWall(63, 9, 3, 3);
+		// south DON'T TOUCH
+		createWall(50, 28, 16, 3);
+		createWall(37, 8, 3, 3);
+		createWall(50, 15, 3, 3);
+		createWall(63, 8, 3, 3);
 
 		// east
-		createWall(81, 74, 8, 3);
-		createWall(81, 47, 8, 3);
-		createWall(81, 16, 8, 3);
-		createWall(92, 60, 5, 3);
-		createWall(92, 31, 5, 5);
+		createWall(95, 69, 3, 7);
+		createWall(95, 40, 3, 9);
+		createWall(82, 15, 9, 3);
+		createWall(82, 59, 3, 3);
+		createWall(82, 28, 3, 3);
 
-		createWall(76, 67, 3, 10);
-		createWall(76, 38, 3, 12);
+		createWall(76, 66, 3, 10);
+		createWall(76, 37, 3, 12);
 
 		// center
-		createWall(50, 49, 9, 1);
-		createWall(50, 40, 9, 1);
+		createWall(50, 48, 9, 1);
+		createWall(50, 39, 9, 1);
+
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
@@ -373,10 +373,10 @@ public class MazeGui extends Application {
 	}
 
 	private void createGhosts() {
-		ghosts[0] = new Ghost(70, 80, world, "/blueGhost.png");
-		ghosts[1] = new Ghost(47, 44, world, "/pinkGhost.png");
-		ghosts[2] = new Ghost(53, 44, world, "/orangeGhost.png");
-		ghosts[3] = new Ghost(58, 44, world, "/redGhost.png");
+		ghosts.add(new Ghost(42, 44, world, "/blueGhost.png"));
+		ghosts.add(new Ghost(47, 44, world, "/pinkGhost.png"));
+		ghosts.add(new Ghost(53, 44, world, "/orangeGhost.png"));
+		ghosts.add(new Ghost(58, 44, world, "/redGhost.png"));
 
 		for (Ghost g : ghosts) {
 			group.add(g.getNode());

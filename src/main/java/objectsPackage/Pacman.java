@@ -18,8 +18,10 @@ public class Pacman extends Piece {
 	private final int height = 3;
 	private final BodyType bodyType = BodyType.DYNAMIC;
 
-	private Image imageClose = new Image(getClass().getResourceAsStream("/pacman-closed.png"));
-	private Image imageOpen = new Image(getClass().getResourceAsStream("/pacman-opened.png"));
+	private Image imageClose = new Image(getClass().getResourceAsStream(
+			"/pacman-closed.png"));
+	private Image imageOpen = new Image(getClass().getResourceAsStream(
+			"/pacman-opened.png"));
 	private Image[] images = new Image[] { imageClose, imageOpen };
 	private boolean colliding = false;
 	private Image image;
@@ -56,17 +58,20 @@ public class Pacman extends Piece {
 		Image img = images[0];
 		ImagePattern imagePattern = new ImagePattern(img);
 
-		Rectangle pacman = new Rectangle((Properties.jBoxtoPixelWidth(width) * 2),
+		Rectangle pacman = new Rectangle(
+				(Properties.jBoxtoPixelWidth(width) * 2),
 				(Properties.jBoxtoPixelHeight(height) * 2));
 		pacman.setFill(imagePattern);
-		pacman.setLayoutX(Properties.jBoxToFxPosX(getPosX()) - Properties.jBoxtoPixelWidth(width));
-		pacman.setLayoutY(Properties.jBoxToFxPosY(getPosY()) - Properties.jBoxtoPixelHeight(height));
+		pacman.setLayoutX(Properties.jBoxToFxPosX(getPosX())
+				- Properties.jBoxtoPixelWidth(width));
+		pacman.setLayoutY(Properties.jBoxToFxPosY(getPosY())
+				- Properties.jBoxtoPixelHeight(height));
 		pacman.setCache(true); // Cache this object for better performance
 
 		PolygonShape ps = new PolygonShape();
 		ps.setAsBox(width, height);
 
-		body = createBodyAndFixture(bodyType, ps);
+		body = createBodyAndFixture(bodyType, ps, 1, 1, 1);
 		super.setUserData();
 
 		pacman.setUserData(body);
@@ -88,7 +93,7 @@ public class Pacman extends Piece {
 	}
 
 	public void setDirection(float horizontal, float vertical, int degree) {
-		Vec2 newDirection= new Vec2(horizontal, vertical);
+		Vec2 newDirection = new Vec2(horizontal, vertical);
 		currDirection = newDirection;
 		currDegree = degree;
 		resetSpeed();
