@@ -283,22 +283,22 @@ public class MazeGui extends Application {
 
 		// west DON'T TOUCH
 		createWall(11, 15, 3, 3);
-		createWall(24, 15, 3, 3);
-		createWall(11, 68, 3, 8);
-		createWall(11, 39, 3, 14);
-		createWall(24, 64, 3, 12);
-		createWall(24, 35, 3, 10);
-
-		// north DON'T TOUCH
-		createWall(37, 60, 3, 3);
-		createWall(63, 60, 3, 3);
-		createWall(50, 73, 16, 3);
-		createWall(50, 65, 3, 8);
-
-		// south DON'T TOUCH
-		createWall(50, 28, 16, 3);
-		createWall(37, 8, 3, 3);
-		createWall(50, 15, 3, 3);
+//		createWall(24, 15, 3, 3);
+//		createWall(11, 68, 3, 8);
+//		createWall(11, 39, 3, 14);
+//		createWall(24, 64, 3, 12);
+//		createWall(24, 35, 3, 10);
+//
+//		// north DON'T TOUCH
+//		createWall(37, 60, 3, 3);
+//		createWall(63, 60, 3, 3);
+//		createWall(50, 73, 16, 3);
+//		createWall(50, 65, 3, 8);
+//
+//		// south DON'T TOUCH
+//		createWall(50, 28, 16, 3);
+//		createWall(37, 8, 3, 3);
+//		createWall(50, 15, 3, 3);
 		createWall(63, 8, 3, 3);
 
 		// east

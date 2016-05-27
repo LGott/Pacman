@@ -44,8 +44,10 @@ public class Ghost extends Piece {
 		ghost = new Rectangle((Properties.jBoxtoPixelWidth(width) * 2),
 				(Properties.jBoxtoPixelHeight(height) * 2));
 		setGhostProperties();
-		body = createBodyAndFixture(bodyType, ps);
-		//fd.filter.maskBits=0;
+		body = createBodyAndFixture(bodyType, ps,-1,-1,-1);
+
+		
+	
 		super.setUserData();
 		ghost.setUserData(body);
 		return ghost;

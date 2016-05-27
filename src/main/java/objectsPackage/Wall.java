@@ -35,10 +35,11 @@ public class Wall extends Piece {
 				.y(Properties.jBoxToFxPosY(getPosY()) - Properties.jBoxtoPixelHeight(height))
 				.width(Properties.jBoxtoPixelWidth(width) * 2).height(Properties.jBoxtoPixelHeight(height) * 2)
 				.fill(color).build();
-		body = createBodyAndFixture(bodyType, ps);
-	
+		body = createBodyAndFixture(bodyType, ps,1,1,1);
+		
 		wall.setUserData(body);
 		super.setUserData();
+
 		return wall;
 	}
 }

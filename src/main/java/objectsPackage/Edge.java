@@ -25,7 +25,10 @@ public class Edge {
 		fd.density = 0f;
 		fd.friction = 0f;
 		fd.restitution = 0f;
-
+//		fd.filter.categoryBits=-1;
+//		fd.filter.maskBits= -1;
+//		fd.filter.groupIndex = -1;
+	//	fixture = body.createFixture(fd);
 		// create the body and add fixture to it
 		Body body = world.createBody(bd);
 		body.createFixture(fd);
