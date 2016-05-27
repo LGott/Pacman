@@ -319,7 +319,7 @@ public class MazeGui extends Application {
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
-		group.add(new Wall(posX, posY, world, width, height, Color.MAGENTA).getNode());
+		group.add(new Wall(posX, posY, world, width, height, Color.BLUE).getNode());
 	}
 
 	public void createPacmans() {
