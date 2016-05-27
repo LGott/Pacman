@@ -6,20 +6,24 @@ import org.jbox2d.collision.shapes.Shape;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.Filter;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 
-public abstract class Piece{
+public abstract class Piece {
 	private int posX;
 	private int posY;
-	private World world;
-	private Fixture fixture;
+	protected World world;
+	protected Fixture fixture;
 	private static int lastID = 0;
 	private int id;
 	private UniqueObject objectDescription;
 	protected Body body;
 	protected Node node;
+	protected FixtureDef fd;
+	protected BodyDef bd;
+
 	public UniqueObject getObjectDescription() {
 		return objectDescription;
 	}
@@ -29,34 +33,37 @@ public abstract class Piece{
 		this.posY = posY;
 		this.world = world;
 		this.id = ++lastID;
-		objectDescription=new UniqueObject(this.id, description);
-		
-		
+		objectDescription = new UniqueObject(this.id, description);
+		fd = new FixtureDef();
+
 	}
 
-	public Body createBodyAndFixture(BodyType bodyType, Shape shape) {
+	public Body createBodyAndFixture(BodyType bodyType, Shape shape,
+			int maskBits, int groupIndex, int categoryBits) {
 
 		// Create an JBox2D body definition
-		BodyDef bd = new BodyDef();
+		bd = new BodyDef();
 		// set position to x and y coordinates
 		bd.position.set(posX, posY);
-		//bd.position.set(posX, posY);
+		// bd.position.set(posX, posY);
 		bd.type = bodyType;
 
 		// Create a fixture
-		FixtureDef fd = new FixtureDef();
+
 		fd.shape = shape;
 		fd.density = 0f;
 		fd.friction = 0f;
 		fd.restitution = 0f;
-
-
-		Body body = new Body(bd, world);
-		body= world.createBody(bd);
+		fd.filter.categoryBits = -categoryBits;
+		fd.filter.maskBits = maskBits;
+		fd.filter.groupIndex = groupIndex;
+		body = world.createBody(bd);
 		fixture = body.createFixture(fd);
 
 		return body;
-	} public int getPosX() {
+	}
+
+	public int getPosX() {
 		return posX;
 	}
 
@@ -72,7 +79,7 @@ public abstract class Piece{
 		this.posY = posY;
 	}
 
-	public Fixture getFixture(){
+	public Fixture getFixture() {
 		return fixture;
 	}
 
@@ -83,9 +90,9 @@ public abstract class Piece{
 
 	public void setUserData(String newDescription) {
 		// TODO Auto-generated method stub
-		objectDescription=new UniqueObject(this.id, newDescription);
+		objectDescription = new UniqueObject(this.id, newDescription);
 	}
-	
+
 	public Node getNode() {
 		return node;
 	}
