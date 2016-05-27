@@ -28,12 +28,6 @@ public class Ghost extends Piece {
 	private Vec2 currDirection;
 	private int currDegree;
 
-	private enum Status {
-		RIGHT, LEFT, UP, DOWN
-	}
-
-	private Status status = Status.UP;
-
 	public Ghost(int posX, int posY, World world, String image) {
 		super(posX, posY, world, "GHOST");
 		ps = new PolygonShape();
@@ -41,7 +35,6 @@ public class Ghost extends Piece {
 		img = new Image(image);
 		imagePattern = new ImagePattern(img);
 		node = create();
-		status = Status.UP;
 	}
 
 	private Node create() {
