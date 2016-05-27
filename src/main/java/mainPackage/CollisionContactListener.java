@@ -65,14 +65,18 @@ public class CollisionContactListener implements ContactListener {
 			pac.incrementScore(10);
 
 			System.out.println("pacman-pellet");
-		} else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "BONUS_PELLET") {
+		} else if (obj2.getDescription() == "PACMAN" && obj1.getDescription() == "BONUS_PELLET") {
 			// remove the bonus pellet
+			removePellet(f1, obj1);
+			Pacman pac = identifyPacman(obj1);
+			pac.incrementScore(50);
 			colliding = true;
 
 		} else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "BONUS_PELLET") {
 			removePellet(f2, obj2);
-			Pacman pac = identifyPacman(obj1);
+			Pacman pac = identifyPacman(obj2);
 			pac.incrementScore(50);
+			
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST"
 				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "GHOST")) {
 			// float xpos =
