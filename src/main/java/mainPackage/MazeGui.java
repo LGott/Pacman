@@ -190,16 +190,16 @@ public class MazeGui extends Application {
 					resetPacmansAndGhosts();
 
 					// If pacman1 hit a ghost, decrement its score
-					if (contactListener.determinePacman() == 1) {
+					if (contactListener.determinePacman() == "Pacman1") {
 						pacmanLives1.get(life).setGraphic(null);
 						contactListener.setPacmanLoss(false);
-						contactListener.setPacmans(0); // reset
+						contactListener.setPacmans("Neutral"); // reset
 					}
 					// If pacman2 hit a ghost decrement its score
-					if (contactListener.determinePacman() == 2) {
-						pacmanLives2.get(life).setGraphic(null);
+					if (contactListener.determinePacman() == "Pacman2") {
+						pacmanLives2.get(life2).setGraphic(null);
 						contactListener.setPacmanLoss(false);
-						contactListener.setPacmans(0); // reset
+						contactListener.setPacmans("Neutral"); // reset
 					}
 					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
 						gameOverLabel.setVisible(true);
@@ -371,8 +371,8 @@ public class MazeGui extends Application {
 	}
 
 	public void createPacmans() {
-		pacmanArray.add(pacman1 = createPacman(50, 80, "pacman1"));
-		pacmanArray.add(pacman2 = createPacman(50, 22, "pacman2"));
+		pacmanArray.add(pacman1 = createPacman(50, 80, "Pacman1"));
+		pacmanArray.add(pacman2 = createPacman(50, 22, "Pacman2"));
 	}
 
 	private Pacman createPacman(int x, int y, String name) {

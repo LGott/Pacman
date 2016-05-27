@@ -26,7 +26,7 @@ public class CollisionContactListener implements ContactListener {
 	private ArrayList<Pacman> deadPacmans;
 	private boolean pacmanLost;
 	private ArrayList<Ghost> ghosts;
-	private int determinePacman;
+	private String determinePacman;
 
 	public CollisionContactListener(Group rootGroup, ArrayList<Pellet> pellet, ArrayList<Pacman> pacmanArray,
 			ArrayList<Ghost> ghosts) {
@@ -39,7 +39,7 @@ public class CollisionContactListener implements ContactListener {
 		this.pacmanColliding = new ArrayList<Integer>();
 		this.pacmanLost = false;
 		this.deadPacmans = new ArrayList<Pacman>();
-		this.determinePacman = 0;
+		this.determinePacman = "Neutral";
 	}
 
 	public void beginContact(Contact contact) {
@@ -97,17 +97,17 @@ public class CollisionContactListener implements ContactListener {
 
 			if (obj1.getDescription() == "PACMAN") {
 				Pacman pac = identifyPacman(obj1);
-				if (pac.getLives() > 0) {
+				if (pac.getLives() > 0) {					
+					this.determinePacman =  pac.getName();
 					pac.decrementLives();
-					determinePacman = 1;
 					deadPacmans.add(pac);
 					System.out.println(pac.getName() + " added to dead list");
 				}
 			} else if (obj2.getDescription() == "PACMAN") {
 				Pacman pac = identifyPacman(obj2);
 				if (pac.getLives() > 0) {
+					this.determinePacman = pac.getName();
 					pac.decrementLives();
-					determinePacman = 2;
 					deadPacmans.add(pac);
 					System.out.println(pac.getName() + " added to dead list");
 				}
@@ -137,13 +137,13 @@ public class CollisionContactListener implements ContactListener {
 		return this.pacmanLost;
 	}
 
-	// 1= Pacman1 , 2= Pacman2, 0=none
-	public int determinePacman() {
+	
+	public String determinePacman() {
 		return this.determinePacman;
 	}
 
-	public void setPacmans(int pacNum) {
-		this.determinePacman = pacNum;
+	public void setPacmans(String name) {
+		this.determinePacman = name;
 	}
 
 	private void turnGhost(UniqueObject obj) {
