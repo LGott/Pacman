@@ -72,10 +72,9 @@ public class MazeGui extends Application {
 		setScorePanels();
 		group = rootGroup.getChildren();
 		this.ghosts = new ArrayList<Ghost>();
-		contactListener = new CollisionContactListener(rootGroup, pellets,
-				scorePanel1, scorePanel2, pacmanArray, ghosts);
-		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
-				Color.BLACK);
+		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel1, scorePanel2, pacmanArray,
+				ghosts);
+		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
 
 		pacmanLives1 = new ArrayList<Label>();
 		pacmanLives2 = new ArrayList<Label>();
@@ -194,15 +193,14 @@ public class MazeGui extends Application {
 					resetPacmansAndGhosts();
 					pacmanLives1.get(life).setGraphic(null);
 					contactListener.setPacmanLoss(false);
-			
-				
-				if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
-					gameOverLabel.setVisible(true);
-					timeline.stop();
-				}
-				if (life < 2) {
-					life++;
-				}
+
+					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
+						gameOverLabel.setVisible(true);
+						timeline.stop();
+					}
+					if (life < 2) {
+						life++;
+					}
 				}
 			}
 		};
@@ -359,8 +357,7 @@ public class MazeGui extends Application {
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
-		group.add(new Wall(posX, posY, world, width, height, Color.BLUE)
-				.getNode());
+		group.add(new Wall(posX, posY, world, width, height, Color.BLUE).getNode());
 	}
 
 	public void createPacmans() {
