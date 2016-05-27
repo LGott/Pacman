@@ -13,10 +13,10 @@ import org.jbox2d.dynamics.World;
 public abstract class Piece{
 	private int posX;
 	private int posY;
-	private World world;
+	protected World world;
 	private Fixture fixture;
 	private static int lastID = 0;
-	private int id;
+	protected int id;
 	private UniqueObject objectDescription;
 	protected Body body;
 	protected Node node;
@@ -30,8 +30,8 @@ public abstract class Piece{
 		this.world = world;
 		this.id = ++lastID;
 		objectDescription=new UniqueObject(this.id, description);
-		
-		
+
+
 	}
 
 	public Body createBodyAndFixture(BodyType bodyType, Shape shape) {
@@ -85,7 +85,7 @@ public abstract class Piece{
 		// TODO Auto-generated method stub
 		objectDescription=new UniqueObject(this.id, newDescription);
 	}
-	
+
 	public Node getNode() {
 		return node;
 	}

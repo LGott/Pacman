@@ -25,6 +25,7 @@ import objectsPackage.Pacman;
 import objectsPackage.Pellet;
 import objectsPackage.Wall;
 import objectsPackage.YellowPellet;
+
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
@@ -65,12 +66,14 @@ public class MazeGui extends Application {
 		// TODO Auto-generated method stub
 		setStageProperties(stage);
 		// Create a group for holding all objects on the screen.
-	
+
 		rootGroup = new Group();
 		setScorePanels();
 		group = rootGroup.getChildren();
-		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel1, scorePanel2, pacmanArray);
-		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
+		contactListener = new CollisionContactListener(rootGroup, pellets,
+				scorePanel1, scorePanel2, pacmanArray);
+		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
+				Color.BLACK);
 
 		pacmanLives1 = new ArrayList<Label>();
 		pacmanLives2 = new ArrayList<Label>();
@@ -179,14 +182,18 @@ public class MazeGui extends Application {
 				removeFixturesAndPellets();
 				scoreValueLabel.setText(String.valueOf(pacman1.getScore()));
 				// Move pacmans to the new position computed by JBox2D
+
 				movePacman(pacman1);
 				movePacman(pacman2);
 				moveGhostsStep();
+
 				if (contactListener.isPacmanLost()) {
-					contactListener.setPacmanLoss(false);
+					timeline.pause();
+					resetPacmansAndGhosts();
 					pacmanLives1.get(life).setGraphic(null);
+					contactListener.setPacmanLoss(false);
 					if (life < 3) {
-						//life++;
+						// life++;
 					}
 				}
 				if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
@@ -206,6 +213,36 @@ public class MazeGui extends Application {
 		// TODO Auto-generated method stub
 	}
 
+	private void resetPacmansAndGhosts() {
+
+		// reset pacman1
+		group.remove(pacman1.getNode());
+		world.destroyBody(pacman1.getFixture().getBody());
+		pacman1 = new Pacman(pacman1);
+		group.add(pacman1.getNode());
+
+		// reset pacman2
+		group.remove(pacman2.getNode());
+		world.destroyBody(pacman2.getFixture().getBody());
+		pacman2 = new Pacman(pacman2);
+		group.add(pacman2.getNode());
+
+		pacmanArray = new ArrayList<Pacman>();
+		pacmanArray.add(pacman1);
+		pacmanArray.add(pacman2);
+		contactListener.resetPacmanArray(pacmanArray);
+
+		//reset ghosts
+		for(Ghost g : ghosts){
+			group.remove(g.getNode());
+			world.destroyBody(g.getFixture().getBody());
+		}
+		createGhosts();
+
+
+
+	}
+
 	private void moveGhostsStep() {
 		// TODO Auto-generated method stub
 		for (Ghost g : ghosts) {
@@ -217,7 +254,7 @@ public class MazeGui extends Application {
 		// TODO Auto-generated method stub
 		Body body = (Body) g.getNode().getUserData();
 		body.setLinearVelocity(new Vec2(-20.0f, 0.0f));
-		
+
 		float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
 		float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 		g.resetLayoutX(xpos);
@@ -225,6 +262,7 @@ public class MazeGui extends Application {
 	}
 
 	private void movePacman(Pacman pacman) {
+
 		animatePacman(timeStart, pacman);
 		// TODO Auto-generated method stub
 		Body pacBody = (Body) pacman.getNode().getUserData();
@@ -247,7 +285,7 @@ public class MazeGui extends Application {
 		}
 
 		// clear for next step
-		contactListener.getPacmanColliding().clear();
+		// contactListener.getPacmanColliding().clear();
 		contactListener.getPelletsToRemove().clear();
 		contactListener.getFixturesToRemove().clear();
 
@@ -319,7 +357,8 @@ public class MazeGui extends Application {
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
-		group.add(new Wall(posX, posY, world, width, height, Color.BLUE).getNode());
+		group.add(new Wall(posX, posY, world, width, height, Color.BLUE)
+		.getNode());
 	}
 
 	public void createPacmans() {
@@ -334,7 +373,7 @@ public class MazeGui extends Application {
 	}
 
 	private void createGhosts() {
-		ghosts[0] = new Ghost(42, 44, world, "/blueGhost.png");
+		ghosts[0] = new Ghost(70, 80, world, "/blueGhost.png");
 		ghosts[1] = new Ghost(47, 44, world, "/pinkGhost.png");
 		ghosts[2] = new Ghost(53, 44, world, "/orangeGhost.png");
 		ghosts[3] = new Ghost(58, 44, world, "/redGhost.png");
@@ -345,56 +384,56 @@ public class MazeGui extends Application {
 	}
 
 	private void createPellets() {
-		//bottom line across
+		// bottom line across
 		for (int i = 13; i < 31; i += 8) {
 			createYellowPellet(i, 9);
-			}
+		}
 		createYellowPellet(44, 9);
 		createYellowPellet(56, 9);
 		for (int i = 70; i < 90; i += 8) {
 			createYellowPellet(i, 9);
 		}
-		
-		//second to bottom across
-		//createYellowPellet(6, 16);
+
+		// second to bottom across
+		// createYellowPellet(6, 16);
 		for (int i = 36; i < 68; i += 7) {
 			createYellowPellet(i, 16);
-		}	
+		}
 		createYellowPellet(93, 16);
-		
-		//third to bottom across
+
+		// third to bottom across
 		for (int i = 13; i < 40; i += 7) {
 			createYellowPellet(i, 23);
 		}
 		for (int i = 65; i < 95; i += 7) {
 			createYellowPellet(i, 23);
 		}
-		
-		//vertical left column
+
+		// vertical left column
 		for (int i = 16; i < 75; i += 7) {
 			createYellowPellet(6, i);
 		}
-		//second to left vertical column
+		// second to left vertical column
 		for (int i = 30; i < 75; i += 7) {
 			createYellowPellet(18, i);
 		}
-		
-		//top row across
+
+		// top row across
 		for (int i = 6; i < 45; i += 7) {
 			createYellowPellet(i, 80);
 		}
 		for (int i = 58; i < 95; i += 7) {
 			createYellowPellet(i, 80);
 		}
-		
-		//left inner home down
+
+		// left inner home down
 		for (int i = 34; i < 60; i += 7) {
 			createYellowPellet(31, i);
 		}
 		for (int i = 34; i < 60; i += 7) {
 			createYellowPellet(38, i);
 		}
-		//right inner home down
+		// right inner home down
 		for (int i = 34; i < 60; i += 7) {
 			createYellowPellet(62, i);
 		}
@@ -402,47 +441,47 @@ public class MazeGui extends Application {
 			createYellowPellet(69, i);
 		}
 		createYellowPellet(76, 55);
-		
-		//horizontal under home
+
+		// horizontal under home
 		for (int i = 44; i < 62; i += 6) {
 			createYellowPellet(i, 34);
 		}
-		
-		//vertical above home
+
+		// vertical above home
 		for (int i = 55; i < 72; i += 6) {
 			createYellowPellet(56, i);
 		}
 		for (int i = 55; i < 72; i += 6) {
 			createYellowPellet(44, i);
 		}
-				
-		//horizontal above home
+
+		// horizontal above home
 		for (int i = 31; i < 45; i += 7) {
 			createYellowPellet(i, 67);
 		}
 		for (int i = 62; i < 75; i += 7) {
 			createYellowPellet(i, 67);
 		}
-		
-		//vertical second to right column
+
+		// vertical second to right column
 		for (int i = 28; i < 45; i += 6) {
 			createYellowPellet(83, i);
 		}
 		for (int i = 55; i < 70; i += 6) {
 			createYellowPellet(83, i);
 		}
-		createYellowPellet(88,40);
-		//createYellowPellet(88,55);
-		createYellowPellet(88,67);
-		
-		//vertical right column
+		createYellowPellet(88, 40);
+		// createYellowPellet(88,55);
+		createYellowPellet(88, 67);
+
+		// vertical right column
 		for (int i = 48; i < 58; i += 7) {
 			createYellowPellet(93, i);
 		}
 		for (int i = 67; i < 75; i += 6) {
 			createYellowPellet(93, i);
 		}
-		
+
 	}
 
 	private void createYellowPellet(int posX, int posY) {
@@ -460,8 +499,7 @@ public class MazeGui extends Application {
 		createBonusPellet(30, 16);
 		createBonusPellet(70, 16);
 		createBonusPellet(6, 9);
-		createBonusPellet(93,40);
-		
+		createBonusPellet(93, 40);
 	}
 
 	private void createBonusPellet(int posX, int posY) {

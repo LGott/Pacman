@@ -29,13 +29,27 @@ public class Pacman extends Piece {
 	private String name;
 	private int score;
 	private int lives;
+	private int initialX, initialY;
 
 	public Pacman(int posX, int posY, World world, String name) {
 		super(posX, posY, world, "PACMAN");
+		this.initialX = posX;
+		this.initialY = posY;
 		node = create();
 		this.name = name;
 		this.score = 0;
 		this.lives = 3;
+	}
+
+	public Pacman(Pacman p) {
+		super(p.initialX, p.initialY, p.world, "PACMAN");
+		node = create();
+		id = p.id;
+		this.initialX = p.initialX;
+		this.initialY = p.initialY;
+		this.name = p.name;
+		this.score = p.score;
+		this.lives = p.lives;
 	}
 
 	private Node create() {
