@@ -22,7 +22,9 @@ public class Ghost extends Piece {
 	private PolygonShape ps;
 	private Image img;
 	private ImagePattern imagePattern;
-	private int i;
+	private final int groupIndex = -1;
+	private final int maskBits = -1;
+	private final int categoryBits = -1;
 
 	private enum Status {
 		RIGHT, LEFT, UP, DOWN
@@ -44,10 +46,8 @@ public class Ghost extends Piece {
 		ghost = new Rectangle((Properties.jBoxtoPixelWidth(width) * 2),
 				(Properties.jBoxtoPixelHeight(height) * 2));
 		setGhostProperties();
-		body = createBodyAndFixture(bodyType, ps,-1,-1,-1);
-
-		
-	
+		body = createBodyAndFixture(bodyType, ps, maskBits, groupIndex,
+				categoryBits);
 		super.setUserData();
 		ghost.setUserData(body);
 		return ghost;
@@ -73,12 +73,12 @@ public class Ghost extends Piece {
 
 	public void turnGhost() {
 		// TODO Auto-generated method stub
-		Random rand= new Random();
-		int nextDir= rand.nextInt(4);
-		switch(nextDir){
+		Random rand = new Random();
+		int nextDir = rand.nextInt(4);
+		switch (nextDir) {
 		case 0:
 			System.out.println("turning right ");
-			//body.setLinearVelocity(new Vec2(0.0f, 20.f));
+			// body.setLinearVelocity(new Vec2(0.0f, 20.f));
 			body.applyLinearImpulse(new Vec2(0.0f, 20.0f),
 					body.getWorldCenter());
 			status = Status.RIGHT;

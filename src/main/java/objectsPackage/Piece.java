@@ -23,10 +23,10 @@ public abstract class Piece {
 	protected Node node;
 	protected FixtureDef fd;
 	protected BodyDef bd;
+
 	public UniqueObject getObjectDescription() {
 		return objectDescription;
 	}
-
 
 	public Piece(int posX, int posY, World world, String description) {
 		this.posX = posX;
@@ -38,7 +38,8 @@ public abstract class Piece {
 
 	}
 
-	public Body createBodyAndFixture(BodyType bodyType, Shape shape, int maskBits, int groupIndex, int categoryBits) {
+	public Body createBodyAndFixture(BodyType bodyType, Shape shape,
+			int maskBits, int groupIndex, int categoryBits) {
 
 		// Create an JBox2D body definition
 		bd = new BodyDef();
@@ -53,13 +54,12 @@ public abstract class Piece {
 		fd.density = 0f;
 		fd.friction = 0f;
 		fd.restitution = 0f;
-		fd.filter.categoryBits=-categoryBits;
-		fd.filter.maskBits= maskBits;
+		fd.filter.categoryBits = -categoryBits;
+		fd.filter.maskBits = maskBits;
 		fd.filter.groupIndex = groupIndex;
-////		Body body = new Body(bd, world);
 		body = world.createBody(bd);
 		fixture = body.createFixture(fd);
-		
+
 		return body;
 	}
 
