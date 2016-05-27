@@ -3,6 +3,7 @@ package mainPackage;
 import java.util.ArrayList;
 
 import javafx.scene.Group;
+import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
 import objectsPackage.UniqueObject;
@@ -26,6 +27,7 @@ public class CollisionContactListener implements ContactListener {
 	private ArrayList<Integer> pacmanColliding;
 	private ArrayList<Pacman> pacmanArray;
 	private boolean pacmanLost;
+	private ArrayList<Ghost> ghosts;
 
 	public boolean isColliding() {
 		return colliding;
@@ -36,8 +38,8 @@ public class CollisionContactListener implements ContactListener {
 	}
 
 	public CollisionContactListener(Group rootGroup, ArrayList<Pellet> pellet, ScorePanel scorePanel,
-			ScorePanel scorePanel2, ArrayList<Pacman> pacmanArray) {
-
+			ScorePanel scorePanel2, ArrayList<Pacman> pacmanArray, ArrayList<Ghost> ghosts) {
+this.ghosts=ghosts;
 		colliding = false;
 		this.pellets = pellet;
 		this.scorePanel = scorePanel;
@@ -80,17 +82,11 @@ public class CollisionContactListener implements ContactListener {
 
 			System.out.println("BONUS PELLET DETECTED");
 
-		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST"
-				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "GHOST")) {
-			// float xpos =
-			// Properties.jBoxToFxPosX(f2.getBody().getPosition().x);
-			// float ypos =
-			// Properties.jBoxToFxPosY(f2.getBody().getPosition().y);
-			// f2.getBody().setAngularVelocity(xpos);
-			// f2.getBody().applyTorque(20);
-			// f2.getBody().setAngularVelocity(20);
-			// f2.getBody().setLinearVelocity(new Vec2(20.0f, 0.0f));
+		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST"){
+			turnGhost(obj2);
 
+		}else if(obj1.getDescription() == "GHOST" && obj2.getDescription() == "GHOST"){
+			turnGhost(obj1);
 		}
 
 		else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "GHOST"
@@ -129,7 +125,19 @@ public class CollisionContactListener implements ContactListener {
 		}
 
 	}
-
+	private void turnGhost(UniqueObject obj) {
+		// TODO Auto-generated method stub
+		for(Ghost g: ghosts){
+			if(g.getObjectDescription().getID()==obj.getID()){
+				System.out.println("TURN GHOST");
+				g.changeDirection();
+				break;
+			}
+		}
+		
+		
+		
+	}
 	private Pacman identifyPacman(UniqueObject obj1) {
 		Pacman pac = null;
 		for (int i = 0; i < pacmanArray.size(); i++) {
