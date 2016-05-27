@@ -46,9 +46,6 @@ public class MazeGui extends Application {
 	private CollisionContactListener contactListener;
 
 	private ArrayList<Pellet> pellets = new ArrayList<Pellet>();
-
-	private ScorePanel scorePanel1 = new ScorePanel();
-	private ScorePanel scorePanel2 = new ScorePanel();
 	private ArrayList<Pacman> pacmanArray = new ArrayList<Pacman>();
 	private Label scoreLabel;
 	private Label scoreValueLabel;
@@ -69,13 +66,11 @@ public class MazeGui extends Application {
 		// Create a group for holding all objects on the screen.
 
 		rootGroup = new Group();
-		setScorePanels();
+		setScoreLabels();
 		group = rootGroup.getChildren();
 		this.ghosts = new ArrayList<Ghost>();
-		contactListener = new CollisionContactListener(rootGroup, pellets,
-				scorePanel1, scorePanel2, pacmanArray, ghosts);
-		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
-				Color.BLACK);
+		contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
+		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
 
 		pacmanLives1 = new ArrayList<Label>();
 		pacmanLives2 = new ArrayList<Label>();
@@ -98,7 +93,7 @@ public class MazeGui extends Application {
 		stage.show();
 	}
 
-	private void setScorePanels() {
+	private void setScoreLabels() {
 		scoreLabel = new Label("Score: ");
 		scoreLabel.setTranslateX(25);
 		scoreLabel.setTranslateY(25);
@@ -357,8 +352,7 @@ public class MazeGui extends Application {
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
-		group.add(new Wall(posX, posY, world, width, height, Color.BLUE)
-				.getNode());
+		group.add(new Wall(posX, posY, world, width, height, Color.BLUE).getNode());
 	}
 
 	public void createPacmans() {
