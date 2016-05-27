@@ -6,7 +6,6 @@ import org.jbox2d.collision.shapes.Shape;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
-import org.jbox2d.dynamics.Filter;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
@@ -17,7 +16,7 @@ public abstract class Piece {
 	protected World world;
 	protected Fixture fixture;
 	private static int lastID = 0;
-	private int id;
+	protected int id;
 	private UniqueObject objectDescription;
 	protected Body body;
 	protected Node node;

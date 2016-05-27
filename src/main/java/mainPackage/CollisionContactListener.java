@@ -11,7 +11,6 @@ import objectsPackage.UniqueObject;
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.collision.Manifold;
-import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.contacts.Contact;
 
@@ -26,6 +25,7 @@ public class CollisionContactListener implements ContactListener {
 	private boolean collidingWithWall;
 	private ArrayList<Integer> pacmanColliding;
 	private ArrayList<Pacman> pacmanArray;
+	private ArrayList<Pacman> deadPacmans;
 	private boolean pacmanLost;
 	private ArrayList<Ghost> ghosts;
 
@@ -51,6 +51,7 @@ public class CollisionContactListener implements ContactListener {
 		this.pacmanArray = pacmanArray;
 		pacmanColliding = new ArrayList<Integer>();
 		pacmanLost = false;
+		deadPacmans = new ArrayList<Pacman>();
 	}
 
 	public void beginContact(Contact contact) {
@@ -59,6 +60,7 @@ public class CollisionContactListener implements ContactListener {
 		Fixture f2 = contact.getFixtureB();
 		UniqueObject obj1 = (UniqueObject) f1.getBody().getUserData();
 		UniqueObject obj2 = (UniqueObject) f2.getBody().getUserData();
+
 		System.out.println("contacts " + obj1.getDescription() + " and "
 				+ obj2.getDescription());
 		if (obj1.getDescription() == "PACMAN"
@@ -70,19 +72,28 @@ public class CollisionContactListener implements ContactListener {
 			pac.incrementScore(10);
 
 			System.out.println("pacman-pellet");
+
+		} else if (obj2.getDescription() == "PACMAN"
+				&& obj1.getDescription() == "PELLET") {
+
+			removePellet(f2, obj1);
+
+			// Find the correct pacman and increment it's score
+			Pacman pac = identifyPacman(obj2);
+			pac.incrementScore(10);
+			System.out.println("pacman-pellet");
 		} else if (obj2.getDescription() == "PACMAN"
 				&& obj1.getDescription() == "BONUS_PELLET") {
 
 			// remove the bonus pellet
 			removePellet(f1, obj1);
-			Pacman pac = identifyPacman(obj1);
+			Pacman pac = identifyPacman(obj2);
 			pac.incrementScore(50);
-			colliding = true;
 
 		} else if (obj1.getDescription() == "PACMAN"
 				&& obj2.getDescription() == "BONUS_PELLET") {
 			removePellet(f2, obj2);
-			Pacman pac = identifyPacman(obj2);
+			Pacman pac = identifyPacman(obj1);
 			pac.incrementScore(50);
 
 			System.out.println("BONUS PELLET DETECTED");
@@ -96,8 +107,7 @@ public class CollisionContactListener implements ContactListener {
 			turnGhost(obj1);
 		}
 
-		else if (obj1.getDescription() == "PACMAN"
-				&& obj2.getDescription() == "GHOST"
+		else if (obj1.getDescription() == "PACMAN"	&& obj2.getDescription() == "GHOST"
 				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "PACMAN")) {
 			// remove an extra pacman
 			// System.out.println("here");
@@ -108,11 +118,15 @@ public class CollisionContactListener implements ContactListener {
 				Pacman pac = identifyPacman(obj1);
 				if (pac.getLives() > 0) {
 					pac.decrementLives();
+					deadPacmans.add(pac);
+					System.out.println(pac.getName() + " added to dead list");
 				}
 			} else if (obj2.getDescription() == "PACMAN") {
 				Pacman pac = identifyPacman(obj2);
 				if (pac.getLives() > 0) {
 					pac.decrementLives();
+					deadPacmans.add(pac);
+					System.out.println(pac.getName() + " added to dead list");
 				}
 			}
 
@@ -156,6 +170,10 @@ public class CollisionContactListener implements ContactListener {
 			}
 		}
 		return pac;
+	}
+
+	public void resetPacmanArray(ArrayList<Pacman> newPacmans) {
+		this.pacmanArray = newPacmans;
 	}
 
 	public void setPacmanLoss(boolean lost) {
@@ -225,5 +243,9 @@ public class CollisionContactListener implements ContactListener {
 
 	public ArrayList<Fixture> getFixturesToRemove() {
 		return fixturesToRemove;
+	}
+
+	public ArrayList<Pacman> getDeadPacmans() {
+		return deadPacmans;
 	}
 }

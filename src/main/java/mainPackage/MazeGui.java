@@ -25,6 +25,7 @@ import objectsPackage.Pacman;
 import objectsPackage.Pellet;
 import objectsPackage.Wall;
 import objectsPackage.YellowPellet;
+
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
@@ -183,20 +184,24 @@ public class MazeGui extends Application {
 				removeFixturesAndPellets();
 				scoreValueLabel.setText(String.valueOf(pacman1.getScore()));
 				// Move pacmans to the new position computed by JBox2D
+
 				movePacman(pacman1);
 				movePacman(pacman2);
 				moveGhostsStep();
+
 				if (contactListener.isPacmanLost()) {
-					contactListener.setPacmanLoss(false);
+					timeline.pause();
+					resetPacmansAndGhosts();
 					pacmanLives1.get(life).setGraphic(null);
+					contactListener.setPacmanLoss(false);
 					if (life < 3) {
 						// life++;
 					}
 				}
-				// if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
-				// gameOverLabel.setVisible(true);
-				// timeline.stop();
-				// }
+				if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
+					gameOverLabel.setVisible(true);
+					timeline.stop();
+				}
 			}
 		};
 		/**
@@ -210,6 +215,35 @@ public class MazeGui extends Application {
 		// TODO Auto-generated method stub
 	}
 
+	private void resetPacmansAndGhosts() {
+
+		// reset pacman1
+		group.remove(pacman1.getNode());
+		world.destroyBody(pacman1.getFixture().getBody());
+		pacman1 = new Pacman(pacman1);
+		group.add(pacman1.getNode());
+
+		// reset pacman2
+		group.remove(pacman2.getNode());
+		world.destroyBody(pacman2.getFixture().getBody());
+		pacman2 = new Pacman(pacman2);
+		group.add(pacman2.getNode());
+
+		pacmanArray = new ArrayList<Pacman>();
+		pacmanArray.add(pacman1);
+		pacmanArray.add(pacman2);
+		contactListener.resetPacmanArray(pacmanArray);
+
+		// reset ghosts
+		for (Ghost g : ghosts) {
+			group.remove(g.getNode());
+			world.destroyBody(g.getFixture().getBody());
+		}
+		ghosts.clear();
+		createGhosts();
+
+	}
+
 	private void moveGhostsStep() {
 		// TODO Auto-generated method stub
 		for (Ghost g : ghosts) {
@@ -220,7 +254,7 @@ public class MazeGui extends Application {
 	private void moveAGhost(Ghost g) {
 		// TODO Auto-generated method stub
 		Body body = (Body) g.getNode().getUserData();
-		//body.setLinearVelocity(new Vec2(-20.0f, 0.0f));
+		// body.setLinearVelocity(new Vec2(-20.0f, 0.0f));
 		float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
 		float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 		g.resetLayoutX(xpos);
@@ -228,6 +262,7 @@ public class MazeGui extends Application {
 	}
 
 	private void movePacman(Pacman pacman) {
+
 		animatePacman(timeStart, pacman);
 		// TODO Auto-generated method stub
 		Body pacBody = (Body) pacman.getNode().getUserData();
@@ -250,7 +285,7 @@ public class MazeGui extends Application {
 		}
 
 		// clear for next step
-		contactListener.getPacmanColliding().clear();
+		// contactListener.getPacmanColliding().clear();
 		contactListener.getPelletsToRemove().clear();
 		contactListener.getFixturesToRemove().clear();
 
@@ -323,7 +358,7 @@ public class MazeGui extends Application {
 
 	private void createWall(int posX, int posY, int width, int height) {
 		group.add(new Wall(posX, posY, world, width, height, Color.BLUE)
-				.getNode());
+		.getNode());
 	}
 
 	public void createPacmans() {
@@ -465,7 +500,6 @@ public class MazeGui extends Application {
 		createBonusPellet(70, 16);
 		createBonusPellet(6, 9);
 		createBonusPellet(93, 40);
-
 	}
 
 	private void createBonusPellet(int posX, int posY) {
