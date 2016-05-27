@@ -97,8 +97,8 @@ public class CollisionContactListener implements ContactListener {
 
 			if (obj1.getDescription() == "PACMAN") {
 				Pacman pac = identifyPacman(obj1);
-				if (pac.getLives() > 0) {					
-					this.determinePacman =  pac.getName();
+				if (pac.getLives() > 0) {
+					this.determinePacman = pac.getName();
 					pac.decrementLives();
 					deadPacmans.add(pac);
 					System.out.println(pac.getName() + " added to dead list");
@@ -137,7 +137,6 @@ public class CollisionContactListener implements ContactListener {
 		return this.pacmanLost;
 	}
 
-	
 	public String determinePacman() {
 		return this.determinePacman;
 	}

@@ -54,7 +54,6 @@ public class MazeGui extends Application {
 	private ArrayList<Label> pacmanLives1;
 	private ArrayList<Label> pacmanLives2;
 	private Label gameOverLabel;
-	private boolean gameOver;
 	private int life;
 	private int life2;
 	private ObservableList<Node> group;
@@ -85,7 +84,6 @@ public class MazeGui extends Application {
 		gameOverLabel.setVisible(false);
 
 		rootGroup.getChildren().add(gameOverLabel);
-		gameOver = false;
 		createShapes();
 		world.setContactListener(contactListener);
 		startSimulation();
@@ -95,22 +93,22 @@ public class MazeGui extends Application {
 	}
 
 	private void setScoreLabels() {
-		scoreLabel = new Label("Score: ");
+		scoreLabel = new Label("Pacman 1 Score: ");
 		scoreLabel.setTranslateX(25);
 		scoreLabel.setTranslateY(25);
 		scoreLabel.setTextFill(Color.YELLOW);
 		scoreValueLabel = new Label();
 		scoreValueLabel.setTextFill(Color.YELLOW);
-		scoreValueLabel.setTranslateX(70);
+		scoreValueLabel.setTranslateX(140);
 		scoreValueLabel.setTranslateY(25);
 
-		scoreLabel2 = new Label("Score: ");
+		scoreLabel2 = new Label("Pacman 2 Score: ");
 		scoreLabel2.setTranslateX(25);
 		scoreLabel2.setTranslateY(45);
 		scoreLabel2.setTextFill(Color.YELLOW);
 		scoreValueLabel2 = new Label();
 		scoreValueLabel2.setTextFill(Color.YELLOW);
-		scoreValueLabel2.setTranslateX(75);
+		scoreValueLabel2.setTranslateX(140);
 		scoreValueLabel2.setTranslateY(45);
 
 		rootGroup.getChildren().add(scoreLabel);
@@ -179,6 +177,8 @@ public class MazeGui extends Application {
 				world.step(1.0f / 60.f, 8, 3);
 				removeFixturesAndPellets();
 				scoreValueLabel.setText(String.valueOf(pacman1.getScore()));
+				scoreValueLabel2.setText(String.valueOf(pacman2.getScore()));
+				
 				// Move pacmans to the new position computed by JBox2D
 
 				movePacman(pacman1);
