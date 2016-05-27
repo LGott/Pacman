@@ -186,7 +186,7 @@ public class MazeGui extends Application {
 					contactListener.setPacmanLoss(false);
 					pacmanLives1.get(life).setGraphic(null);
 					if (life < 3) {
-						life++;
+						//life++;
 					}
 				}
 				if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
