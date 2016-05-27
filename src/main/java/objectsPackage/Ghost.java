@@ -1,5 +1,7 @@
 package objectsPackage;
 
+import java.util.Random;
+
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
@@ -68,31 +70,61 @@ public class Ghost extends Piece {
 
 	public void turnGhost() {
 		// TODO Auto-generated method stub
-		if (status.equals(Status.UP)) {
+		Random rand= new Random();
+		int nextDir= rand.nextInt(4);
+		switch(nextDir){
+		case 0:
 			System.out.println("turning right " + objectDescription.getID());
+			//body.setLinearVelocity(new Vec2(0.0f, 20.f));
 			body.applyLinearImpulse(new Vec2(0.0f, 20.0f),
 					body.getWorldCenter());
 			status = Status.RIGHT;
-		}
-		else if (status.equals(Status.RIGHT)) {
+			break;
+		case 1:
 			System.out.println("turning down");
 			body.applyLinearImpulse(new Vec2(-20.0f, 0.0f),
 					body.getWorldCenter());
 			status = Status.DOWN;
-		}
-		else if (status.equals(Status.DOWN)) {
+			break;
+		case 2:
 			System.out.println("turning left");
 			body.applyLinearImpulse(new Vec2(0.0f, -20.0f),
 					body.getWorldCenter());
 			status = Status.LEFT;
-		}
-		else if (status.equals(Status.LEFT)) {
+			break;
+		case 3:
 			System.out.println("turning up");
 			body.applyLinearImpulse(new Vec2(20.0f, 0.0f),
 					body.getWorldCenter());
 			status = Status.UP;
-
+			break;
 		}
+//		if (status.equals(Status.UP)) {
+//			System.out.println("turning right " + objectDescription.getID());
+//			//body.setLinearVelocity(new Vec2(0.0f, 20.f));
+//			body.applyLinearImpulse(new Vec2(0.0f, 20.0f),
+//					body.getWorldCenter());
+//			status = Status.RIGHT;
+//		}
+//		else if (status.equals(Status.RIGHT)) {
+//			System.out.println("turning down");
+//			body.applyLinearImpulse(new Vec2(-20.0f, 0.0f),
+//					body.getWorldCenter());
+//			status = Status.DOWN;
+//		}
+//		else if (status.equals(Status.DOWN)) {
+//			System.out.println("turning left");
+//			body.applyLinearImpulse(new Vec2(0.0f, -20.0f),
+//					body.getWorldCenter());
+//			status = Status.LEFT;
+//		}
+//		else if (status.equals(Status.LEFT)) {
+//			System.out.println("turning up");
+//			body.applyLinearImpulse(new Vec2(20.0f, 0.0f),
+//					body.getWorldCenter());
+//			status = Status.UP;
+//
+//		}
 	}
 
 }

@@ -71,7 +71,7 @@ private ArrayList<Ghost> ghosts;
 		else if (obj1.getDescription() == "WALL"
 				&& obj2.getDescription() == "GHOST") {
 
-			//			float xpos = Properties.jBoxToFxPosX(f2.getBody().getPosition().x);
+//			float xpos = Properties.jBoxToFxPosX(f2.getBody().getPosition().x);
 //			float ypos = Properties.jBoxToFxPosY(f2.getBody().getPosition().y);
 //			f2.getBody().setAngularVelocity(xpos);
 //			f2.getBody().applyTorque(20);
