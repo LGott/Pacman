@@ -194,13 +194,15 @@ public class MazeGui extends Application {
 					resetPacmansAndGhosts();
 					pacmanLives1.get(life).setGraphic(null);
 					contactListener.setPacmanLoss(false);
-					if (life < 3) {
-						// life++;
-					}
-				}
+			
+				
 				if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
 					gameOverLabel.setVisible(true);
 					timeline.stop();
+				}
+				if (life < 2) {
+					life++;
+				}
 				}
 			}
 		};
