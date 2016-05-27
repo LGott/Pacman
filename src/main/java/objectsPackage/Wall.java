@@ -23,7 +23,7 @@ public class Wall extends Piece {
 	public Wall(int posX, int posY, World world, float width, float height, Color c) {
 		super(posX, posY, world, "WALL");
 		ps = new PolygonShape();
-		ps.setAsBox(width, height);
+		ps.setAsBox(width + .48f, height + .48f);
 		this.height = height;
 		this.width = width;
 		this.color = c;
