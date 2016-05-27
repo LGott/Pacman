@@ -36,6 +36,7 @@ public class Wall extends Piece {
 				.width(Properties.jBoxtoPixelWidth(width) * 2).height(Properties.jBoxtoPixelHeight(height) * 2)
 				.fill(color).build();
 		body = createBodyAndFixture(bodyType, ps);
+	
 		wall.setUserData(body);
 		super.setUserData();
 		return wall;

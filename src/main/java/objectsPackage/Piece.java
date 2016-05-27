@@ -6,6 +6,7 @@ import org.jbox2d.collision.shapes.Shape;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.Filter;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
@@ -20,6 +21,7 @@ public abstract class Piece{
 	private UniqueObject objectDescription;
 	protected Body body;
 	protected Node node;
+	protected FixtureDef fd; 
 	public UniqueObject getObjectDescription() {
 		return objectDescription;
 	}
@@ -30,7 +32,7 @@ public abstract class Piece{
 		this.world = world;
 		this.id = ++lastID;
 		objectDescription=new UniqueObject(this.id, description);
-		
+		fd=new FixtureDef();
 		
 	}
 
@@ -42,15 +44,22 @@ public abstract class Piece{
 		bd.position.set(posX, posY);
 		//bd.position.set(posX, posY);
 		bd.type = bodyType;
-
+		//set collision properties
+//		fd.filter.maskBits=0;
+//		fd.filter.categoryBits=0;
+//		fd.filter.groupIndex=0;
+		
+		
 		// Create a fixture
-		FixtureDef fd = new FixtureDef();
+		
 		fd.shape = shape;
 		fd.density = 0f;
 		fd.friction = 0f;
 		fd.restitution = 0f;
 
 
+		
+	
 		Body body = new Body(bd, world);
 		body= world.createBody(bd);
 		fixture = body.createFixture(fd);

@@ -189,10 +189,10 @@ public class MazeGui extends Application {
 						//life++;
 					}
 				}
-				if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
-					gameOverLabel.setVisible(true);
-					timeline.stop();
-				}
+//				if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
+//					gameOverLabel.setVisible(true);
+//					timeline.stop();
+//				}
 			}
 		};
 		/**
