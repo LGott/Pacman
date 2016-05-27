@@ -66,6 +66,7 @@ public class CollisionContactListener implements ContactListener {
 
 			System.out.println("pacman-pellet");
 		} else if (obj2.getDescription() == "PACMAN" && obj1.getDescription() == "BONUS_PELLET") {
+
 			// remove the bonus pellet
 			removePellet(f1, obj1);
 			Pacman pac = identifyPacman(obj1);
@@ -76,7 +77,9 @@ public class CollisionContactListener implements ContactListener {
 			removePellet(f2, obj2);
 			Pacman pac = identifyPacman(obj2);
 			pac.incrementScore(50);
-			
+
+			System.out.println("BONUS PELLET DETECTED");
+
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST"
 				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "GHOST")) {
 			// float xpos =
@@ -146,15 +149,15 @@ public class CollisionContactListener implements ContactListener {
 		return pacmanColliding;
 	}
 
-	private void removePellet(Fixture f2, UniqueObject obj2) {
-		fixturesToRemove.add(f2);
-		removePelletShape(obj2);
+	private void removePellet(Fixture f, UniqueObject obj) {
+		fixturesToRemove.add(f);
+		removePelletShape(obj);
 	}
 
-	private void removePelletShape(UniqueObject obj2) {
+	private void removePelletShape(UniqueObject obj) {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < pellets.size(); i++) {
-			if (pellets.get(i).getObjectDescription().getID() == obj2.getID()) {
+			if (pellets.get(i).getObjectDescription().getID() == obj.getID()) {
 				pelletsToRemove.add(pellets.get(i));
 				break;
 			}
@@ -174,10 +177,10 @@ public class CollisionContactListener implements ContactListener {
 		}
 	}
 
-	private void setPacmanColliding(UniqueObject obj2) {
+	private void setPacmanColliding(UniqueObject obj) {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < pacmanArray.size(); i++) {
-			if (pacmanArray.get(i).getObjectDescription().getID() == obj2.getID()) {
+			if (pacmanArray.get(i).getObjectDescription().getID() == obj.getID()) {
 				pacmanArray.get(i).setColliding(false);
 				break;
 			}
