@@ -270,7 +270,7 @@ public class MazeGui extends Application {
 		createGhosts();
 		createPacmans();
 		createPellets();
-		createBonusPellets();
+		//createBonusPellets();
 	}
 
 	private void createWalls() {
@@ -349,68 +349,73 @@ public class MazeGui extends Application {
 	}
 
 	private void createPellets() {
-		// bottom line across
-		for (int i = 13; i < 31; i += 8) {
-			createYellowPellet(i, 9);
+	/*	// bottom line across
+		for (int i = 15; i < 31; i += 7) {
+			createYellowPellet(i, 8);
 		}
-		createYellowPellet(44, 9);
-		createYellowPellet(56, 9);
-		for (int i = 70; i < 90; i += 8) {
-			createYellowPellet(i, 9);
+		for (int i = 43; i < 60; i += 7) {
+			createYellowPellet(i, 8);
+		}
+		for (int i = 70; i < 90; i += 7) {
+			createYellowPellet(i, 8);
 		}
 
 		// second to bottom across
 		// createYellowPellet(6, 16);
-		for (int i = 36; i < 68; i += 7) {
-			createYellowPellet(i, 16);
+		for (int i = 36; i < 45; i += 7) {
+			createYellowPellet(i, 15);
 		}
-		createYellowPellet(93, 16);
+		for (int i = 57; i < 68; i += 7) {
+			createYellowPellet(i, 15);
+		}
+		createYellowPellet(95, 15);
 
 		// third to bottom across
-		for (int i = 13; i < 40; i += 7) {
-			createYellowPellet(i, 23);
+		for (int i = 15; i < 47; i += 7) {
+			createYellowPellet(i, 21);
 		}
-		for (int i = 65; i < 95; i += 7) {
-			createYellowPellet(i, 23);
+		for (int i = 58; i < 95; i += 7) {
+			createYellowPellet(i, 21);
 		}
-
+*/
 		// vertical left column
-		for (int i = 16; i < 75; i += 7) {
-			createYellowPellet(6, i);
+		for (int i = 9; i < 85; i += 7) {
+			createYellowPellet(4, i);
 		}
 		// second to left vertical column
-		for (int i = 30; i < 75; i += 7) {
+		for (int i = 9; i < 82; i += 7) {
 			createYellowPellet(18, i);
 		}
+		
 
-		// top row across
-		for (int i = 6; i < 45; i += 7) {
+	/*	// top row across
+		for (int i = 4; i < 45; i += 7) {
 			createYellowPellet(i, 80);
 		}
 		for (int i = 58; i < 95; i += 7) {
 			createYellowPellet(i, 80);
 		}
-
+*/
 		// left inner home down
-		for (int i = 34; i < 60; i += 7) {
+		for (int i = 9; i < 82; i += 7) {
 			createYellowPellet(31, i);
 		}
-		for (int i = 34; i < 60; i += 7) {
+		for (int i = 9; i < 82; i += 7) {
 			createYellowPellet(38, i);
 		}
 		// right inner home down
-		for (int i = 34; i < 60; i += 7) {
+		for (int i = 9; i < 82; i += 7) {
 			createYellowPellet(62, i);
 		}
-		for (int i = 34; i < 60; i += 7) {
+		for (int i = 9; i < 82; i += 7) {
 			createYellowPellet(69, i);
 		}
 		createYellowPellet(76, 55);
 
-		// horizontal under home
+	/*	// horizontal under home
 		for (int i = 44; i < 62; i += 6) {
 			createYellowPellet(i, 34);
-		}
+		}*/
 
 		// vertical above home
 		for (int i = 55; i < 72; i += 6) {
@@ -420,14 +425,14 @@ public class MazeGui extends Application {
 			createYellowPellet(44, i);
 		}
 
-		// horizontal above home
+	/*	// horizontal above home
 		for (int i = 31; i < 45; i += 7) {
 			createYellowPellet(i, 67);
 		}
 		for (int i = 62; i < 75; i += 7) {
 			createYellowPellet(i, 67);
 		}
-
+*/
 		// vertical second to right column
 		for (int i = 28; i < 45; i += 6) {
 			createYellowPellet(83, i);
@@ -436,7 +441,6 @@ public class MazeGui extends Application {
 			createYellowPellet(83, i);
 		}
 		createYellowPellet(88, 40);
-		// createYellowPellet(88,55);
 		createYellowPellet(88, 67);
 
 		// vertical right column
@@ -465,7 +469,6 @@ public class MazeGui extends Application {
 		createBonusPellet(70, 16);
 		createBonusPellet(6, 9);
 		createBonusPellet(93, 40);
-
 	}
 
 	private void createBonusPellet(int posX, int posY) {
