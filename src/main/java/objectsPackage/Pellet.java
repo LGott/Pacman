@@ -19,12 +19,14 @@ public class Pellet extends Piece {
 	protected String imgName;
 	private CircleShape cs;
 	
+	
 
 	public Pellet(int posX, int posY, World world, String description, String imgName) {
 		super(posX, posY, world, description);
 		// TODO Auto-generated constructor stub
 		this.radius = 10;
 		this.imgName = imgName;
+		
 		pellet = new Circle();
 		node = create();
 	}
@@ -36,6 +38,7 @@ public class Pellet extends Piece {
 		cs.m_radius = radius * 0.1f; // We need to convert radius to JBox2D
 		// equivalent
 		body = createBodyAndFixture(bodyType, cs);
+		
 		super.setUserData();
 		pellet.setUserData(body);
 		return pellet;

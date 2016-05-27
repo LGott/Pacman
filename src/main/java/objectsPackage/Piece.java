@@ -42,9 +42,9 @@ public abstract class Piece{
 		bd.position.set(posX, posY);
 		//bd.position.set(posX, posY);
 		bd.type = bodyType;
-
 		// Create a fixture
 		FixtureDef fd = new FixtureDef();
+		
 		fd.shape = shape;
 		fd.density = 0f;
 		fd.friction = 0f;
