@@ -46,9 +46,6 @@ public class MazeGui extends Application {
 	private CollisionContactListener contactListener;
 
 	private ArrayList<Pellet> pellets = new ArrayList<Pellet>();
-
-	private ScorePanel scorePanel1 = new ScorePanel();
-	private ScorePanel scorePanel2 = new ScorePanel();
 	private ArrayList<Pacman> pacmanArray = new ArrayList<Pacman>();
 	private Label scoreLabel;
 	private Label scoreValueLabel;
@@ -57,8 +54,8 @@ public class MazeGui extends Application {
 	private ArrayList<Label> pacmanLives1;
 	private ArrayList<Label> pacmanLives2;
 	private Label gameOverLabel;
-	private boolean gameOver;
 	private int life;
+	private int life2;
 	private ObservableList<Node> group;
 	private final long timeStart = System.currentTimeMillis();
 
@@ -69,16 +66,15 @@ public class MazeGui extends Application {
 		// Create a group for holding all objects on the screen.
 
 		rootGroup = new Group();
-		setScorePanels();
+		setScoreLabels();
 		group = rootGroup.getChildren();
 		this.ghosts = new ArrayList<Ghost>();
-		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel1, scorePanel2, pacmanArray,
-				ghosts);
+		contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
 		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
-
 		pacmanLives1 = new ArrayList<Label>();
 		pacmanLives2 = new ArrayList<Label>();
 		life = 0;
+		life2 = 0;
 		setPacmanLives();
 		gameOverLabel = new Label("GAME OVER");
 		gameOverLabel.setFont(new Font(90));
@@ -88,7 +84,6 @@ public class MazeGui extends Application {
 		gameOverLabel.setVisible(false);
 
 		rootGroup.getChildren().add(gameOverLabel);
-		gameOver = false;
 		createShapes();
 		world.setContactListener(contactListener);
 		startSimulation();
@@ -97,23 +92,23 @@ public class MazeGui extends Application {
 		stage.show();
 	}
 
-	private void setScorePanels() {
-		scoreLabel = new Label("Score: ");
+	private void setScoreLabels() {
+		scoreLabel = new Label("Pacman 1 Score: ");
 		scoreLabel.setTranslateX(25);
 		scoreLabel.setTranslateY(25);
 		scoreLabel.setTextFill(Color.YELLOW);
 		scoreValueLabel = new Label();
 		scoreValueLabel.setTextFill(Color.YELLOW);
-		scoreValueLabel.setTranslateX(70);
+		scoreValueLabel.setTranslateX(140);
 		scoreValueLabel.setTranslateY(25);
 
-		scoreLabel2 = new Label("Score: ");
+		scoreLabel2 = new Label("Pacman 2 Score: ");
 		scoreLabel2.setTranslateX(25);
 		scoreLabel2.setTranslateY(45);
 		scoreLabel2.setTextFill(Color.YELLOW);
 		scoreValueLabel2 = new Label();
 		scoreValueLabel2.setTextFill(Color.YELLOW);
-		scoreValueLabel2.setTranslateX(75);
+		scoreValueLabel2.setTranslateX(140);
 		scoreValueLabel2.setTranslateY(45);
 
 		rootGroup.getChildren().add(scoreLabel);
@@ -182,6 +177,8 @@ public class MazeGui extends Application {
 				world.step(1.0f / 60.f, 8, 3);
 				removeFixturesAndPellets();
 				scoreValueLabel.setText(String.valueOf(pacman1.getScore()));
+				scoreValueLabel2.setText(String.valueOf(pacman2.getScore()));
+				
 				// Move pacmans to the new position computed by JBox2D
 
 				movePacman(pacman1);
@@ -191,15 +188,28 @@ public class MazeGui extends Application {
 				if (contactListener.isPacmanLost()) {
 					timeline.pause();
 					resetPacmansAndGhosts();
-					pacmanLives1.get(life).setGraphic(null);
-					contactListener.setPacmanLoss(false);
 
+					// If pacman1 hit a ghost, decrement its score
+					if (contactListener.determinePacman() == "Pacman1") {
+						pacmanLives1.get(life).setGraphic(null);
+						contactListener.setPacmanLoss(false);
+						contactListener.setPacmans("Neutral"); // reset
+						if (life < 2) {
+							life++;
+						}
+					}
+					// If pacman2 hit a ghost decrement its score
+					if (contactListener.determinePacman() == "Pacman2") {
+						pacmanLives2.get(life2).setGraphic(null);
+						contactListener.setPacmanLoss(false);
+						contactListener.setPacmans("Neutral"); // reset
+						if (life2 < 2) {
+							life2++;
+						}
+					}
 					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
 						gameOverLabel.setVisible(true);
 						timeline.stop();
-					}
-					if (life < 2) {
-						life++;
 					}
 				}
 			}
@@ -361,8 +371,8 @@ public class MazeGui extends Application {
 	}
 
 	public void createPacmans() {
-		pacmanArray.add(pacman1 = createPacman(50, 80, "pacman1"));
-		pacmanArray.add(pacman2 = createPacman(50, 22, "pacman2"));
+		pacmanArray.add(pacman1 = createPacman(50, 80, "Pacman1"));
+		pacmanArray.add(pacman2 = createPacman(50, 22, "Pacman2"));
 	}
 
 	private Pacman createPacman(int x, int y, String name) {
