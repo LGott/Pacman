@@ -26,26 +26,20 @@ public class CollisionContactListener implements ContactListener {
 	private ArrayList<Pacman> deadPacmans;
 	private boolean pacmanLost;
 	private ArrayList<Ghost> ghosts;
-
-	public boolean isColliding() {
-		return colliding;
-	}
-
-	public boolean isPacmanLost() {
-		return this.pacmanLost;
-	}
+	private int determinePacman;
 
 	public CollisionContactListener(Group rootGroup, ArrayList<Pellet> pellet, ArrayList<Pacman> pacmanArray,
 			ArrayList<Ghost> ghosts) {
 		this.ghosts = ghosts;
-		colliding = false;
+		this.colliding = false;
 		this.pellets = pellet;
 		this.fixturesToRemove = new ArrayList<Fixture>();
 		this.pelletsToRemove = new ArrayList<Pellet>();
 		this.pacmanArray = pacmanArray;
-		pacmanColliding = new ArrayList<Integer>();
-		pacmanLost = false;
-		deadPacmans = new ArrayList<Pacman>();
+		this.pacmanColliding = new ArrayList<Integer>();
+		this.pacmanLost = false;
+		this.deadPacmans = new ArrayList<Pacman>();
+		this.determinePacman = 0;
 	}
 
 	public void beginContact(Contact contact) {
@@ -105,6 +99,7 @@ public class CollisionContactListener implements ContactListener {
 				Pacman pac = identifyPacman(obj1);
 				if (pac.getLives() > 0) {
 					pac.decrementLives();
+					determinePacman = 1;
 					deadPacmans.add(pac);
 					System.out.println(pac.getName() + " added to dead list");
 				}
@@ -112,6 +107,7 @@ public class CollisionContactListener implements ContactListener {
 				Pacman pac = identifyPacman(obj2);
 				if (pac.getLives() > 0) {
 					pac.decrementLives();
+					determinePacman = 2;
 					deadPacmans.add(pac);
 					System.out.println(pac.getName() + " added to dead list");
 				}
@@ -131,6 +127,23 @@ public class CollisionContactListener implements ContactListener {
 			System.out.println("pacman-wall");
 		}
 
+	}
+
+	public boolean isColliding() {
+		return colliding;
+	}
+
+	public boolean isPacmanLost() {
+		return this.pacmanLost;
+	}
+
+	// 1= Pacman1 , 2= Pacman2, 0=none
+	public int determinePacman() {
+		return this.determinePacman;
+	}
+
+	public void setPacmans(int pacNum) {
+		this.determinePacman = pacNum;
 	}
 
 	private void turnGhost(UniqueObject obj) {

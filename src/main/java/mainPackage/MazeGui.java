@@ -55,7 +55,8 @@ public class MazeGui extends Application {
 	private ArrayList<Label> pacmanLives2;
 	private Label gameOverLabel;
 	private boolean gameOver;
-	private int life;
+	private int life; 
+	private int life2;
 	private ObservableList<Node> group;
 	private final long timeStart = System.currentTimeMillis();
 
@@ -74,6 +75,7 @@ public class MazeGui extends Application {
 		pacmanLives1 = new ArrayList<Label>();
 		pacmanLives2 = new ArrayList<Label>();
 		life = 0;
+		life2 =0;
 		setPacmanLives();
 		gameOverLabel = new Label("GAME OVER");
 		gameOverLabel.setFont(new Font(90));
@@ -186,15 +188,28 @@ public class MazeGui extends Application {
 				if (contactListener.isPacmanLost()) {
 					timeline.pause();
 					resetPacmansAndGhosts();
-					pacmanLives1.get(life).setGraphic(null);
-					contactListener.setPacmanLoss(false);
 
+					// If pacman1 hit a ghost, decrement its score
+					if (contactListener.determinePacman() == 1) {
+						pacmanLives1.get(life).setGraphic(null);
+						contactListener.setPacmanLoss(false);
+						contactListener.setPacmans(0); // reset
+					}
+					// If pacman2 hit a ghost decrement its score
+					if (contactListener.determinePacman() == 2) {
+						pacmanLives2.get(life).setGraphic(null);
+						contactListener.setPacmanLoss(false);
+						contactListener.setPacmans(0); // reset
+					}
 					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
 						gameOverLabel.setVisible(true);
 						timeline.stop();
 					}
 					if (life < 2) {
 						life++;
+					}
+					if (life2 < 2) {
+						life2++;
 					}
 				}
 			}
