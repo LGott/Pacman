@@ -1,5 +1,7 @@
 package objectsPackage;
 
+import java.util.Random;
+
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
@@ -22,6 +24,12 @@ public class Ghost extends Piece {
 	private ImagePattern imagePattern;
 	private int i;
 
+	private enum Status {
+		RIGHT, LEFT, UP, DOWN
+	}
+
+	private Status status = Status.UP;
+
 	public Ghost(int posX, int posY, World world, String image) {
 		super(posX, posY, world, "GHOST");
 		ps = new PolygonShape();
@@ -29,6 +37,7 @@ public class Ghost extends Piece {
 		img = new Image(image);
 		imagePattern = new ImagePattern(img);
 		node = create();
+		status = Status.UP;
 	}
 
 	private Node create() {
@@ -59,18 +68,36 @@ public class Ghost extends Piece {
 		node.setLayoutY(y - Properties.jBoxtoPixelWidth(height));
 	}
 
-	public void changeDirection() {
+	public void turnGhost() {
 		// TODO Auto-generated method stub
-		i++;
-		if (i % 10 == 0) {
-			body.setLinearVelocity(new Vec2(-50.0f, 0.0f));
-		} else if (i % 20 == 0) {
-			body.setLinearVelocity(new Vec2(50.0f, 0.0f));
-
-		} else if (i % 30 == 0) {
-			body.setLinearVelocity(new Vec2(0.0f, 50.0f));
-		} else if (i % 40 == 0) {
-			body.setLinearVelocity(new Vec2(0.0f, -50.0f));
+		Random rand= new Random();
+		int nextDir= rand.nextInt(4);
+		switch(nextDir){
+		case 0:
+			System.out.println("turning right ");
+			//body.setLinearVelocity(new Vec2(0.0f, 20.f));
+			body.applyLinearImpulse(new Vec2(0.0f, 20.0f),
+					body.getWorldCenter());
+			status = Status.RIGHT;
+			break;
+		case 1:
+			System.out.println("turning down");
+			body.applyLinearImpulse(new Vec2(-20.0f, 0.0f),
+					body.getWorldCenter());
+			status = Status.DOWN;
+			break;
+		case 2:
+			System.out.println("turning left");
+			body.applyLinearImpulse(new Vec2(0.0f, -20.0f),
+					body.getWorldCenter());
+			status = Status.LEFT;
+			break;
+		case 3:
+			System.out.println("turning up");
+			body.applyLinearImpulse(new Vec2(20.0f, 0.0f),
+					body.getWorldCenter());
+			status = Status.UP;
+			break;
 		}
 	}
 

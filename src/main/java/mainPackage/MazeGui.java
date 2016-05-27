@@ -217,7 +217,7 @@ public class MazeGui extends Application {
 		// TODO Auto-generated method stub
 		Body body = (Body) g.getNode().getUserData();
 		body.setLinearVelocity(new Vec2(-20.0f, 0.0f));
-		g.changeDirection();
+		
 		float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
 		float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 		g.resetLayoutX(xpos);
