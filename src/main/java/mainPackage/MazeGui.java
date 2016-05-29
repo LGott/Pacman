@@ -55,6 +55,8 @@ public class MazeGui extends Application {
 	private ArrayList<Label> pacmanLives2;
 	private Label gameOverLabel;
 	private Label outLabel;
+	private Label pacmanLife1;
+	private Label pacmanLife2;
 	private int life;
 	private int life2;
 	private ObservableList<Node> group;
@@ -68,12 +70,14 @@ public class MazeGui extends Application {
 
 		rootGroup = new Group();
 		setScoreLabels();
+		
 		group = rootGroup.getChildren();
 		this.ghosts = new ArrayList<Ghost>();
 		contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
 		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
 		pacmanLives1 = new ArrayList<Label>();
 		pacmanLives2 = new ArrayList<Label>();
+		
 		life = 0;
 		life2 = 0;
 		setPacmanLives();
@@ -101,36 +105,44 @@ public class MazeGui extends Application {
 		outLabel.setTextFill(Color.WHITE);
 		outLabel.setVisible(false);
 
-		rootGroup.getChildren().add(gameOverLabel);
-		rootGroup.getChildren().add(outLabel);
+		group.add(gameOverLabel);
+		group.add(outLabel);
 
 	}
 
 	private void setScoreLabels() {
 		scoreLabel = new Label("Pacman 1 Score: ");
-		scoreLabel.setTranslateX(25);
-		scoreLabel.setTranslateY(25);
-		scoreLabel.setTextFill(Color.YELLOW);
+		setLabel(scoreLabel, 25, 25);
 		scoreValueLabel = new Label();
-		scoreValueLabel.setTextFill(Color.YELLOW);
-		scoreValueLabel.setTranslateX(140);
-		scoreValueLabel.setTranslateY(25);
+		setLabel(scoreValueLabel, 140, 25);
 
 		scoreLabel2 = new Label("Pacman 2 Score: ");
-		scoreLabel2.setTranslateX(25);
-		scoreLabel2.setTranslateY(45);
-		scoreLabel2.setTextFill(Color.YELLOW);
+		setLabel(scoreLabel2, 25, 45);
+		
 		scoreValueLabel2 = new Label();
-		scoreValueLabel2.setTextFill(Color.YELLOW);
-		scoreValueLabel2.setTranslateX(140);
-		scoreValueLabel2.setTranslateY(45);
+		setLabel(scoreValueLabel2, 140, 45);
+		
 
+		pacmanLife1=new Label("Pacman 1");
+		pacmanLife2= new Label("Pacman 2");
+		setLabel(pacmanLife1, 575, 50);
+		setLabel(pacmanLife2, 285, 50);
 		rootGroup.getChildren().add(scoreLabel);
 		rootGroup.getChildren().add(scoreValueLabel);
 
 		rootGroup.getChildren().add(scoreLabel2);
 		rootGroup.getChildren().add(scoreValueLabel2);
+		rootGroup.getChildren().add(pacmanLife1);
+		rootGroup.getChildren().add(pacmanLife2);
+		
 
+	}
+	private void  setLabel(Label label, int x, int y){
+		
+		label.setTranslateX(x);
+		label.setTranslateY(y);
+		label.setTextFill(Color.YELLOW);
+	
 	}
 
 	private void setStageProperties(Stage stage) {
