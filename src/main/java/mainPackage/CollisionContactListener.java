@@ -1,8 +1,13 @@
 package mainPackage;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.effect.Bloom;
 import javafx.scene.effect.Glow;
@@ -35,6 +40,7 @@ public class CollisionContactListener implements ContactListener {
 	private boolean pacmanLost;
 	private ArrayList<Ghost> ghosts;
 	private String determinePacman;
+	private boolean isInvincible;
 
 	public CollisionContactListener(Group rootGroup, ArrayList<Pellet> pellet, ArrayList<Pacman> pacmanArray,
 			ArrayList<Ghost> ghosts) {
@@ -48,6 +54,7 @@ public class CollisionContactListener implements ContactListener {
 		this.pacmanLost = false;
 		this.deadPacmans = new ArrayList<Pacman>();
 		this.determinePacman = "Neutral";
+		this.isInvincible = false;
 	}
 
 	public void beginContact(Contact contact) {
@@ -83,6 +90,7 @@ public class CollisionContactListener implements ContactListener {
 			Pacman pac = identifyPacman(obj2);
 			pac.incrementScore(50);
 			ghostEffects();
+			setInvincible();
 
 		} else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "BONUS_PELLET") {
 			removePellet(f2, obj2);
@@ -91,6 +99,8 @@ public class CollisionContactListener implements ContactListener {
 
 			System.out.println("BONUS PELLET DETECTED");
 			ghostEffects();
+			setInvincible();
+		
 
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST") {
 			turnGhost(obj2);
@@ -103,27 +113,27 @@ public class CollisionContactListener implements ContactListener {
 				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "PACMAN")) {
 			// remove an extra pacman
 			// System.out.println("here");
+			if (!isInvincible) {
+				pacmanLost = true;
 
-			pacmanLost = true;
-
-			if (obj1.getDescription() == "PACMAN") {
-				Pacman pac = identifyPacman(obj1);
-				if (pac.getLives() > 0) {
-					this.determinePacman = pac.getName();
-					pac.decrementLives();
-					deadPacmans.add(pac);
-					System.out.println(pac.getName() + " added to dead list");
-				}
-			} else if (obj2.getDescription() == "PACMAN") {
-				Pacman pac = identifyPacman(obj2);
-				if (pac.getLives() > 0) {
-					this.determinePacman = pac.getName();
-					pac.decrementLives();
-					deadPacmans.add(pac);
-					System.out.println(pac.getName() + " added to dead list");
+				if (obj1.getDescription() == "PACMAN") {
+					Pacman pac = identifyPacman(obj1);
+					if (pac.getLives() > 0) {
+						this.determinePacman = pac.getName();
+						pac.decrementLives();
+						deadPacmans.add(pac);
+						System.out.println(pac.getName() + " added to dead list");
+					}
+				} else if (obj2.getDescription() == "PACMAN") {
+					Pacman pac = identifyPacman(obj2);
+					if (pac.getLives() > 0) {
+						this.determinePacman = pac.getName();
+						pac.decrementLives();
+						deadPacmans.add(pac);
+						System.out.println(pac.getName() + " added to dead list");
+					}
 				}
 			}
-
 			System.out.println("pacman-ghost   are colliding");
 
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "PACMAN") {
@@ -138,6 +148,20 @@ public class CollisionContactListener implements ContactListener {
 			System.out.println("pacman-wall");
 		}
 
+	}
+
+	private void setInvincible() {
+		Timer timer = new java.util.Timer();
+
+		timer.schedule(new TimerTask() {
+		    public void run() {
+		         Platform.runLater(new Runnable() {
+		            public void run() {
+		             isInvincible  = true;
+		            }
+		        });
+		    }
+		}, 15000);
 	}
 
 	private void ghostEffects() {
