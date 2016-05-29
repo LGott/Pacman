@@ -82,27 +82,7 @@ public class CollisionContactListener implements ContactListener {
 			removePellet(f1, obj1);
 			Pacman pac = identifyPacman(obj2);
 			pac.incrementScore(50);
-
-			for (Ghost ghost : ghosts) {
-				Glow glow = new Glow(2.0);
-				// Bloom bloom = new Bloom();
-				// bloom.setThreshold(0.3);
-				// ghost.getNode().setEffect(bloom);
-				// Distant light = new Distant();
-				// light.setAzimuth(-135.0f);
-				//
-				// Lighting l = new Lighting();
-				// l.setLight(light);
-				// l.setSurfaceScale(5.0f);
-
-				FadeTransition ft = new FadeTransition(Duration.millis(1000), ghost.getNode());
-				ft.setFromValue(1.0);
-				ft.setToValue(0.3);
-				ft.setCycleCount(4);
-				ft.setAutoReverse(true);
-
-				ft.play();
-			}
+			ghostEffects();
 
 		} else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "BONUS_PELLET") {
 			removePellet(f2, obj2);
@@ -110,29 +90,8 @@ public class CollisionContactListener implements ContactListener {
 			pac.incrementScore(50);
 
 			System.out.println("BONUS PELLET DETECTED");
-			for (Ghost ghost : ghosts) {
-				Glow glow = new Glow(2.0);
-				// Bloom bloom = new Bloom();
-				// bloom.setThreshold(0.3);
-				// ghost.getNode().setEffect(bloom);
-				// Distant light = new Distant();
-				// light.setAzimuth(-135.0f);
-				//
-				// Lighting l = new Lighting();
-				// l.setLight(light);
-				// l.setSurfaceScale(5.0f);
+			ghostEffects();
 
-				FadeTransition ft = new FadeTransition(Duration.millis(3000), ghost.getNode());
-				ft.setFromValue(1.0);
-				ft.setToValue(0.3);
-				ft.setCycleCount(4);
-				ft.setAutoReverse(true);
-
-				ft.play();
-
-				// ghost.getNode().setEffect(glow);
-				// ghost.getNode().
-			}
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST") {
 			turnGhost(obj2);
 
@@ -179,6 +138,17 @@ public class CollisionContactListener implements ContactListener {
 			System.out.println("pacman-wall");
 		}
 
+	}
+
+	private void ghostEffects() {
+		for (Ghost ghost : ghosts) {
+			FadeTransition ft = new FadeTransition(Duration.millis(1000), ghost.getNode());
+			ft.setFromValue(3.0);
+			ft.setToValue(0.2);
+			ft.setCycleCount(10);
+			ft.setAutoReverse(true);
+			ft.play();
+		}
 	}
 
 	public boolean isColliding() {
