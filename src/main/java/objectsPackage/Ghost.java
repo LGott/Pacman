@@ -26,7 +26,6 @@ public class Ghost extends Piece {
 	private final int maskBits = -1;
 	private final int categoryBits = -1;
 	private Vec2 currDirection;
-	private int currDegree;
 
 	public Ghost(int posX, int posY, World world, String image) {
 		super(posX, posY, world, "GHOST");
@@ -75,19 +74,15 @@ public class Ghost extends Piece {
 			switch (dir) {
 			case 0: // UP
 				currDirection = new Vec2(0.0f, 30.0f);
-				currDegree = 270;
 				break;
 			case 1: // DOWN
 				currDirection = new Vec2(0.0f, -30.0f);
-				currDegree = 90;
 				break;
 			case 2: // LEFT
 				currDirection = new Vec2(-30.0f, 0.0f);
-				currDegree = 180;
 				break;
 			case 3: // RIGHT
 				currDirection = new Vec2(30.0f, 0.0f);
-				currDegree = 0;
 				break;
 			}
 		}
@@ -96,7 +91,6 @@ public class Ghost extends Piece {
 
 	public void resetSpeed() {
 		body.setLinearVelocity(currDirection);
-		node.setRotate(currDegree);
 	}
 
 }
