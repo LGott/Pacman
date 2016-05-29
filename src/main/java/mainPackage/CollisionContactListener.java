@@ -117,7 +117,7 @@ public class CollisionContactListener implements ContactListener {
 	public boolean isColliding() {
 		return colliding;
 	}
-
+	
 	public boolean isPacmanLost() {
 		return this.pacmanLost;
 	}
