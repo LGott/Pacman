@@ -1,8 +1,20 @@
 package mainPackage;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.Group;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.Glow;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Light.Distant;
+import javafx.scene.effect.Lighting;
+import javafx.util.Duration;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
@@ -10,6 +22,7 @@ import objectsPackage.UniqueObject;
 
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
+import org.jbox2d.collision.Distance;
 import org.jbox2d.collision.Manifold;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.contacts.Contact;
@@ -27,6 +40,7 @@ public class CollisionContactListener implements ContactListener {
 	private boolean pacmanLost;
 	private ArrayList<Ghost> ghosts;
 	private String determinePacman;
+	private boolean isInvincible;
 
 	public CollisionContactListener(Group rootGroup, ArrayList<Pellet> pellet, ArrayList<Pacman> pacmanArray,
 			ArrayList<Ghost> ghosts) {
@@ -40,6 +54,7 @@ public class CollisionContactListener implements ContactListener {
 		this.pacmanLost = false;
 		this.deadPacmans = new ArrayList<Pacman>();
 		this.determinePacman = "Neutral";
+		this.isInvincible = false;
 	}
 
 	public void beginContact(Contact contact) {
@@ -61,16 +76,22 @@ public class CollisionContactListener implements ContactListener {
 			Pacman pac = identifyPacman(obj2);
 			pac.incrementScore(10);
 			System.out.println("pacman-pellet");
+
 		} else if (obj2.getDescription() == "PACMAN" && obj1.getDescription() == "BONUS_PELLET") {
 			// remove the bonus pellet
 			removePellet(f1, obj1);
 			Pacman pac = identifyPacman(obj2);
 			pac.incrementScore(50);
+			ghostEffects();
+			setInvincible();
 
 		} else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "BONUS_PELLET") {
 			removePellet(f2, obj2);
 			Pacman pac = identifyPacman(obj1);
 			pac.incrementScore(50);
+			ghostEffects();
+			setInvincible();
+
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST") {
 			turnGhost(obj2);
 
@@ -84,23 +105,29 @@ public class CollisionContactListener implements ContactListener {
 			// remove an extra pacman
 			// System.out.println("here");
 
-			pacmanLost = true;
+			if (!isInvincible) {
+				pacmanLost = true;
 
-			if (obj1.getDescription() == "PACMAN") {
-				Pacman pac = identifyPacman(obj1);
-				if (pac.getLives() > 0) {
-					this.determinePacman = pac.getName();
-					pac.decrementLives();
-					deadPacmans.add(pac);
-				}
-			} else if (obj2.getDescription() == "PACMAN") {
-				Pacman pac = identifyPacman(obj2);
-				if (pac.getLives() > 0) {
-					this.determinePacman = pac.getName();
-					pac.decrementLives();
-					deadPacmans.add(pac);
+				if (obj1.getDescription() == "PACMAN") {
+					Pacman pac = identifyPacman(obj1);
+					if (pac.getLives() > 0) {
+						this.determinePacman = pac.getName();
+						pac.decrementLives();
+						deadPacmans.add(pac);
+						System.out.println(pac.getName() + " added to dead list");
+					}
+				} else if (obj2.getDescription() == "PACMAN") {
+					Pacman pac = identifyPacman(obj2);
+					if (pac.getLives() > 0) {
+						this.determinePacman = pac.getName();
+						pac.decrementLives();
+						deadPacmans.add(pac);
+						System.out.println(pac.getName() + " added to dead list");
+					}
 				}
 			}
+			System.out.println("pacman-ghost   are colliding");
+
 
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "PACMAN") {
 			collidingWithWall = true;
@@ -112,6 +139,31 @@ public class CollisionContactListener implements ContactListener {
 			}
 		}
 
+	}
+
+	private void setInvincible() {
+		Timer timer = new java.util.Timer();
+
+		timer.schedule(new TimerTask() {
+			public void run() {
+				Platform.runLater(new Runnable() {
+					public void run() {
+						isInvincible = true;
+					}
+				});
+			}
+		}, 15000);
+	}
+
+	private void ghostEffects() {
+		for (Ghost ghost : ghosts) {
+			FadeTransition ft = new FadeTransition(Duration.millis(1000), ghost.getNode());
+			ft.setFromValue(3.0);
+			ft.setToValue(0.2);
+			ft.setCycleCount(10);
+			ft.setAutoReverse(true);
+			ft.play();
+		}
 	}
 
 	public boolean isColliding() {

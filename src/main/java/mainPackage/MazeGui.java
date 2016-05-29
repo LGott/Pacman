@@ -278,7 +278,7 @@ public class MazeGui extends Application {
 		ghosts.clear();
 		outLabel.setVisible(true);
 		createGhosts();
-      
+
 	}
 
 	private void moveGhostsStep() {
