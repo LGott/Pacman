@@ -2,10 +2,14 @@ package mainPackage;
 
 import java.util.ArrayList;
 
+import javafx.animation.FadeTransition;
 import javafx.scene.Group;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.Glow;
 import javafx.scene.effect.Light;
 import javafx.scene.effect.Light.Distant;
 import javafx.scene.effect.Lighting;
+import javafx.util.Duration;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
@@ -71,7 +75,7 @@ public class CollisionContactListener implements ContactListener {
 			Pacman pac = identifyPacman(obj2);
 			pac.incrementScore(10);
 			System.out.println("pacman-pellet");
-			
+
 		} else if (obj2.getDescription() == "PACMAN" && obj1.getDescription() == "BONUS_PELLET") {
 
 			// remove the bonus pellet
@@ -80,15 +84,24 @@ public class CollisionContactListener implements ContactListener {
 			pac.incrementScore(50);
 
 			for (Ghost ghost : ghosts) {
+				Glow glow = new Glow(2.0);
+				// Bloom bloom = new Bloom();
+				// bloom.setThreshold(0.3);
+				// ghost.getNode().setEffect(bloom);
+				// Distant light = new Distant();
+				// light.setAzimuth(-135.0f);
+				//
+				// Lighting l = new Lighting();
+				// l.setLight(light);
+				// l.setSurfaceScale(5.0f);
 
-				Distant light = new Distant();
-				light.setAzimuth(-135.0f);
+				FadeTransition ft = new FadeTransition(Duration.millis(1000), ghost.getNode());
+				ft.setFromValue(1.0);
+				ft.setToValue(0.3);
+				ft.setCycleCount(4);
+				ft.setAutoReverse(true);
 
-				Lighting l = new Lighting();
-				l.setLight(light);
-				l.setSurfaceScale(5.0f);
-
-				ghost.getNode().setEffect(l);
+				ft.play();
 			}
 
 		} else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "BONUS_PELLET") {
@@ -98,18 +111,28 @@ public class CollisionContactListener implements ContactListener {
 
 			System.out.println("BONUS PELLET DETECTED");
 			for (Ghost ghost : ghosts) {
+				Glow glow = new Glow(2.0);
+				// Bloom bloom = new Bloom();
+				// bloom.setThreshold(0.3);
+				// ghost.getNode().setEffect(bloom);
+				// Distant light = new Distant();
+				// light.setAzimuth(-135.0f);
+				//
+				// Lighting l = new Lighting();
+				// l.setLight(light);
+				// l.setSurfaceScale(5.0f);
 
-				Distant light = new Distant();
-				light.setAzimuth(-135.0f);
+				FadeTransition ft = new FadeTransition(Duration.millis(3000), ghost.getNode());
+				ft.setFromValue(1.0);
+				ft.setToValue(0.3);
+				ft.setCycleCount(4);
+				ft.setAutoReverse(true);
 
-				Lighting l = new Lighting();
-				l.setLight(light);
-				l.setSurfaceScale(5.0f);
+				ft.play();
 
-				ghost.getNode().setEffect(l);
+				// ghost.getNode().setEffect(glow);
+				// ghost.getNode().
 			}
-
-
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST") {
 			turnGhost(obj2);
 
