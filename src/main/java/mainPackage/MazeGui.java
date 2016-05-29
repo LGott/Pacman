@@ -25,9 +25,12 @@ import objectsPackage.Pacman;
 import objectsPackage.Pellet;
 import objectsPackage.Wall;
 import objectsPackage.YellowPellet;
+
+import org.jbox2d.callbacks.RayCastCallback;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
+import org.jbox2d.dynamics.World;
 
 public class MazeGui extends Application {
 	private Group rootGroup;
@@ -65,7 +68,7 @@ public class MazeGui extends Application {
 		// TODO Auto-generated method stub
 		setStageProperties(stage);
 		// Create a group for holding all objects on the screen.
-	
+
 		rootGroup = new Group();
 		setScorePanels();
 		group = rootGroup.getChildren();
@@ -186,7 +189,7 @@ public class MazeGui extends Application {
 					contactListener.setPacmanLoss(false);
 					pacmanLives1.get(life).setGraphic(null);
 					if (life < 3) {
-						//life++;
+						// life++;
 					}
 				}
 				if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
@@ -217,7 +220,7 @@ public class MazeGui extends Application {
 		// TODO Auto-generated method stub
 		Body body = (Body) g.getNode().getUserData();
 		body.setLinearVelocity(new Vec2(-20.0f, 0.0f));
-		
+
 		float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
 		float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 		g.resetLayoutX(xpos);
@@ -345,56 +348,56 @@ public class MazeGui extends Application {
 	}
 
 	private void createPellets() {
-		//bottom line across
+		// bottom line across
 		for (int i = 13; i < 31; i += 8) {
 			createYellowPellet(i, 9);
-			}
+		}
 		createYellowPellet(44, 9);
 		createYellowPellet(56, 9);
 		for (int i = 70; i < 90; i += 8) {
 			createYellowPellet(i, 9);
 		}
-		
-		//second to bottom across
-		//createYellowPellet(6, 16);
+
+		// second to bottom across
+		// createYellowPellet(6, 16);
 		for (int i = 36; i < 68; i += 7) {
 			createYellowPellet(i, 16);
-		}	
+		}
 		createYellowPellet(93, 16);
-		
-		//third to bottom across
+
+		// third to bottom across
 		for (int i = 13; i < 40; i += 7) {
 			createYellowPellet(i, 23);
 		}
 		for (int i = 65; i < 95; i += 7) {
 			createYellowPellet(i, 23);
 		}
-		
-		//vertical left column
+
+		// vertical left column
 		for (int i = 16; i < 75; i += 7) {
 			createYellowPellet(6, i);
 		}
-		//second to left vertical column
+		// second to left vertical column
 		for (int i = 30; i < 75; i += 7) {
 			createYellowPellet(18, i);
 		}
-		
-		//top row across
+
+		// top row across
 		for (int i = 6; i < 45; i += 7) {
 			createYellowPellet(i, 80);
 		}
 		for (int i = 58; i < 95; i += 7) {
 			createYellowPellet(i, 80);
 		}
-		
-		//left inner home down
+
+		// left inner home down
 		for (int i = 34; i < 60; i += 7) {
 			createYellowPellet(31, i);
 		}
 		for (int i = 34; i < 60; i += 7) {
 			createYellowPellet(38, i);
 		}
-		//right inner home down
+		// right inner home down
 		for (int i = 34; i < 60; i += 7) {
 			createYellowPellet(62, i);
 		}
@@ -402,47 +405,47 @@ public class MazeGui extends Application {
 			createYellowPellet(69, i);
 		}
 		createYellowPellet(76, 55);
-		
-		//horizontal under home
+
+		// horizontal under home
 		for (int i = 44; i < 62; i += 6) {
 			createYellowPellet(i, 34);
 		}
-		
-		//vertical above home
+
+		// vertical above home
 		for (int i = 55; i < 72; i += 6) {
 			createYellowPellet(56, i);
 		}
 		for (int i = 55; i < 72; i += 6) {
 			createYellowPellet(44, i);
 		}
-				
-		//horizontal above home
+
+		// horizontal above home
 		for (int i = 31; i < 45; i += 7) {
 			createYellowPellet(i, 67);
 		}
 		for (int i = 62; i < 75; i += 7) {
 			createYellowPellet(i, 67);
 		}
-		
-		//vertical second to right column
+
+		// vertical second to right column
 		for (int i = 28; i < 45; i += 6) {
 			createYellowPellet(83, i);
 		}
 		for (int i = 55; i < 70; i += 6) {
 			createYellowPellet(83, i);
 		}
-		createYellowPellet(88,40);
-		//createYellowPellet(88,55);
-		createYellowPellet(88,67);
-		
-		//vertical right column
+		createYellowPellet(88, 40);
+		// createYellowPellet(88,55);
+		createYellowPellet(88, 67);
+
+		// vertical right column
 		for (int i = 48; i < 58; i += 7) {
 			createYellowPellet(93, i);
 		}
 		for (int i = 67; i < 75; i += 6) {
 			createYellowPellet(93, i);
 		}
-		
+
 	}
 
 	private void createYellowPellet(int posX, int posY) {
@@ -460,8 +463,8 @@ public class MazeGui extends Application {
 		createBonusPellet(30, 16);
 		createBonusPellet(70, 16);
 		createBonusPellet(6, 9);
-		createBonusPellet(93,40);
-		
+		createBonusPellet(93, 40);
+
 	}
 
 	private void createBonusPellet(int posX, int posY) {
@@ -484,6 +487,7 @@ public class MazeGui extends Application {
 					moveGhostsStep();
 					break;
 				case UP:
+
 					pacman1.setDirection(0.0f, 20.0f, 270);
 					break;
 				case DOWN:
@@ -517,4 +521,46 @@ public class MazeGui extends Application {
 	public void play(String[] args) {
 		Application.launch(args);
 	}
-}
+/*
+	private boolean checkMovable(Body body, KeyEvent dir) {
+		final boolean canMove = true;
+		World world = body.getWorld();
+
+		RayCastCallback rayCastCallback = new RayCastCallback() {
+			@Override
+			public float reportRayFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction) {
+				if (fixture.getFilterData().categoryBits == GameManager.WALL_BIT
+						|| fixture.getFilterData().categoryBits == GameManager.GATE_BIT) {
+					canMove = false;
+					return 0;
+				}
+				return 0;
+			}
+		};
+
+		for (int i = 0; i < 2; i++) {
+			Pacman tmpV1 = new Pacman()
+			tmpV1.set(body.getPosition());
+			switch (dir) {
+			case UP:
+				tmpV2.set(body.getPosition().x - (i - 0.5f) * 0.2f, body.getPosition().y + 0.6f);
+				break;
+			case DOWN:
+				tmpV2.set(body.getPosition().x - (i - 0.5f) * 0.2f, body.getPosition().y - 0.6f);
+				break;
+			case LEFT:
+				tmpV2.set(body.getPosition().x - 0.6f, body.getPosition().y - (i - 0.5f) * 0.2f);
+				break;
+			case RIGHT:
+				tmpV2.set(body.getPosition().x + 0.6f, body.getPosition().y - (i - 0.5f) * 0.2f);
+				break;
+			default:
+				break;
+			}
+
+			world.rayCast(rayCastCallback, tmpV1, tmpV2);
+		}
+
+		return canMove;
+	}
+*/}
