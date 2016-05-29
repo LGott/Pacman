@@ -100,7 +100,6 @@ public class CollisionContactListener implements ContactListener {
 			System.out.println("BONUS PELLET DETECTED");
 			ghostEffects();
 			setInvincible();
-		
 
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST") {
 			turnGhost(obj2);
@@ -154,13 +153,13 @@ public class CollisionContactListener implements ContactListener {
 		Timer timer = new java.util.Timer();
 
 		timer.schedule(new TimerTask() {
-		    public void run() {
-		         Platform.runLater(new Runnable() {
-		            public void run() {
-		             isInvincible  = true;
-		            }
-		        });
-		    }
+			public void run() {
+				Platform.runLater(new Runnable() {
+					public void run() {
+						isInvincible = true;
+					}
+				});
+			}
 		}, 15000);
 	}
 
