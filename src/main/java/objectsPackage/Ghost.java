@@ -66,7 +66,6 @@ public class Ghost extends Piece {
 	}
 
 	public void changeDirection() {
-		System.out.println("CHANGE DIRECTION");
 		Vec2 oldDir = currDirection;
 		Random randomGen = new Random();
 		while (oldDir == currDirection) {
@@ -74,15 +73,19 @@ public class Ghost extends Piece {
 			switch (dir) {
 			case 0: // UP
 				currDirection = new Vec2(0.0f, 30.0f);
+				System.out.println("up");
 				break;
 			case 1: // DOWN
 				currDirection = new Vec2(0.0f, -30.0f);
+				System.out.println("down");
 				break;
 			case 2: // LEFT
 				currDirection = new Vec2(-30.0f, 0.0f);
+				System.out.println("left");
 				break;
 			case 3: // RIGHT
 				currDirection = new Vec2(30.0f, 0.0f);
+				System.out.println("right");
 				break;
 			}
 		}
@@ -93,4 +96,5 @@ public class Ghost extends Piece {
 		body.setLinearVelocity(currDirection);
 	}
 
+	
 }

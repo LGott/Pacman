@@ -39,6 +39,7 @@ public class MazeGui extends Application {
 	private Pacman pacman1;
 	private Pacman pacman2;
 	private ArrayList<Ghost> ghosts;
+	private int x = 0;
 
 	// private int numBonusPellets; //I think they can be counted together, and
 	// when they're both all finished - you finished the round!
@@ -70,14 +71,16 @@ public class MazeGui extends Application {
 
 		rootGroup = new Group();
 		setScoreLabels();
-		
+
 		group = rootGroup.getChildren();
 		this.ghosts = new ArrayList<Ghost>();
-		contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
-		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
+		contactListener = new CollisionContactListener(rootGroup, pellets,
+				pacmanArray, ghosts);
+		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
+				Color.BLACK);
 		pacmanLives1 = new ArrayList<Label>();
 		pacmanLives2 = new ArrayList<Label>();
-		
+
 		life = 0;
 		life2 = 0;
 		setPacmanLives();
@@ -118,13 +121,12 @@ public class MazeGui extends Application {
 
 		scoreLabel2 = new Label("Pacman 2 Score: ");
 		setLabel(scoreLabel2, 25, 45);
-		
+
 		scoreValueLabel2 = new Label();
 		setLabel(scoreValueLabel2, 140, 45);
-		
 
-		pacmanLife1=new Label("Pacman 1");
-		pacmanLife2= new Label("Pacman 2");
+		pacmanLife1 = new Label("Pacman 1");
+		pacmanLife2 = new Label("Pacman 2");
 		setLabel(pacmanLife1, 575, 50);
 		setLabel(pacmanLife2, 285, 50);
 		rootGroup.getChildren().add(scoreLabel);
@@ -134,15 +136,15 @@ public class MazeGui extends Application {
 		rootGroup.getChildren().add(scoreValueLabel2);
 		rootGroup.getChildren().add(pacmanLife1);
 		rootGroup.getChildren().add(pacmanLife2);
-		
 
 	}
-	private void  setLabel(Label label, int x, int y){
-		
+
+	private void setLabel(Label label, int x, int y) {
+
 		label.setTranslateX(x);
 		label.setTranslateY(y);
 		label.setTextFill(Color.YELLOW);
-	
+
 	}
 
 	private void setStageProperties(Stage stage) {
@@ -201,6 +203,7 @@ public class MazeGui extends Application {
 		EventHandler<ActionEvent> ae = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
 				world.step(1.0f / 60.f, 8, 3);
+				x++;
 				removeFixturesAndPellets();
 				scoreValueLabel.setText(String.valueOf(pacman1.getScore()));
 				scoreValueLabel2.setText(String.valueOf(pacman2.getScore()));
@@ -285,6 +288,9 @@ public class MazeGui extends Application {
 		// TODO Auto-generated method stub
 		for (Ghost g : ghosts) {
 			moveAGhost(g);
+			if (x % 65 == 0) {
+				g.changeDirection();
+			}
 		}
 	}
 
@@ -394,7 +400,8 @@ public class MazeGui extends Application {
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
-		group.add(new Wall(posX, posY, world, width, height, Color.BLUE).getNode());
+		group.add(new Wall(posX, posY, world, width, height, Color.BLUE)
+				.getNode());
 	}
 
 	public void createPacmans() {
