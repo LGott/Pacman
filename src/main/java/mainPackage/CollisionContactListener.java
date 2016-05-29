@@ -3,6 +3,9 @@ package mainPackage;
 import java.util.ArrayList;
 
 import javafx.scene.Group;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Light.Distant;
+import javafx.scene.effect.Lighting;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
@@ -10,6 +13,7 @@ import objectsPackage.UniqueObject;
 
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
+import org.jbox2d.collision.Distance;
 import org.jbox2d.collision.Manifold;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.contacts.Contact;
@@ -67,6 +71,7 @@ public class CollisionContactListener implements ContactListener {
 			Pacman pac = identifyPacman(obj2);
 			pac.incrementScore(10);
 			System.out.println("pacman-pellet");
+			
 		} else if (obj2.getDescription() == "PACMAN" && obj1.getDescription() == "BONUS_PELLET") {
 
 			// remove the bonus pellet
@@ -74,12 +79,36 @@ public class CollisionContactListener implements ContactListener {
 			Pacman pac = identifyPacman(obj2);
 			pac.incrementScore(50);
 
+			for (Ghost ghost : ghosts) {
+
+				Distant light = new Distant();
+				light.setAzimuth(-135.0f);
+
+				Lighting l = new Lighting();
+				l.setLight(light);
+				l.setSurfaceScale(5.0f);
+
+				ghost.getNode().setEffect(l);
+			}
+
 		} else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "BONUS_PELLET") {
 			removePellet(f2, obj2);
 			Pacman pac = identifyPacman(obj1);
 			pac.incrementScore(50);
 
 			System.out.println("BONUS PELLET DETECTED");
+			for (Ghost ghost : ghosts) {
+
+				Distant light = new Distant();
+				light.setAzimuth(-135.0f);
+
+				Lighting l = new Lighting();
+				l.setLight(light);
+				l.setSurfaceScale(5.0f);
+
+				ghost.getNode().setEffect(l);
+			}
+
 
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST") {
 			turnGhost(obj2);
