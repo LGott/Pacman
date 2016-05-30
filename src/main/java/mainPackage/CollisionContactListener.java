@@ -58,13 +58,14 @@ public class CollisionContactListener implements ContactListener {
 	}
 
 	public void beginContact(Contact contact) {
-		colliding = true;
+		this.colliding = true;
 		Fixture f1 = contact.getFixtureA();
 		Fixture f2 = contact.getFixtureB();
 		UniqueObject obj1 = (UniqueObject) f1.getBody().getUserData();
 		UniqueObject obj2 = (UniqueObject) f2.getBody().getUserData();
 
-	//System.out.println("contacts " + obj1.getDescription() + " and " + obj2.getDescription());
+		// System.out.println("contacts " + obj1.getDescription() + " and " +
+		// obj2.getDescription());
 		if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "PELLET") {
 			removePellet(f2, obj2);
 			// Find the correct pacman and increment it's score
@@ -75,7 +76,7 @@ public class CollisionContactListener implements ContactListener {
 			// Find the correct pacman and increment it's score
 			Pacman pac = identifyPacman(obj2);
 			pac.incrementScore(10);
-			
+
 		} else if (obj2.getDescription() == "PACMAN" && obj1.getDescription() == "BONUS_PELLET") {
 			// remove the bonus pellet
 			removePellet(f1, obj1);
@@ -95,19 +96,18 @@ public class CollisionContactListener implements ContactListener {
 			System.out.println("Bang");
 			turnGhost(obj2);
 
-		} else if(obj2.getDescription() == "WALL" && obj1.getDescription() == "GHOST"){
+		} else if (obj2.getDescription() == "WALL" && obj1.getDescription() == "GHOST") {
 			System.out.println("Bang");
 			turnGhost(obj1);
-			
+
 		}
-//		else if (obj1.getDescription() == "GHOST" && obj2.getDescription() == "GHOST") {
-//			turnGhost(obj1);
-//		}
+		// else if (obj1.getDescription() == "GHOST" && obj2.getDescription() ==
+		// "GHOST") {
+		// turnGhost(obj1);
+		// }
 
 		else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "GHOST"
 				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "PACMAN")) {
-			// remove an extra pacman
-			// System.out.println("here");
 
 			if (!isInvincible) {
 				pacmanLost = true;
@@ -132,7 +132,6 @@ public class CollisionContactListener implements ContactListener {
 			}
 			System.out.println("pacman-ghost   are colliding");
 
-
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "PACMAN") {
 			collidingWithWall = true;
 			for (int i = 0; i < pacmanArray.size(); i++) {
@@ -154,7 +153,7 @@ public class CollisionContactListener implements ContactListener {
 					public void run() {
 						isInvincible = true;
 					}
-				}); 
+				});
 			}
 		}, 15000);
 	}
@@ -173,7 +172,7 @@ public class CollisionContactListener implements ContactListener {
 	public boolean isColliding() {
 		return colliding;
 	}
-	
+
 	public boolean isPacmanLost() {
 		return this.pacmanLost;
 	}
@@ -187,7 +186,6 @@ public class CollisionContactListener implements ContactListener {
 	}
 
 	private void turnGhost(UniqueObject obj) {
-		// TODO Auto-generated method stub
 		for (Ghost g : ghosts) {
 			if (g.getObjectDescription().getID() == obj.getID()) {
 				System.out.println("TURN GHOST");
@@ -195,7 +193,6 @@ public class CollisionContactListener implements ContactListener {
 				break;
 			}
 		}
-
 	}
 
 	private Pacman identifyPacman(UniqueObject obj1) {
@@ -227,7 +224,6 @@ public class CollisionContactListener implements ContactListener {
 	}
 
 	private void removePelletShape(UniqueObject obj) {
-		// TODO Auto-generated method stub
 		for (int i = 0; i < pellets.size(); i++) {
 			if (pellets.get(i).getObjectDescription().getID() == obj.getID()) {
 				pelletsToRemove.add(pellets.get(i));
@@ -250,7 +246,6 @@ public class CollisionContactListener implements ContactListener {
 	}
 
 	private void setPacmanColliding(UniqueObject obj) {
-		// TODO Auto-generated method stub
 		for (int i = 0; i < pacmanArray.size(); i++) {
 			if (pacmanArray.get(i).getObjectDescription().getID() == obj.getID()) {
 				pacmanArray.get(i).setColliding(false);
@@ -264,12 +259,9 @@ public class CollisionContactListener implements ContactListener {
 	}
 
 	public void preSolve(Contact arg0, Manifold arg1) {
-		// TODO Auto-generated method stub
 	}
 
 	public void postSolve(Contact contact, ContactImpulse impulse) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public ArrayList<Pellet> getPelletsToRemove() {

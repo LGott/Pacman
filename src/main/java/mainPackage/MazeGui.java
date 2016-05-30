@@ -66,24 +66,21 @@ public class MazeGui extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		// TODO Auto-generated method stub
 		setStageProperties(stage);
 		// Create a group for holding all objects on the screen.
 
-		rootGroup = new Group();
+		this.rootGroup = new Group();
 		setScoreLabels();
 
-		group = rootGroup.getChildren();
+		this.group = rootGroup.getChildren();
 		this.ghosts = new ArrayList<Ghost>();
-		contactListener = new CollisionContactListener(rootGroup, pellets,
-				pacmanArray, ghosts);
-		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
-				Color.BLACK);
-		pacmanLives1 = new ArrayList<Label>();
-		pacmanLives2 = new ArrayList<Label>();
+		this.contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
+		this.scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
+		this.pacmanLives1 = new ArrayList<Label>();
+		this.pacmanLives2 = new ArrayList<Label>();
+		this.life = 0;
+		this.life2 = 0;
 
-		life = 0;
-		life2 = 0;
 		setPacmanLives();
 		setLabels();
 		createShapes();
@@ -108,7 +105,7 @@ public class MazeGui extends Application {
 		outLabel.setTranslateY(300);
 		outLabel.setTextFill(Color.WHITE);
 		outLabel.setVisible(false);
-		
+
 		group.add(gameOverLabel);
 		group.add(outLabel);
 
@@ -122,7 +119,6 @@ public class MazeGui extends Application {
 
 		scoreLabel2 = new Label("Pacman 2 Score: ");
 		setLabel(scoreLabel2, 25, 45);
-
 		scoreValueLabel2 = new Label();
 		setLabel(scoreValueLabel2, 140, 45);
 
@@ -130,9 +126,9 @@ public class MazeGui extends Application {
 		pacmanLife2 = new Label("Pacman 2");
 		setLabel(pacmanLife1, 570, 10);
 		setLabel(pacmanLife2, 570, 60);
+
 		rootGroup.getChildren().add(scoreLabel);
 		rootGroup.getChildren().add(scoreValueLabel);
-
 		rootGroup.getChildren().add(scoreLabel2);
 		rootGroup.getChildren().add(scoreValueLabel2);
 		rootGroup.getChildren().add(pacmanLife1);
@@ -145,8 +141,8 @@ public class MazeGui extends Application {
 		label.setTranslateX(x);
 		label.setTranslateY(y);
 		label.setTextFill(Color.YELLOW);
-		
-		logo = new Label("");
+
+		this.logo = new Label("");
 		Image image = new Image(getClass().getResourceAsStream("/PacManLogo.png"));
 		ImageView img = new ImageView(image);
 		img.setFitWidth(300);
@@ -213,6 +209,7 @@ public class MazeGui extends Application {
 
 		EventHandler<ActionEvent> ae = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
+
 				world.step(1.0f / 60.f, 8, 3);
 				x++;
 				removeFixturesAndPellets();
@@ -247,11 +244,12 @@ public class MazeGui extends Application {
 							life2++;
 						}
 					}
-					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
+					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0 || pellets.isEmpty()) {
 						gameOverLabel.setVisible(true);
 						timeline.stop();
 					}
 				}
+
 			}
 		};
 		/**
@@ -411,8 +409,7 @@ public class MazeGui extends Application {
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
-		group.add(new Wall(posX, posY, world, width, height, Color.BLUE)
-				.getNode());
+		group.add(new Wall(posX, posY, world, width, height, Color.BLUE).getNode());
 	}
 
 	public void createPacmans() {

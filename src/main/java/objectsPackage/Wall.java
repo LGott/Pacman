@@ -23,29 +23,22 @@ public class Wall extends Piece {
 	private final int maskBits = 1;
 	private final int categoryBits = 1;
 
-	public Wall(int posX, int posY, World world, float width, float height,
-			Color c) {
+	public Wall(int posX, int posY, World world, float width, float height, Color c) {
 		super(posX, posY, world, "WALL");
-		ps = new PolygonShape();
-		ps.setAsBox(width + .48f, height + .48f);
+		this.ps = new PolygonShape();
+		this.ps.setAsBox(width + .48f, height + .48f);
 		this.height = height;
 		this.width = width;
 		this.color = c;
-		node = create();
+		this.node = create();
 	}
 
 	private Node create() {
-		wall = RectangleBuilder
-				.create()
-				.x(Properties.jBoxToFxPosX(getPosX())
-						- Properties.jBoxtoPixelWidth(width))
-				.y(Properties.jBoxToFxPosY(getPosY())
-						- Properties.jBoxtoPixelHeight(height))
-				.width(Properties.jBoxtoPixelWidth(width) * 2)
-				.height(Properties.jBoxtoPixelHeight(height) * 2).fill(color)
-				.build();
-		body = createBodyAndFixture(bodyType, ps, maskBits, groupIndex,
-				categoryBits);
+		wall = RectangleBuilder.create().x(Properties.jBoxToFxPosX(getPosX()) - Properties.jBoxtoPixelWidth(width))
+				.y(Properties.jBoxToFxPosY(getPosY()) - Properties.jBoxtoPixelHeight(height))
+				.width(Properties.jBoxtoPixelWidth(width) * 2).height(Properties.jBoxtoPixelHeight(height) * 2)
+				.fill(color).build();
+		body = createBodyAndFixture(bodyType, ps, maskBits, groupIndex, categoryBits);
 
 		wall.setUserData(body);
 		super.setUserData();
