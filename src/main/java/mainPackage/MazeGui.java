@@ -155,7 +155,6 @@ public class MazeGui extends Application {
 	}
 
 	private void setStageProperties(Stage stage) {
-		// TODO Auto-generated method stub
 		stage.setWidth(Properties.WIDTH);
 		stage.setHeight(Properties.HEIGHT);
 		stage.setTitle("Pacman");
@@ -183,7 +182,7 @@ public class MazeGui extends Application {
 		}
 	}
 
-	// Set the attributes
+	// Set the attributes for the live-labels
 	private void pacLives(Label pac, int x, int y) {
 
 		Image image = new Image(getClass().getResourceAsStream("/pacman.png"));
@@ -257,10 +256,7 @@ public class MazeGui extends Application {
 		 * trigged when KeyFrame execution is over.
 		 */
 		KeyFrame frame = new KeyFrame(duration, ae, null, null);
-
 		timeline.getKeyFrames().add(frame);
-
-		// TODO Auto-generated method stub
 	}
 
 	private void resetPacmansAndGhosts() {
@@ -304,7 +300,6 @@ public class MazeGui extends Application {
 	}
 
 	private void moveAGhost(Ghost g) {
-		// TODO Auto-generated method stub
 		Body body = (Body) g.getNode().getUserData();
 		// body.setLinearVelocity(new Vec2(-20.0f, 0.0f));
 		float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
@@ -316,7 +311,6 @@ public class MazeGui extends Application {
 	private void movePacman(Pacman pacman) {
 
 		animatePacman(timeStart, pacman);
-		// TODO Auto-generated method stub
 		Body pacBody = (Body) pacman.getNode().getUserData();
 		float xpos = Properties.jBoxToFxPosX(pacBody.getPosition().x);
 		float ypos = Properties.jBoxToFxPosY(pacBody.getPosition().y);
@@ -326,7 +320,6 @@ public class MazeGui extends Application {
 	}
 
 	private void removeFixturesAndPellets() {
-		// TODO Auto-generated method stub
 		for (Fixture b : contactListener.getFixturesToRemove()) {
 			world.destroyBody(b.getBody());
 			// rootGroup.getChildren().remove(b);
@@ -552,7 +545,6 @@ public class MazeGui extends Application {
 	}
 
 	private void createBonusPellet(int posX, int posY) {
-		// TODO Auto-generated method stub
 		Pellet bp = new BonusPellet(posX, posY, world);
 		addPellet(bp);
 	}

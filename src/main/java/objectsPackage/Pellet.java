@@ -22,8 +22,7 @@ public class Pellet extends Piece {
 	private final int maskBits = -1;
 	private final int categoryBits = -1;
 
-	public Pellet(int posX, int posY, World world, String description,
-			String imgName) {
+	public Pellet(int posX, int posY, World world, String description, String imgName) {
 		super(posX, posY, world, description);
 		this.radius = 10;
 		this.imgName = imgName;
@@ -37,8 +36,7 @@ public class Pellet extends Piece {
 		this.cs = new CircleShape();
 		this.cs.m_radius = radius * 0.1f; // We need to convert radius to JBox2D
 		// equivalent
-		this.body = createBodyAndFixture(bodyType, cs, maskBits, groupIndex,
-				categoryBits);
+		this.body = createBodyAndFixture(bodyType, cs, maskBits, groupIndex, categoryBits);
 		super.setUserData();
 		this.pellet.setUserData(body);
 		return pellet;
