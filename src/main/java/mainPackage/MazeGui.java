@@ -61,8 +61,8 @@ public class MazeGui extends Application {
 	private Label pacmanLife2;
 	private int life;
 	private int life2;
-	private boolean isPaused;
-	private MyThread thread;
+	//private volatile boolean isPaused;
+	private PausableThread pauseThread;
 	private ObservableList<Node> group;
 	private final long timeStart = System.currentTimeMillis();
 
@@ -82,8 +82,8 @@ public class MazeGui extends Application {
 		this.pacmanLives2 = new ArrayList<Label>();
 		this.life = 0;
 		this.life2 = 0;
-		this.isPaused = false;
-		this.thread = new MyThread();
+		//this.isPaused = false;
+		this.pauseThread = new PausableThread();
 
 		setPacmanLives();
 		setLabels();
@@ -204,7 +204,7 @@ public class MazeGui extends Application {
 	private void startSimulation() {
 
 		timeline.setCycleCount(Timeline.INDEFINITE);
-
+		
 		Duration duration = Duration.seconds(1.0 / 60.0); // Set duration for
 		// frame.
 
@@ -213,7 +213,7 @@ public class MazeGui extends Application {
 
 		EventHandler<ActionEvent> ae = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
-
+		
 				world.step(1.0f / 60.f, 8, 3);
 				x++;
 				removeFixturesAndPellets();
@@ -565,52 +565,6 @@ public class MazeGui extends Application {
 		pellets.add(p);
 		group.add(p.getNode());
 	}
-	// // blocks current thread until it is resumed
-	// private synchronized void waitUntilResumed() throws InterruptedException
-	// {
-	// while (isPaused) {
-	// wait();
-	// }
-	// }
-	//
-	// public synchronized void resumeAction() {
-	// System.out.println("resumed");
-	// isPaused = false;
-	// notifyAll();
-	// }
-
-	// Main thread
-	void pause() {
-		isPaused = true;
-	}
-
-	private void resumeGame() {
-		synchronized (thread) {
-			isPaused = false;
-			thread.notify();
-		}
-	}
-
-	class MyThread extends Thread {
-
-		public void run() {
-			while (isPaused) {
-				synchronized (this) {
-					if (isPaused) {
-						try {
-							wait();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-
-					} else {
-					isPaused = false;
-					}
-				}
-				// resumeGame();
-			}
-		}
-	}
 
 	private void addKeyListeners(Scene scene) {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -645,11 +599,10 @@ public class MazeGui extends Application {
 					pacman2.setDirection(0.0f, 20.0f, 270);
 					break;
 				case P: // Pause
-					pause();
-					thread.run();
-					break;
+					pauseThread.pauseAction();
+					pauseThread.run();
 				case ENTER:
-				isPaused = false;
+					pauseThread.resumeAction();
 					break;
 				default:
 					break;
