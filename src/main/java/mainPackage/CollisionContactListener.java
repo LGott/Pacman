@@ -154,7 +154,7 @@ public class CollisionContactListener implements ContactListener {
 					public void run() {
 						isInvincible = true;
 					}
-				});
+				}); 
 			}
 		}, 15000);
 	}
