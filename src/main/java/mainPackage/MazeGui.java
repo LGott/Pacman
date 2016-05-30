@@ -61,6 +61,7 @@ public class MazeGui extends Application {
 	private Label pacmanLife2;
 	private int life;
 	private int life2;
+	private boolean isPaused;
 	private ObservableList<Node> group;
 	private final long timeStart = System.currentTimeMillis();
 
@@ -80,6 +81,7 @@ public class MazeGui extends Application {
 		this.pacmanLives2 = new ArrayList<Label>();
 		this.life = 0;
 		this.life2 = 0;
+		this.isPaused = false;
 
 		setPacmanLives();
 		setLabels();
@@ -561,6 +563,18 @@ public class MazeGui extends Application {
 		pellets.add(p);
 		group.add(p.getNode());
 	}
+	  // blocks current thread until it is resumed
+    private synchronized void waitUntilResumed() throws InterruptedException {
+        while (isPaused) {
+            wait();
+        }
+    }
+
+    public synchronized void resumeAction() {
+        System.out.println("resumed");
+       isPaused = false; 
+       notifyAll();
+    }
 
 	private void addKeyListeners(Scene scene) {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -594,11 +608,27 @@ public class MazeGui extends Application {
 				case E:// Up
 					pacman2.setDirection(0.0f, 20.0f, 270);
 					break;
+				case P: //Pause
+				boolean isPaused = true;
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+					try {
+						waitUntilResumed();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				break;
+				case ENTER:
+					resumeAction();
 				default:
 					break;
 				}
 			}
 		});
+		
 	}
 
 	public void play(String[] args) {
