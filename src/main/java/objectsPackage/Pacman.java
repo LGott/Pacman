@@ -35,7 +35,7 @@ public class Pacman extends Piece {
 		super(posX, posY, world, "PACMAN");
 		this.initialX = posX;
 		this.initialY = posY;
-		node = create();
+		this.node = create();
 		this.name = name;
 		this.score = 0;
 		this.lives = 3;
@@ -43,8 +43,8 @@ public class Pacman extends Piece {
 
 	public Pacman(Pacman p) {
 		super(p.initialX, p.initialY, p.world, "PACMAN");
-		node = create();
-		id = p.id;
+		this.node = create();
+		this.id = p.id;
 		this.initialX = p.initialX;
 		this.initialY = p.initialY;
 		this.name = p.name;

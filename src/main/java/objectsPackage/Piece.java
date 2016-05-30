@@ -32,13 +32,12 @@ public abstract class Piece {
 		this.posY = posY;
 		this.world = world;
 		this.id = ++lastID;
-		objectDescription = new UniqueObject(this.id, description);
-		fd = new FixtureDef();
+		this.objectDescription = new UniqueObject(this.id, description);
+		this.fd = new FixtureDef();
 
 	}
 
-	public Body createBodyAndFixture(BodyType bodyType, Shape shape,
-			int maskBits, int groupIndex, int categoryBits) {
+	public Body createBodyAndFixture(BodyType bodyType, Shape shape, int maskBits, int groupIndex, int categoryBits) {
 
 		// Create an JBox2D body definition
 		bd = new BodyDef();
@@ -83,12 +82,10 @@ public abstract class Piece {
 	}
 
 	public void setUserData() {
-		// TODO Auto-generated method stub
 		body.setUserData(objectDescription);
 	}
 
 	public void setUserData(String newDescription) {
-		// TODO Auto-generated method stub
 		objectDescription = new UniqueObject(this.id, newDescription);
 	}
 
