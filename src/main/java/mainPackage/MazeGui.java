@@ -56,6 +56,7 @@ public class MazeGui extends Application {
 	private ArrayList<Label> pacmanLives2;
 	private Label gameOverLabel;
 	private Label outLabel;
+	private Label logo;
 	private Label pacmanLife1;
 	private Label pacmanLife2;
 	private int life;
@@ -107,7 +108,7 @@ public class MazeGui extends Application {
 		outLabel.setTranslateY(300);
 		outLabel.setTextFill(Color.WHITE);
 		outLabel.setVisible(false);
-
+		
 		group.add(gameOverLabel);
 		group.add(outLabel);
 
@@ -127,8 +128,8 @@ public class MazeGui extends Application {
 
 		pacmanLife1 = new Label("Pacman 1");
 		pacmanLife2 = new Label("Pacman 2");
-		setLabel(pacmanLife1, 575, 50);
-		setLabel(pacmanLife2, 285, 50);
+		setLabel(pacmanLife1, 570, 10);
+		setLabel(pacmanLife2, 570, 60);
 		rootGroup.getChildren().add(scoreLabel);
 		rootGroup.getChildren().add(scoreValueLabel);
 
@@ -144,6 +145,16 @@ public class MazeGui extends Application {
 		label.setTranslateX(x);
 		label.setTranslateY(y);
 		label.setTextFill(Color.YELLOW);
+		
+		logo = new Label("");
+		Image image = new Image(getClass().getResourceAsStream("/PacManLogo.png"));
+		ImageView img = new ImageView(image);
+		img.setFitWidth(300);
+		img.setPreserveRatio(true);
+		logo.setGraphic(img);
+		logo.setTranslateX(200);
+		logo.setTranslateY(8);
+		rootGroup.getChildren().add(logo);
 
 	}
 
@@ -158,7 +169,7 @@ public class MazeGui extends Application {
 	// Display the pacman labels in the correct position
 	private void setPacmanLives() {
 		int x = 630;
-		int y = 25;
+		int y = 28;
 
 		for (int i = 0; i < 3; i++) {
 			pacmanLives1.add(new Label(""));
@@ -169,10 +180,10 @@ public class MazeGui extends Application {
 			pacLives(pac, x, y);
 			x -= 45;
 		}
-		x = 250;
+		x = 630;
 		for (Label pac2 : pacmanLives2) {
-			pacLives(pac2, x, y);
-			x += 45;
+			pacLives(pac2, x, 80);
+			x -= 45;
 		}
 	}
 
