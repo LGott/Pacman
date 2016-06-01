@@ -97,8 +97,8 @@ public class MazeGui extends Application {
 	}
 
 	private void setLabels() {
-		gameOverLabel = new Label("GAME OVER");
-		gameOverLabel.setFont(new Font(90));
+		gameOverLabel = new Label("GAME OVER" + "\n" +"Press R to restart" );
+		gameOverLabel.setFont(new Font(70));
 		gameOverLabel.setTranslateX(120);
 		gameOverLabel.setTranslateY(150);
 		gameOverLabel.setTextFill(Color.WHITE);
