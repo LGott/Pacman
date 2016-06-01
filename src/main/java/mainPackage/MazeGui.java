@@ -61,7 +61,7 @@ public class MazeGui extends Application {
 	private Label pacmanLife2;
 	private int life;
 	private int life2;
-	//private volatile boolean isPaused;
+	// private volatile boolean isPaused;
 	private PausableThread pauseThread;
 	private ObservableList<Node> group;
 	private final long timeStart = System.currentTimeMillis();
@@ -82,7 +82,7 @@ public class MazeGui extends Application {
 		this.pacmanLives2 = new ArrayList<Label>();
 		this.life = 0;
 		this.life2 = 0;
-		//this.isPaused = false;
+		// this.isPaused = false;
 		this.pauseThread = new PausableThread();
 
 		setPacmanLives();
@@ -204,7 +204,7 @@ public class MazeGui extends Application {
 	private void startSimulation() {
 
 		timeline.setCycleCount(Timeline.INDEFINITE);
-		
+
 		Duration duration = Duration.seconds(1.0 / 60.0); // Set duration for
 		// frame.
 
@@ -213,7 +213,7 @@ public class MazeGui extends Application {
 
 		EventHandler<ActionEvent> ae = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
-		
+
 				world.step(1.0f / 60.f, 8, 3);
 				x++;
 				removeFixturesAndPellets();
@@ -599,10 +599,10 @@ public class MazeGui extends Application {
 					pacman2.setDirection(0.0f, 20.0f, 270);
 					break;
 				case P: // Pause
-					pauseThread.pauseAction();
-					pauseThread.run();
+					timeline.pause();
+					break;
 				case ENTER:
-					pauseThread.resumeAction();
+					timeline.play();
 					break;
 				default:
 					break;
