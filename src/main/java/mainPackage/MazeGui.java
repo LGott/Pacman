@@ -69,6 +69,10 @@ public class MazeGui extends Application {
 	private ObservableList<Node> group;
 	private final long timeStart = System.currentTimeMillis();
 
+	private static final Integer STARTTIME = 15;
+	private Label timerLabel;
+	private Integer timeSeconds = STARTTIME;
+
 	@Override
 	public void start(Stage stage) throws Exception {
 		setStageProperties(stage);
@@ -89,9 +93,10 @@ public class MazeGui extends Application {
 		this.pauseThread = new PausableThread();
 
 		setPacmanLives();
-		
+
 		createShapes();
 		setLabels();
+		setTimerLabel();
 		world.setContactListener(contactListener);
 		startSimulation();
 		addKeyListeners(scene);
@@ -118,6 +123,14 @@ public class MazeGui extends Application {
 		group.add(gameOverLabel);
 		group.add(outLabel);
 
+	}
+
+	private void setTimerLabel() {
+		timerLabel = new Label();
+		timerLabel.setText(timeSeconds.toString());
+		timerLabel.setTextFill(Color.RED);
+		timerLabel.setStyle("-fx-font-size: 4em;");
+		group.add(timerLabel);
 	}
 
 	private void setScoreLabels() {
