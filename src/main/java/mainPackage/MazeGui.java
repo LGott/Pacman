@@ -1,6 +1,8 @@
 package mainPackage;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -19,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import mainPackage.CollisionContactListener.DelayTask;
 import objectsPackage.BonusPellet;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
@@ -97,7 +100,7 @@ public class MazeGui extends Application {
 	}
 
 	private void setLabels() {
-		gameOverLabel = new Label("GAME OVER" + "\n" +"Press R to restart" );
+		gameOverLabel = new Label("GAME OVER" + "\n" + "Press R to restart");
 		gameOverLabel.setFont(new Font(70));
 		gameOverLabel.setTranslateX(120);
 		gameOverLabel.setTranslateY(150);
@@ -106,7 +109,7 @@ public class MazeGui extends Application {
 
 		outLabel = new Label("BOOM!!"); // Subject to change lol
 		outLabel.setFont(new Font(90));
-		outLabel.setTranslateX(155);
+		outLabel.setTranslateX(160);
 		outLabel.setTranslateY(300);
 		outLabel.setTextFill(Color.WHITE);
 		outLabel.setVisible(false);
@@ -292,9 +295,21 @@ public class MazeGui extends Application {
 			world.destroyBody(g.getFixture().getBody());
 		}
 		ghosts.clear();
-		outLabel.setVisible(true);
+		showLabelOnTimer();
 		createGhosts();
 
+	}
+
+	private void showLabelOnTimer() {
+		outLabel.setVisible(true);
+		Timer timer = new java.util.Timer();
+		timer.schedule(new ScheduledTask(), 2 * 1000);
+	}
+
+	class ScheduledTask extends TimerTask {
+		public void run() {
+			outLabel.setVisible(false);
+		}
 	}
 
 	private void moveGhostsStep() {
@@ -345,7 +360,7 @@ public class MazeGui extends Application {
 
 	}
 
-	//Reset the game
+	// Reset the game
 	private void restartGame() {
 		resetPacmansAndGhosts();
 		createPellets();
@@ -358,7 +373,7 @@ public class MazeGui extends Application {
 		pacmanLives2.clear();
 		life = 0;
 		life2 = 0;
-		
+
 		for (Label pac : pacmanLives1) {
 			group.remove(pac.getNodeOrientation());
 		}
