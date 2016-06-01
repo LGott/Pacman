@@ -89,8 +89,9 @@ public class MazeGui extends Application {
 		this.pauseThread = new PausableThread();
 
 		setPacmanLives();
-		setLabels();
+		
 		createShapes();
+		setLabels();
 		world.setContactListener(contactListener);
 		startSimulation();
 		addKeyListeners(scene);
@@ -109,8 +110,8 @@ public class MazeGui extends Application {
 
 		outLabel = new Label("BOOM!!"); // Subject to change lol
 		outLabel.setFont(new Font(90));
-		outLabel.setTranslateX(160);
-		outLabel.setTranslateY(300);
+		outLabel.setTranslateX(195);
+		outLabel.setTranslateY(250);
 		outLabel.setTextFill(Color.WHITE);
 		outLabel.setVisible(false);
 
@@ -157,7 +158,7 @@ public class MazeGui extends Application {
 		img.setPreserveRatio(true);
 		logo.setGraphic(img);
 		logo.setTranslateX(200);
-		logo.setTranslateY(8);
+		logo.setTranslateY(1);
 		rootGroup.getChildren().add(logo);
 
 	}
@@ -257,7 +258,6 @@ public class MazeGui extends Application {
 						timeline.stop();
 					}
 				}
-
 			}
 		};
 		/**

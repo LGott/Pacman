@@ -161,11 +161,15 @@ public class CollisionContactListener implements ContactListener {
 	class DelayTask extends TimerTask {
 		public void run() {
 			isInvincible = false;
+			for (Ghost ghost : ghosts) {
+				ghost.resetColor();
+			}
 		}
 	}
 
 	private void ghostEffects() {
 		for (Ghost ghost : ghosts) {
+			ghost.turnBlue();
 			FadeTransition ft = new FadeTransition(Duration.millis(1000), ghost.getNode());
 			ft.setFromValue(3.0);
 			ft.setToValue(0.2);
@@ -233,6 +237,7 @@ public class CollisionContactListener implements ContactListener {
 		for (int i = 0; i < pellets.size(); i++) {
 			if (pellets.get(i).getObjectDescription().getID() == obj.getID()) {
 				pelletsToRemove.add(pellets.get(i));
+				pellets.remove(i);
 				break;
 			}
 		}

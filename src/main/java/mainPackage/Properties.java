@@ -2,7 +2,7 @@ package mainPackage;
 
 public class Properties {
 	public static final int WIDTH = 700;
-	public static final int HEIGHT = 800;
+	public static final int HEIGHT = 700;
 
 	
 	//Convert a JBox2D x coordinate to a JavaFX pixel x coordinate
