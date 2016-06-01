@@ -345,6 +345,18 @@ public class MazeGui extends Application {
 
 	}
 
+	private void restartGame(){
+		resetPacmansAndGhosts();
+		createPellets();
+		createBonusPellets();
+		pacman1.resetLives();
+		pacman2.resetLives();
+		pacman1.resetScore();
+		pacman2.resetScore();
+	//	setPacmanLives();
+		timeline.playFromStart();
+	}
+	
 	private void animatePacman(final long timeStart, Pacman pacman) {
 		if (contactListener.isCollidingWithWall() && pacman.isColliding()) {
 			pacman.setOpenPacman();
@@ -602,6 +614,8 @@ public class MazeGui extends Application {
 				case ENTER:
 					timeline.play();
 					break;
+				case R:
+					restartGame();
 				default:
 					break;
 				}
