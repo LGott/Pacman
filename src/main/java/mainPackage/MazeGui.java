@@ -373,6 +373,7 @@ public class MazeGui extends Application {
 		pacmanLives2.clear();
 		life = 0;
 		life2 = 0;
+		gameOverLabel.setVisible(false);
 
 		for (Label pac : pacmanLives1) {
 			group.remove(pac.getNodeOrientation());
