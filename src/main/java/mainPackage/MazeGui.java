@@ -23,9 +23,11 @@ import objectsPackage.BonusPellet;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
+import objectsPackage.UniqueObject;
 import objectsPackage.Wall;
 import objectsPackage.YellowPellet;
 
+import org.jbox2d.callbacks.RayCastCallback;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
@@ -40,6 +42,19 @@ public class MazeGui extends Application {
 	private Pacman pacman2;
 	private ArrayList<Ghost> ghosts;
 	private int x = 0;
+
+	public enum MoveDir {
+		UP, DOWN, LEFT, RIGHT, NONE
+	}
+
+	private MoveDir P2intendedMoveDir = MoveDir.NONE;
+	private MoveDir P1intendedMoveDir = MoveDir.NONE;
+	private MoveDir P1currentDir = MoveDir.RIGHT;
+	private MoveDir P2currentDir = MoveDir.RIGHT;
+
+	private final Vec2 tmpV1 = new Vec2();
+	private final Vec2 tmpV2 = new Vec2();
+	private boolean canMove;
 
 	// private int numBonusPellets; //I think they can be counted together, and
 	// when they're both all finished - you finished the round!
@@ -208,8 +223,23 @@ public class MazeGui extends Application {
 				scoreValueLabel.setText(String.valueOf(pacman1.getScore()));
 				scoreValueLabel2.setText(String.valueOf(pacman2.getScore()));
 
+				if (P1intendedMoveDir != MoveDir.NONE) {
+					// automatic pacman movement based on input
+					if (isValidMove(pacman1, P1intendedMoveDir)) {
+						System.out.println("pacman1 change direction");
+						P1currentDir = P1intendedMoveDir;
+						P1intendedMoveDir = MoveDir.NONE;
+						pacman1.setDirection(P1currentDir);
+					}
+				}
+				if (P2intendedMoveDir != MoveDir.NONE) {
+					if (isValidMove(pacman2, P2intendedMoveDir)) {
+						P2currentDir = P2intendedMoveDir;
+						P2intendedMoveDir = MoveDir.NONE;
+						pacman2.setDirection(P2currentDir);
+					}
+				}
 				// Move pacmans to the new position computed by JBox2D
-
 				movePacman(pacman1);
 				movePacman(pacman2);
 				moveGhostsStep();
@@ -401,7 +431,7 @@ public class MazeGui extends Application {
 
 	private void createWall(int posX, int posY, int width, int height) {
 		group.add(new Wall(posX, posY, world, width, height, Color.BLUE)
-				.getNode());
+		.getNode());
 	}
 
 	public void createPacmans() {
@@ -556,6 +586,7 @@ public class MazeGui extends Application {
 
 	private void addKeyListeners(Scene scene) {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
 			public void handle(KeyEvent event) {
 				switch (event.getCode()) {
 				case SHIFT:
@@ -563,34 +594,120 @@ public class MazeGui extends Application {
 					moveGhostsStep();
 					break;
 				case UP:
-					pacman1.setDirection(0.0f, 20.0f, 270);
+					P1intendedMoveDir = MoveDir.UP;
+					// if (checkMovable(pacman1.getFixture().getBody(),
+					// MoveDir.UP)) {
+					// pacman1.setDirection(0.0f, 20.0f, 270);
+					// }
 					break;
 				case DOWN:
-					pacman1.setDirection(0.0f, -20.0f, 90);
+					P1intendedMoveDir = MoveDir.DOWN;
+					// if (checkMovable(pacman1.getFixture().getBody(),
+					// MoveDir.DOWN)) {
+					// //pacman1.getFixture().getBody().applyLinearImpulse(tmpV1.set(3.6f,
+					// 0).scl(pacman1.getFixture().getBody().getMass()),
+					// pacman1.getFixture().getBody().getWorldCenter(), true);
+					// pacman1.setDirection(0.0f, -20.0f, 90);
+					// }
 					break;
 				case LEFT:
-					pacman1.setDirection(-20.0f, 0.0f, 180);
-					break;
+					P1intendedMoveDir = MoveDir.LEFT;
+					// if (checkMovable(pacman1.getFixture().getBody(),
+					// MoveDir.LEFT)) {
+					// pacman1.setDirection(-20.0f, 0.0f, 180);
+					// break;
+					// }
 				case RIGHT:
-					pacman1.setDirection(20.0f, 0.0f, 0);
+					P1intendedMoveDir = MoveDir.RIGHT;
+					// if (checkMovable(pacman1.getFixture().getBody(),
+					// MoveDir.RIGHT)) {
+					// pacman1.setDirection(20.0f, 0.0f, 0);
+					// }
 					break;
 				case S:// LEFT
-					pacman2.setDirection(-20.0f, 0.0f, 180);
+					P2intendedMoveDir = MoveDir.LEFT;
+					// if (checkMovable(pacman2.getFixture().getBody(),
+					// MoveDir.LEFT)) {
+					// pacman2.setDirection(-20.0f, 0.0f, 180);
+					// }
 					break;
 				case D:// Down
-					pacman2.setDirection(0.0f, -20.0f, 90);
+					P2intendedMoveDir = MoveDir.DOWN;
+					// if (checkMovable(pacman2.getFixture().getBody(),
+					// MoveDir.DOWN)) {
+					// pacman2.setDirection(0.0f, -20.0f, 90);
+					// }
 					break;
 				case F:// Right
-					pacman2.setDirection(20.0f, 0.0f, 0);
+					P2intendedMoveDir = MoveDir.RIGHT;
+					// if (checkMovable(pacman2.getFixture().getBody(),
+					// MoveDir.RIGHT)) {
+					// pacman2.setDirection(20.0f, 0.0f, 0);
+					// }
 					break;
 				case E:// Up
-					pacman2.setDirection(0.0f, 20.0f, 270);
+					P2intendedMoveDir = MoveDir.UP;
+					// if (checkMovable(pacman2.getFixture().getBody(),
+					// MoveDir.UP)) {
+					// pacman2.setDirection(0.0f, 20.0f, 270);
+					// }
 					break;
+
 				default:
 					break;
 				}
 			}
 		});
+	}
+
+	private boolean isValidMove(Pacman pacman, MoveDir dir) {
+		Pacman p = new Pacman(pacman);
+		p.setDirection(dir);
+		if (!p.isColliding()) {
+			world.destroyBody(p.getFixture().getBody());
+			return true;
+		}
+		return false;
+
+	}
+
+	private boolean checkMovable(Body body, MoveDir dir) {
+		canMove = true;
+		RayCastCallback rayCastCallback = new RayCastCallback() {
+			public float reportFixture(Fixture fixture, Vec2 point,
+					Vec2 normal, float fraction) {
+				if (((UniqueObject) fixture.getBody().getUserData())
+						.getDescription() == "WALL") {
+					canMove = false;
+					return 0;
+				}
+				return 0;
+			}
+		};
+
+		tmpV1.set(body.getPosition());
+		MoveDir direction = dir;
+		switch (direction) {
+		case UP:
+			tmpV2.set(20.0f, 0.0f);
+			break;
+		case DOWN:
+			tmpV2.set(0.0f, -20.0f);
+			break;
+		case LEFT:
+			tmpV2.set(-20.0f, 0.0f);
+			break;
+		case RIGHT:
+			tmpV2.set(20.0f, 0.0f);
+			break;
+		case NONE:
+			canMove = false;
+			break;
+		}
+
+		world.raycast(rayCastCallback, tmpV1, tmpV2);
+
+		return canMove;
 	}
 
 	public void play(String[] args) {
