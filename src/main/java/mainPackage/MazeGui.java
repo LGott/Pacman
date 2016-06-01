@@ -345,7 +345,7 @@ public class MazeGui extends Application {
 
 	}
 
-	private void restartGame(){
+	private void restartGame() {
 		resetPacmansAndGhosts();
 		createPellets();
 		createBonusPellets();
@@ -353,10 +353,23 @@ public class MazeGui extends Application {
 		pacman2.resetLives();
 		pacman1.resetScore();
 		pacman2.resetScore();
-	//	setPacmanLives();
+		// setPacmanLives();
+		// Image image =new
+		// Image(getClass().getResourceAsStream("/pacman.png"));
+		// ImageView img = new ImageView(image);
+		//
+		pacmanLives1.clear();
+		pacmanLives2.clear();
+		for(Label pac: pacmanLives1){
+			group.remove(pac.getNodeOrientation());
+		}
+		for(Label pac2: pacmanLives2){
+			group.remove(pac2.getNodeOrientation());
+		}
+		setPacmanLives();
 		timeline.playFromStart();
 	}
-	
+
 	private void animatePacman(final long timeStart, Pacman pacman) {
 		if (contactListener.isCollidingWithWall() && pacman.isColliding()) {
 			pacman.setOpenPacman();
@@ -616,6 +629,7 @@ public class MazeGui extends Application {
 					break;
 				case R:
 					restartGame();
+					break;
 				default:
 					break;
 				}
