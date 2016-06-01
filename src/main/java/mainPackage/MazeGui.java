@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
@@ -81,9 +82,10 @@ public class MazeGui extends Application {
 		// Create a group for holding all objects on the screen.
 
 		this.rootGroup = new Group();
+		this.group = rootGroup.getChildren();
+
 		setScoreLabels();
 
-		this.group = rootGroup.getChildren();
 		this.ghosts = new ArrayList<Ghost>();
 		this.contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
 		this.scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
@@ -98,13 +100,19 @@ public class MazeGui extends Application {
 
 		createShapes();
 		setLabels();
-		setTimerLabel();
+
 		world.setContactListener(contactListener);
 		startSimulation();
 		addKeyListeners(scene);
 		stage.setScene(scene);
 		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacmanIcon2.png")));
+
+		setTimerLabel();
+		timeSeconds.set(STARTTIME);
+		timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(STARTTIME - 1), new KeyValue(timeSeconds, 0)));
+
 		stage.show();
+	
 	}
 
 	private void setLabels() {
