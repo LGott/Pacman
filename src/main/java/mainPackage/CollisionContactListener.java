@@ -145,17 +145,15 @@ public class CollisionContactListener implements ContactListener {
 	}
 
 	private void setInvincible() {
+		isInvincible = true;
 		Timer timer = new java.util.Timer();
+		timer.schedule(new DelayTask(), 10 * 1000); //Allow pacman to be invincible for 10 seconds 
+	}
 
-		timer.schedule(new TimerTask() {
-			public void run() {
-				Platform.runLater(new Runnable() {
-					public void run() {
-						isInvincible = true;
-					}
-				});
-			}
-		}, 15000);
+	class DelayTask extends TimerTask {
+		public void run() {
+			isInvincible = false;
+		}
 	}
 
 	private void ghostEffects() {
