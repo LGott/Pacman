@@ -97,8 +97,8 @@ public class MazeGui extends Application {
 	}
 
 	private void setLabels() {
-		gameOverLabel = new Label("GAME OVER");
-		gameOverLabel.setFont(new Font(90));
+		gameOverLabel = new Label("GAME OVER" + "\n" +"Press R to restart" );
+		gameOverLabel.setFont(new Font(70));
 		gameOverLabel.setTranslateX(120);
 		gameOverLabel.setTranslateY(150);
 		gameOverLabel.setTextFill(Color.WHITE);
@@ -343,6 +343,30 @@ public class MazeGui extends Application {
 		contactListener.getPelletsToRemove().clear();
 		contactListener.getFixturesToRemove().clear();
 
+	}
+
+	//Reset the game
+	private void restartGame() {
+		resetPacmansAndGhosts();
+		createPellets();
+		createBonusPellets();
+		pacman1.resetLives();
+		pacman2.resetLives();
+		pacman1.resetScore();
+		pacman2.resetScore();
+		pacmanLives1.clear();
+		pacmanLives2.clear();
+		life = 0;
+		life2 = 0;
+		
+		for (Label pac : pacmanLives1) {
+			group.remove(pac.getNodeOrientation());
+		}
+		for (Label pac2 : pacmanLives2) {
+			group.remove(pac2.getNodeOrientation());
+		}
+		setPacmanLives();
+		timeline.playFromStart();
 	}
 
 	private void animatePacman(final long timeStart, Pacman pacman) {
@@ -601,6 +625,9 @@ public class MazeGui extends Application {
 					break;
 				case ENTER:
 					timeline.play();
+					break;
+				case R:
+					restartGame();
 					break;
 				default:
 					break;
