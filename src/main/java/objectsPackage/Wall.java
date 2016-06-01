@@ -19,15 +19,18 @@ public class Wall extends Piece {
 	private Rectangle wall;
 	private PolygonShape ps;
 	private Color color;
+	private final int groupIndex = 1;
+	private final int maskBits = 1;
+	private final int categoryBits = 1;
 
 	public Wall(int posX, int posY, World world, float width, float height, Color c) {
 		super(posX, posY, world, "WALL");
-		ps = new PolygonShape();
-		ps.setAsBox(width, height);
+		this.ps = new PolygonShape();
+		this.ps.setAsBox(width + .48f, height + .48f);
 		this.height = height;
 		this.width = width;
 		this.color = c;
-		node = create();
+		this.node = create();
 	}
 
 	private Node create() {
@@ -35,9 +38,11 @@ public class Wall extends Piece {
 				.y(Properties.jBoxToFxPosY(getPosY()) - Properties.jBoxtoPixelHeight(height))
 				.width(Properties.jBoxtoPixelWidth(width) * 2).height(Properties.jBoxtoPixelHeight(height) * 2)
 				.fill(color).build();
-		body = createBodyAndFixture(bodyType, ps);
+		body = createBodyAndFixture(bodyType, ps, maskBits, groupIndex, categoryBits);
+
 		wall.setUserData(body);
 		super.setUserData();
+
 		return wall;
 	}
 }

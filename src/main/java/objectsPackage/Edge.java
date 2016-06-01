@@ -25,7 +25,6 @@ public class Edge {
 		fd.density = 0f;
 		fd.friction = 0f;
 		fd.restitution = 0f;
-
 		// create the body and add fixture to it
 		Body body = world.createBody(bd);
 		body.createFixture(fd);

@@ -1,6 +1,8 @@
 package mainPackage;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -19,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import mainPackage.CollisionContactListener.DelayTask;
 import objectsPackage.BonusPellet;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
@@ -26,11 +29,9 @@ import objectsPackage.Pellet;
 import objectsPackage.Wall;
 import objectsPackage.YellowPellet;
 
-import org.jbox2d.callbacks.RayCastCallback;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
-import org.jbox2d.dynamics.World;
 
 public class MazeGui extends Application {
 	private Group rootGroup;
@@ -40,86 +41,124 @@ public class MazeGui extends Application {
 	private WorldLogic world = new WorldLogic(gravity, doSleep);
 	private Pacman pacman1;
 	private Pacman pacman2;
-	private Ghost[] ghosts = new Ghost[4];
+	private ArrayList<Ghost> ghosts;
+	private int x = 0;
+
 	// private int numBonusPellets; //I think they can be counted together, and
 	// when they're both all finished - you finished the round!
 	final Timeline timeline = new Timeline();
 	private CollisionContactListener contactListener;
 
 	private ArrayList<Pellet> pellets = new ArrayList<Pellet>();
-
-	private ScorePanel scorePanel1 = new ScorePanel();
-	private ScorePanel scorePanel2 = new ScorePanel();
 	private ArrayList<Pacman> pacmanArray = new ArrayList<Pacman>();
+	private ArrayList<Label> pacmanLives1;
+	private ArrayList<Label> pacmanLives2;
 	private Label scoreLabel;
 	private Label scoreValueLabel;
 	private Label scoreLabel2;
 	private Label scoreValueLabel2;
-	private ArrayList<Label> pacmanLives1;
-	private ArrayList<Label> pacmanLives2;
 	private Label gameOverLabel;
-	private boolean gameOver;
+	private Label outLabel;
+	private Label logo;
+	private Label pacmanLife1;
+	private Label pacmanLife2;
 	private int life;
+	private int life2;
+	// private volatile boolean isPaused;
+	private PausableThread pauseThread;
 	private ObservableList<Node> group;
 	private final long timeStart = System.currentTimeMillis();
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		// TODO Auto-generated method stub
 		setStageProperties(stage);
 		// Create a group for holding all objects on the screen.
 
-		rootGroup = new Group();
-		setScorePanels();
-		group = rootGroup.getChildren();
-		contactListener = new CollisionContactListener(rootGroup, pellets, scorePanel1, scorePanel2, pacmanArray);
-		scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
+		this.rootGroup = new Group();
+		setScoreLabels();
 
-		pacmanLives1 = new ArrayList<Label>();
-		pacmanLives2 = new ArrayList<Label>();
-		life = 0;
+		this.group = rootGroup.getChildren();
+		this.ghosts = new ArrayList<Ghost>();
+		this.contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
+		this.scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
+		this.pacmanLives1 = new ArrayList<Label>();
+		this.pacmanLives2 = new ArrayList<Label>();
+		this.life = 0;
+		this.life2 = 0;
+		// this.isPaused = false;
+		this.pauseThread = new PausableThread();
+
 		setPacmanLives();
-		gameOverLabel = new Label("GAME OVER");
-		gameOverLabel.setFont(new Font(90));
-		gameOverLabel.setTranslateX(120);
-		gameOverLabel.setTranslateY(150);
-		gameOverLabel.setTextFill(Color.WHITE);
-		gameOverLabel.setVisible(false);
-
-		rootGroup.getChildren().add(gameOverLabel);
-		gameOver = false;
+		setLabels();
 		createShapes();
 		world.setContactListener(contactListener);
 		startSimulation();
 		addKeyListeners(scene);
 		stage.setScene(scene);
+		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacmanIcon2.png")));
 		stage.show();
 	}
 
-	private void setScorePanels() {
-		scoreLabel = new Label("Score: ");
-		scoreLabel.setTranslateX(25);
-		scoreLabel.setTranslateY(25);
-		scoreLabel.setTextFill(Color.YELLOW);
-		scoreValueLabel = new Label();
-		scoreValueLabel.setTextFill(Color.YELLOW);
-		scoreValueLabel.setTranslateX(70);
-		scoreValueLabel.setTranslateY(25);
+	private void setLabels() {
+		gameOverLabel = new Label("GAME OVER" + "\n" + "Press R to restart");
+		gameOverLabel.setFont(new Font(70));
+		gameOverLabel.setTranslateX(120);
+		gameOverLabel.setTranslateY(150);
+		gameOverLabel.setTextFill(Color.WHITE);
+		gameOverLabel.setVisible(false);
 
-		scoreLabel2 = new Label("Score: ");
-		scoreLabel2.setTranslateX(25);
-		scoreLabel2.setTranslateY(45);
-		scoreLabel2.setTextFill(Color.YELLOW);
+		outLabel = new Label("BOOM!!"); // Subject to change lol
+		outLabel.setFont(new Font(90));
+		outLabel.setTranslateX(160);
+		outLabel.setTranslateY(300);
+		outLabel.setTextFill(Color.WHITE);
+		outLabel.setVisible(false);
+
+		group.add(gameOverLabel);
+		group.add(outLabel);
+
+	}
+
+	private void setScoreLabels() {
+		scoreLabel = new Label("Pacman 1 Score: ");
+		setLabel(scoreLabel, 25, 25);
+		scoreValueLabel = new Label();
+		setLabel(scoreValueLabel, 140, 25);
+
+		scoreLabel2 = new Label("Pacman 2 Score: ");
+		setLabel(scoreLabel2, 25, 45);
 		scoreValueLabel2 = new Label();
-		scoreValueLabel2.setTextFill(Color.YELLOW);
-		scoreValueLabel2.setTranslateX(75);
-		scoreValueLabel2.setTranslateY(45);
+		setLabel(scoreValueLabel2, 140, 45);
+
+		pacmanLife1 = new Label("Pacman 1");
+		pacmanLife2 = new Label("Pacman 2");
+		setLabel(pacmanLife1, 570, 10);
+		setLabel(pacmanLife2, 570, 60);
 
 		rootGroup.getChildren().add(scoreLabel);
 		rootGroup.getChildren().add(scoreValueLabel);
-
 		rootGroup.getChildren().add(scoreLabel2);
 		rootGroup.getChildren().add(scoreValueLabel2);
+		rootGroup.getChildren().add(pacmanLife1);
+		rootGroup.getChildren().add(pacmanLife2);
+
+	}
+
+	private void setLabel(Label label, int x, int y) {
+
+		label.setTranslateX(x);
+		label.setTranslateY(y);
+		label.setTextFill(Color.YELLOW);
+
+		this.logo = new Label("");
+		Image image = new Image(getClass().getResourceAsStream("/PacManLogo.png"));
+		ImageView img = new ImageView(image);
+		img.setFitWidth(300);
+		img.setPreserveRatio(true);
+		logo.setGraphic(img);
+		logo.setTranslateX(200);
+		logo.setTranslateY(8);
+		rootGroup.getChildren().add(logo);
 
 	}
 
@@ -134,7 +173,7 @@ public class MazeGui extends Application {
 	// Display the pacman labels in the correct position
 	private void setPacmanLives() {
 		int x = 630;
-		int y = 25;
+		int y = 28;
 
 		for (int i = 0; i < 3; i++) {
 			pacmanLives1.add(new Label(""));
@@ -145,10 +184,10 @@ public class MazeGui extends Application {
 			pacLives(pac, x, y);
 			x -= 45;
 		}
-		x = 250;
+		x = 630;
 		for (Label pac2 : pacmanLives2) {
-			pacLives(pac2, x, y);
-			x += 45;
+			pacLives(pac2, x, 80);
+			x -= 45;
 		}
 	}
 
@@ -178,24 +217,47 @@ public class MazeGui extends Application {
 
 		EventHandler<ActionEvent> ae = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
+
 				world.step(1.0f / 60.f, 8, 3);
+				x++;
 				removeFixturesAndPellets();
 				scoreValueLabel.setText(String.valueOf(pacman1.getScore()));
+				scoreValueLabel2.setText(String.valueOf(pacman2.getScore()));
+
 				// Move pacmans to the new position computed by JBox2D
+
 				movePacman(pacman1);
 				movePacman(pacman2);
 				moveGhostsStep();
+
 				if (contactListener.isPacmanLost()) {
-					contactListener.setPacmanLoss(false);
-					pacmanLives1.get(life).setGraphic(null);
-					if (life < 3) {
-						// life++;
+					timeline.pause();
+					resetPacmansAndGhosts();
+
+					// If pacman1 hit a ghost, decrement its score
+					if (contactListener.determinePacman() == "Pacman1") {
+						pacmanLives1.get(life).setGraphic(null);
+						contactListener.setPacmanLoss(false);
+						contactListener.setPacmans("Neutral"); // reset
+						if (life < 2) {
+							life++;
+						}
+					}
+					// If pacman2 hit a ghost decrement its score
+					if (contactListener.determinePacman() == "Pacman2") {
+						pacmanLives2.get(life2).setGraphic(null);
+						contactListener.setPacmanLoss(false);
+						contactListener.setPacmans("Neutral"); // reset
+						if (life2 < 2) {
+							life2++;
+						}
+					}
+					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0 || pellets.isEmpty()) {
+						gameOverLabel.setVisible(true);
+						timeline.stop();
 					}
 				}
-				if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0) {
-					gameOverLabel.setVisible(true);
-					timeline.stop();
-				}
+
 			}
 		};
 		/**
@@ -206,21 +268,64 @@ public class MazeGui extends Application {
 
 		timeline.getKeyFrames().add(frame);
 
-		// TODO Auto-generated method stub
+	}
+
+	private void resetPacmansAndGhosts() {
+
+		// reset pacman1
+		group.remove(pacman1.getNode());
+		world.destroyBody(pacman1.getFixture().getBody());
+		pacman1 = new Pacman(pacman1);
+		group.add(pacman1.getNode());
+
+		// reset pacman2
+		group.remove(pacman2.getNode());
+		world.destroyBody(pacman2.getFixture().getBody());
+		pacman2 = new Pacman(pacman2);
+		group.add(pacman2.getNode());
+
+		pacmanArray = new ArrayList<Pacman>();
+		pacmanArray.add(pacman1);
+		pacmanArray.add(pacman2);
+		contactListener.resetPacmanArray(pacmanArray);
+
+		// reset ghosts
+		for (Ghost g : ghosts) {
+			group.remove(g.getNode());
+			world.destroyBody(g.getFixture().getBody());
+		}
+		ghosts.clear();
+		showLabelOnTimer();
+		createGhosts();
+
+	}
+
+	private void showLabelOnTimer() {
+		outLabel.setVisible(true);
+		Timer timer = new java.util.Timer();
+		timer.schedule(new ScheduledTask(), 2 * 1000);
+	}
+
+	class ScheduledTask extends TimerTask {
+		public void run() {
+			outLabel.setVisible(false);
+		}
 	}
 
 	private void moveGhostsStep() {
 		// TODO Auto-generated method stub
 		for (Ghost g : ghosts) {
 			moveAGhost(g);
+			if (x % 65 == 0) {
+				g.changeDirection();
+			}
 		}
 	}
 
 	private void moveAGhost(Ghost g) {
 		// TODO Auto-generated method stub
 		Body body = (Body) g.getNode().getUserData();
-		body.setLinearVelocity(new Vec2(-20.0f, 0.0f));
-
+		// body.setLinearVelocity(new Vec2(-20.0f, 0.0f));
 		float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
 		float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 		g.resetLayoutX(xpos);
@@ -228,8 +333,8 @@ public class MazeGui extends Application {
 	}
 
 	private void movePacman(Pacman pacman) {
+
 		animatePacman(timeStart, pacman);
-		// TODO Auto-generated method stub
 		Body pacBody = (Body) pacman.getNode().getUserData();
 		float xpos = Properties.jBoxToFxPosX(pacBody.getPosition().x);
 		float ypos = Properties.jBoxToFxPosY(pacBody.getPosition().y);
@@ -239,7 +344,6 @@ public class MazeGui extends Application {
 	}
 
 	private void removeFixturesAndPellets() {
-		// TODO Auto-generated method stub
 		for (Fixture b : contactListener.getFixturesToRemove()) {
 			world.destroyBody(b.getBody());
 			// rootGroup.getChildren().remove(b);
@@ -250,10 +354,35 @@ public class MazeGui extends Application {
 		}
 
 		// clear for next step
-		contactListener.getPacmanColliding().clear();
+		// contactListener.getPacmanColliding().clear();
 		contactListener.getPelletsToRemove().clear();
 		contactListener.getFixturesToRemove().clear();
 
+	}
+
+	// Reset the game
+	private void restartGame() {
+		resetPacmansAndGhosts();
+		createPellets();
+		createBonusPellets();
+		pacman1.resetLives();
+		pacman2.resetLives();
+		pacman1.resetScore();
+		pacman2.resetScore();
+		pacmanLives1.clear();
+		pacmanLives2.clear();
+		life = 0;
+		life2 = 0;
+		gameOverLabel.setVisible(false);
+
+		for (Label pac : pacmanLives1) {
+			group.remove(pac.getNodeOrientation());
+		}
+		for (Label pac2 : pacmanLives2) {
+			group.remove(pac2.getNodeOrientation());
+		}
+		setPacmanLives();
+		timeline.playFromStart();
 	}
 
 	private void animatePacman(final long timeStart, Pacman pacman) {
@@ -275,50 +404,50 @@ public class MazeGui extends Application {
 
 	private void createWalls() {
 		// wall (x,y) = 1/2 from edge (x,y)
-		// WALLS
+		// WALLS DON'T TOUCH!
 		// top wall
-		createWall(0, 85, 100, 1);
+		createWall(0, 84, 100, 1);
 		// bottom wall
-		createWall(0, 5, 100, 1);
+		createWall(0, 4, 100, 1);
 		// right wall
-		createWall(99, 37, 2, 100);
+		createWall(99, 37, 1, 74);
 		// left wall
-		createWall(0, 50, 2, 100);
+		createWall(0, 37, 1, 74);
 
-		// west
-		createWall(18, 16, 9, 3);
-		createWall(12, 69, 3, 8);
-		createWall(12, 40, 3, 14);
-		createWall(25, 65, 3, 12);
-		createWall(25, 36, 3, 10);
+		// west DON'T TOUCH
+		createWall(11, 15, 3, 3);
+		createWall(24, 15, 3, 3);
+		createWall(11, 68, 3, 8);
+		createWall(11, 39, 3, 14);
+		createWall(24, 64, 3, 12);
+		createWall(24, 35, 3, 10);
 
-		// north
-		createWall(34, 60, 6, 3);
-		createWall(67, 60, 6, 3);
+		// north DON'T TOUCH
+		createWall(37, 60, 3, 3);
+		createWall(63, 60, 3, 3);
+		createWall(50, 73, 16, 3);
 		createWall(50, 65, 3, 8);
-		createWall(50, 74, 15, 3);
 
-		// south
-		createWall(50, 29, 15, 3);
-		createWall(43, 23, 3, 3);
-		createWall(57, 23, 3, 3);
-		createWall(37, 9, 3, 3);
-		createWall(50, 9, 3, 3);
-		createWall(63, 9, 3, 3);
+		// south DON'T TOUCH
+		createWall(50, 28, 16, 3);
+		createWall(37, 8, 3, 3);
+		createWall(50, 15, 3, 3);
+		createWall(63, 8, 3, 3);
 
 		// east
-		createWall(81, 74, 8, 3);
-		createWall(81, 47, 8, 3);
-		createWall(81, 16, 8, 3);
-		createWall(92, 60, 5, 3);
-		createWall(92, 31, 5, 5);
+		createWall(95, 69, 3, 7);
+		createWall(95, 40, 3, 9);
+		createWall(82, 15, 9, 3);
+		createWall(82, 59, 3, 3);
+		createWall(82, 28, 3, 3);
 
-		createWall(76, 67, 3, 10);
-		createWall(76, 38, 3, 12);
+		createWall(76, 66, 3, 10);
+		createWall(76, 37, 3, 12);
 
 		// center
-		createWall(50, 49, 9, 1);
-		createWall(50, 40, 9, 1);
+		createWall(50, 48, 9, 1);
+		createWall(50, 39, 9, 1);
+
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
@@ -326,8 +455,8 @@ public class MazeGui extends Application {
 	}
 
 	public void createPacmans() {
-		pacmanArray.add(pacman1 = createPacman(50, 80, "pacman1"));
-		pacmanArray.add(pacman2 = createPacman(50, 22, "pacman2"));
+		pacmanArray.add(pacman1 = createPacman(50, 80, "Pacman1"));
+		pacmanArray.add(pacman2 = createPacman(50, 22, "Pacman2"));
 	}
 
 	private Pacman createPacman(int x, int y, String name) {
@@ -337,10 +466,10 @@ public class MazeGui extends Application {
 	}
 
 	private void createGhosts() {
-		ghosts[0] = new Ghost(42, 44, world, "/blueGhost.png");
-		ghosts[1] = new Ghost(47, 44, world, "/pinkGhost.png");
-		ghosts[2] = new Ghost(53, 44, world, "/orangeGhost.png");
-		ghosts[3] = new Ghost(58, 44, world, "/redGhost.png");
+		ghosts.add(new Ghost(42, 44, world, "/blueGhost.png"));
+		ghosts.add(new Ghost(47, 44, world, "/pinkGhost.png"));
+		ghosts.add(new Ghost(53, 44, world, "/orangeGhost.png"));
+		ghosts.add(new Ghost(58, 44, world, "/redGhost.png"));
 
 		for (Ghost g : ghosts) {
 			group.add(g.getNode());
@@ -349,47 +478,47 @@ public class MazeGui extends Application {
 
 	private void createPellets() {
 		// bottom line across
-		for (int i = 13; i < 31; i += 8) {
-			createYellowPellet(i, 9);
+		for (int i = 5; i < 31; i += 8) {
+			createYellowPellet(i, 8);
 		}
-		createYellowPellet(44, 9);
-		createYellowPellet(56, 9);
-		for (int i = 70; i < 90; i += 8) {
-			createYellowPellet(i, 9);
+		createYellowPellet(43, 8);
+		createYellowPellet(50, 8);
+		createYellowPellet(57, 8);
+		for (int i = 70; i < 95; i += 8) {
+			createYellowPellet(i, 8);
 		}
-
 		// second to bottom across
-		// createYellowPellet(6, 16);
-		for (int i = 36; i < 68; i += 7) {
-			createYellowPellet(i, 16);
-		}
-		createYellowPellet(93, 16);
+		createYellowPellet(29, 15);
+		createYellowPellet(36, 15);
+		createYellowPellet(43, 15);
 
+		createYellowPellet(57, 15);
+		createYellowPellet(63, 15);
+		createYellowPellet(70, 15);
 		// third to bottom across
-		for (int i = 13; i < 40; i += 7) {
-			createYellowPellet(i, 23);
+		for (int i = 22; i < 50; i += 7) {
+			createYellowPellet(i, 22);
 		}
-		for (int i = 65; i < 95; i += 7) {
-			createYellowPellet(i, 23);
+		for (int i = 57; i < 90; i += 7) {
+			createYellowPellet(i, 22);
 		}
-
+		createYellowPellet(12, 22);
+		createYellowPellet(18, 15);
 		// vertical left column
 		for (int i = 16; i < 75; i += 7) {
-			createYellowPellet(6, i);
+			createYellowPellet(5, i);
 		}
 		// second to left vertical column
 		for (int i = 30; i < 75; i += 7) {
 			createYellowPellet(18, i);
 		}
-
 		// top row across
-		for (int i = 6; i < 45; i += 7) {
+		for (int i = 5; i < 45; i += 7) {
 			createYellowPellet(i, 80);
 		}
-		for (int i = 58; i < 95; i += 7) {
+		for (int i = 59; i < 95; i += 7) {
 			createYellowPellet(i, 80);
 		}
-
 		// left inner home down
 		for (int i = 34; i < 60; i += 7) {
 			createYellowPellet(31, i);
@@ -397,6 +526,7 @@ public class MazeGui extends Application {
 		for (int i = 34; i < 60; i += 7) {
 			createYellowPellet(38, i);
 		}
+		createYellowPellet(31, 61);
 		// right inner home down
 		for (int i = 34; i < 60; i += 7) {
 			createYellowPellet(62, i);
@@ -404,13 +534,11 @@ public class MazeGui extends Application {
 		for (int i = 34; i < 60; i += 7) {
 			createYellowPellet(69, i);
 		}
-		createYellowPellet(76, 55);
-
+		createYellowPellet(69, 61);
 		// horizontal under home
 		for (int i = 44; i < 62; i += 6) {
 			createYellowPellet(i, 34);
 		}
-
 		// vertical above home
 		for (int i = 55; i < 72; i += 6) {
 			createYellowPellet(56, i);
@@ -418,7 +546,6 @@ public class MazeGui extends Application {
 		for (int i = 55; i < 72; i += 6) {
 			createYellowPellet(44, i);
 		}
-
 		// horizontal above home
 		for (int i = 31; i < 45; i += 7) {
 			createYellowPellet(i, 67);
@@ -426,26 +553,26 @@ public class MazeGui extends Application {
 		for (int i = 62; i < 75; i += 7) {
 			createYellowPellet(i, 67);
 		}
-
-		// vertical second to right column
-		for (int i = 28; i < 45; i += 6) {
-			createYellowPellet(83, i);
+		// vertical third to right column
+		for (int i = 35; i < 58; i += 8) {
+			createYellowPellet(82, i);
 		}
-		for (int i = 55; i < 70; i += 6) {
-			createYellowPellet(83, i);
+		for (int i = 66; i < 75; i += 7) {
+			createYellowPellet(82, i);
 		}
-		createYellowPellet(88, 40);
-		// createYellowPellet(88,55);
-		createYellowPellet(88, 67);
-
-		// vertical right column
-		for (int i = 48; i < 58; i += 7) {
-			createYellowPellet(93, i);
+		// right vertical
+		createYellowPellet(94, 51);
+		createYellowPellet(94, 59);
+		for (int i = 14; i < 30; i += 7) {
+			createYellowPellet(94, i);
 		}
-		for (int i = 67; i < 75; i += 6) {
-			createYellowPellet(93, i);
+		// second to right vertical
+		for (int i = 59; i < 75; i += 7) {
+			createYellowPellet(87, i);
 		}
-
+		for (int i = 35; i < 58; i += 8) {
+			createYellowPellet(87, i);
+		}
 	}
 
 	private void createYellowPellet(int posX, int posY) {
@@ -454,17 +581,16 @@ public class MazeGui extends Application {
 	}
 
 	private void createBonusPellets() {
-		createBonusPellet(32, 74);
+		createBonusPellet(31, 74);
 		createBonusPellet(70, 74);
-		createBonusPellet(25, 49);
-		createBonusPellet(12, 58);
+		createBonusPellet(11, 57);
 		createBonusPellet(50, 54);
-		createBonusPellet(93, 9);
-		createBonusPellet(30, 16);
-		createBonusPellet(70, 16);
-		createBonusPellet(6, 9);
-		createBonusPellet(93, 40);
-
+		createBonusPellet(24, 49);
+		createBonusPellet(88, 28);
+		createBonusPellet(17, 22);
+		createBonusPellet(70, 28);
+		createBonusPellet(31, 28);
+		createBonusPellet(76, 53);
 	}
 
 	private void createBonusPellet(int posX, int posY) {
@@ -487,7 +613,6 @@ public class MazeGui extends Application {
 					moveGhostsStep();
 					break;
 				case UP:
-
 					pacman1.setDirection(0.0f, 20.0f, 270);
 					break;
 				case DOWN:
@@ -511,56 +636,24 @@ public class MazeGui extends Application {
 				case E:// Up
 					pacman2.setDirection(0.0f, 20.0f, 270);
 					break;
+				case P: // Pause
+					timeline.pause();
+					break;
+				case ENTER:
+					timeline.play();
+					break;
+				case R:
+					restartGame();
+					break;
 				default:
 					break;
 				}
 			}
 		});
+
 	}
 
 	public void play(String[] args) {
 		Application.launch(args);
 	}
-/*
-	private boolean checkMovable(Body body, KeyEvent dir) {
-		final boolean canMove = true;
-		World world = body.getWorld();
-
-		RayCastCallback rayCastCallback = new RayCastCallback() {
-			@Override
-			public float reportRayFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction) {
-				if (fixture.getFilterData().categoryBits == GameManager.WALL_BIT
-						|| fixture.getFilterData().categoryBits == GameManager.GATE_BIT) {
-					canMove = false;
-					return 0;
-				}
-				return 0;
-			}
-		};
-
-		for (int i = 0; i < 2; i++) {
-			Pacman tmpV1 = new Pacman()
-			tmpV1.set(body.getPosition());
-			switch (dir) {
-			case UP:
-				tmpV2.set(body.getPosition().x - (i - 0.5f) * 0.2f, body.getPosition().y + 0.6f);
-				break;
-			case DOWN:
-				tmpV2.set(body.getPosition().x - (i - 0.5f) * 0.2f, body.getPosition().y - 0.6f);
-				break;
-			case LEFT:
-				tmpV2.set(body.getPosition().x - 0.6f, body.getPosition().y - (i - 0.5f) * 0.2f);
-				break;
-			case RIGHT:
-				tmpV2.set(body.getPosition().x + 0.6f, body.getPosition().y - (i - 0.5f) * 0.2f);
-				break;
-			default:
-				break;
-			}
-
-			world.rayCast(rayCastCallback, tmpV1, tmpV2);
-		}
-
-		return canMove;
-	}
-*/}
+}

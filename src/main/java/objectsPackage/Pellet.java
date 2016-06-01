@@ -18,31 +18,33 @@ public class Pellet extends Piece {
 	protected Circle pellet;
 	protected String imgName;
 	private CircleShape cs;
-	
+	private final int groupIndex = -1;
+	private final int maskBits = -1;
+	private final int categoryBits = -1;
 
-	public Pellet(int posX, int posY, World world, String description, String imgName) {
+	public Pellet(int posX, int posY, World world, String description,
+			String imgName) {
 		super(posX, posY, world, description);
-		// TODO Auto-generated constructor stub
 		this.radius = 10;
 		this.imgName = imgName;
-		pellet = new Circle();
-		node = create();
+		this.pellet = new Circle();
+		this.node = create();
 	}
 
 	private Node create() {
 		setPelletProperties();
 		// create a jbox2D circle shape
-		cs = new CircleShape();
-		cs.m_radius = radius * 0.1f; // We need to convert radius to JBox2D
+		this.cs = new CircleShape();
+		this.cs.m_radius = radius * 0.1f; // We need to convert radius to JBox2D
 		// equivalent
-		body = createBodyAndFixture(bodyType, cs);
+		this.body = createBodyAndFixture(bodyType, cs, maskBits, groupIndex,
+				categoryBits);
 		super.setUserData();
-		pellet.setUserData(body);
+		this.pellet.setUserData(body);
 		return pellet;
 	}
 
 	private void setPelletProperties() {
-		// TODO Auto-generated method stub
 		pellet.setRadius(radius);
 		pellet.setLayoutX(Properties.jBoxToFxPosX(getPosX()));
 		pellet.setLayoutY(Properties.jBoxToFxPosY(getPosY()));
@@ -51,7 +53,6 @@ public class Pellet extends Piece {
 	}
 
 	private void setPelletImage() {
-		// TODO Auto-generated method stub
 		Image img = new Image(imgName);
 		ImagePattern imagePattern = new ImagePattern(img);
 		pellet.setFill(imagePattern);

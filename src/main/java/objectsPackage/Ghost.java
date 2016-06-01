@@ -22,13 +22,10 @@ public class Ghost extends Piece {
 	private PolygonShape ps;
 	private Image img;
 	private ImagePattern imagePattern;
-	private int i;
-
-	private enum Status {
-		RIGHT, LEFT, UP, DOWN
-	}
-
-	private Status status = Status.UP;
+	private final int groupIndex = -1;
+	private final int maskBits = -1;
+	private final int categoryBits = -1;
+	private Vec2 currDirection;
 
 	public Ghost(int posX, int posY, World world, String image) {
 		super(posX, posY, world, "GHOST");
@@ -37,14 +34,14 @@ public class Ghost extends Piece {
 		img = new Image(image);
 		imagePattern = new ImagePattern(img);
 		node = create();
-		status = Status.UP;
 	}
 
 	private Node create() {
 		ghost = new Rectangle((Properties.jBoxtoPixelWidth(width) * 2),
 				(Properties.jBoxtoPixelHeight(height) * 2));
 		setGhostProperties();
-		body = createBodyAndFixture(bodyType, ps);
+		body = createBodyAndFixture(bodyType, ps, maskBits, groupIndex,
+				categoryBits);
 		super.setUserData();
 		ghost.setUserData(body);
 		return ghost;
@@ -68,37 +65,36 @@ public class Ghost extends Piece {
 		node.setLayoutY(y - Properties.jBoxtoPixelWidth(height));
 	}
 
-	public void turnGhost() {
-		// TODO Auto-generated method stub
-		Random rand= new Random();
-		int nextDir= rand.nextInt(4);
-		switch(nextDir){
-		case 0:
-			System.out.println("turning right ");
-			//body.setLinearVelocity(new Vec2(0.0f, 20.f));
-			body.applyLinearImpulse(new Vec2(0.0f, 20.0f),
-					body.getWorldCenter());
-			status = Status.RIGHT;
-			break;
-		case 1:
-			System.out.println("turning down");
-			body.applyLinearImpulse(new Vec2(-20.0f, 0.0f),
-					body.getWorldCenter());
-			status = Status.DOWN;
-			break;
-		case 2:
-			System.out.println("turning left");
-			body.applyLinearImpulse(new Vec2(0.0f, -20.0f),
-					body.getWorldCenter());
-			status = Status.LEFT;
-			break;
-		case 3:
-			System.out.println("turning up");
-			body.applyLinearImpulse(new Vec2(20.0f, 0.0f),
-					body.getWorldCenter());
-			status = Status.UP;
-			break;
+	public void changeDirection() {
+		Vec2 oldDir = currDirection;
+		Random randomGen = new Random();
+		while (oldDir == currDirection) {
+			int dir = randomGen.nextInt(4);
+			switch (dir) {
+			case 0: // UP
+				currDirection = new Vec2(0.0f, 30.0f);
+				System.out.println("up");
+				break;
+			case 1: // DOWN
+				currDirection = new Vec2(0.0f, -30.0f);
+				System.out.println("down");
+				break;
+			case 2: // LEFT
+				currDirection = new Vec2(-30.0f, 0.0f);
+				System.out.println("left");
+				break;
+			case 3: // RIGHT
+				currDirection = new Vec2(30.0f, 0.0f);
+				System.out.println("right");
+				break;
+			}
 		}
+		resetSpeed();
 	}
 
+	public void resetSpeed() {
+		body.setLinearVelocity(currDirection);
+	}
+
+	
 }

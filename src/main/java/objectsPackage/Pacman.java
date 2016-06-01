@@ -29,13 +29,27 @@ public class Pacman extends Piece {
 	private String name;
 	private int score;
 	private int lives;
+	private int initialX, initialY;
 
 	public Pacman(int posX, int posY, World world, String name) {
 		super(posX, posY, world, "PACMAN");
-		node = create();
+		this.initialX = posX;
+		this.initialY = posY;
+		this.node = create();
 		this.name = name;
 		this.score = 0;
 		this.lives = 3;
+	}
+
+	public Pacman(Pacman p) {
+		super(p.initialX, p.initialY, p.world, "PACMAN");
+		this.node = create();
+		this.id = p.id;
+		this.initialX = p.initialX;
+		this.initialY = p.initialY;
+		this.name = p.name;
+		this.score = p.score;
+		this.lives = p.lives;
 	}
 
 	private Node create() {
@@ -52,7 +66,7 @@ public class Pacman extends Piece {
 		PolygonShape ps = new PolygonShape();
 		ps.setAsBox(width, height);
 
-		body = createBodyAndFixture(bodyType, ps);
+		body = createBodyAndFixture(bodyType, ps, 1, 1, 1);
 		super.setUserData();
 
 		pacman.setUserData(body);
@@ -74,7 +88,7 @@ public class Pacman extends Piece {
 	}
 
 	public void setDirection(float horizontal, float vertical, int degree) {
-		Vec2 newDirection= new Vec2(horizontal, vertical);
+		Vec2 newDirection = new Vec2(horizontal, vertical);
 		currDirection = newDirection;
 		currDegree = degree;
 		resetSpeed();
@@ -136,5 +150,11 @@ public class Pacman extends Piece {
 
 	public String getName() {
 		return this.name;
+	}
+	public void resetLives(){
+		this.lives = 3;
+	}
+	public  void resetScore(){
+		this.score = 0;
 	}
 }
