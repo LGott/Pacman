@@ -81,6 +81,9 @@ public class CollisionContactListener implements ContactListener {
 			// remove the bonus pellet
 			removePellet(f1, obj1);
 			Pacman pac = identifyPacman(obj2);
+			if (isInvincible) { //If pacman eats a cherry while he is invincible he gets 500 points
+				pac.incrementScore(500);
+			}
 			pac.incrementScore(50);
 			ghostEffects();
 			setInvincible();
@@ -88,6 +91,9 @@ public class CollisionContactListener implements ContactListener {
 		} else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "BONUS_PELLET") {
 			removePellet(f2, obj2);
 			Pacman pac = identifyPacman(obj1);
+			if (isInvincible) { //If pacman eats a cherry while he is invincible he gets 500 points
+				pac.incrementScore(500);
+			}
 			pac.incrementScore(50);
 			ghostEffects();
 			setInvincible();
@@ -147,7 +153,8 @@ public class CollisionContactListener implements ContactListener {
 	private void setInvincible() {
 		isInvincible = true;
 		Timer timer = new java.util.Timer();
-		timer.schedule(new DelayTask(), 10 * 1000); //Allow pacman to be invincible for 10 seconds 
+		timer.schedule(new DelayTask(), 10 * 1000); // Allow pacman to be
+													// invincible for 10 seconds
 	}
 
 	class DelayTask extends TimerTask {
