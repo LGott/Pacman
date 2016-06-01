@@ -48,12 +48,12 @@ public class MazeGui extends Application {
 
 	private ArrayList<Pellet> pellets = new ArrayList<Pellet>();
 	private ArrayList<Pacman> pacmanArray = new ArrayList<Pacman>();
+	private ArrayList<Label> pacmanLives1;
+	private ArrayList<Label> pacmanLives2;
 	private Label scoreLabel;
 	private Label scoreValueLabel;
 	private Label scoreLabel2;
 	private Label scoreValueLabel2;
-	private ArrayList<Label> pacmanLives1;
-	private ArrayList<Label> pacmanLives2;
 	private Label gameOverLabel;
 	private Label outLabel;
 	private Label logo;
@@ -260,7 +260,6 @@ public class MazeGui extends Application {
 
 		timeline.getKeyFrames().add(frame);
 
-		// TODO Auto-generated method stub
 	}
 
 	private void resetPacmansAndGhosts() {
@@ -316,7 +315,6 @@ public class MazeGui extends Application {
 	private void movePacman(Pacman pacman) {
 
 		animatePacman(timeStart, pacman);
-		// TODO Auto-generated method stub
 		Body pacBody = (Body) pacman.getNode().getUserData();
 		float xpos = Properties.jBoxToFxPosX(pacBody.getPosition().x);
 		float ypos = Properties.jBoxToFxPosY(pacBody.getPosition().y);
@@ -326,7 +324,6 @@ public class MazeGui extends Application {
 	}
 
 	private void removeFixturesAndPellets() {
-		// TODO Auto-generated method stub
 		for (Fixture b : contactListener.getFixturesToRemove()) {
 			world.destroyBody(b.getBody());
 			// rootGroup.getChildren().remove(b);
