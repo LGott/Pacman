@@ -32,6 +32,8 @@ import objectsPackage.YellowPellet;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class MazeGui extends Application {
 	private Group rootGroup;
@@ -69,9 +71,9 @@ public class MazeGui extends Application {
 	private ObservableList<Node> group;
 	private final long timeStart = System.currentTimeMillis();
 
-	private static final Integer STARTTIME = 15;
+	private static final Integer STARTTIME = 3;
 	private Label timerLabel;
-	private Integer timeSeconds = STARTTIME;
+	private IntegerProperty timeSeconds;
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -127,9 +129,12 @@ public class MazeGui extends Application {
 
 	private void setTimerLabel() {
 		timerLabel = new Label();
+		timeSeconds = new SimpleIntegerProperty(STARTTIME);
 		timerLabel.setText(timeSeconds.toString());
 		timerLabel.setTextFill(Color.RED);
 		timerLabel.setStyle("-fx-font-size: 4em;");
+		timerLabel.textProperty().bind(timeSeconds.asString());
+
 		group.add(timerLabel);
 	}
 
