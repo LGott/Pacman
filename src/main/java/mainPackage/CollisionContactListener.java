@@ -29,18 +29,19 @@ import org.jbox2d.dynamics.contacts.Contact;
 
 public class CollisionContactListener implements ContactListener {
 
-	private boolean colliding;
+	
 	private ArrayList<Pellet> pellets;
 	private ArrayList<Fixture> fixturesToRemove;
 	private ArrayList<Pellet> pelletsToRemove;
-	private boolean collidingWithWall;
 	private ArrayList<Integer> pacmanColliding;
 	private ArrayList<Pacman> pacmanArray;
 	private ArrayList<Pacman> deadPacmans;
-	private boolean pacmanLost;
 	private ArrayList<Ghost> ghosts;
 	private String determinePacman;
 	private boolean isInvincible;
+	private boolean pacmanLost;
+	private boolean colliding;
+	private boolean collidingWithWall;
 
 	public CollisionContactListener(Group rootGroup, ArrayList<Pellet> pellet, ArrayList<Pacman> pacmanArray,
 			ArrayList<Ghost> ghosts) {
@@ -64,8 +65,6 @@ public class CollisionContactListener implements ContactListener {
 		UniqueObject obj1 = (UniqueObject) f1.getBody().getUserData();
 		UniqueObject obj2 = (UniqueObject) f2.getBody().getUserData();
 
-		// System.out.println("contacts " + obj1.getDescription() + " and " +
-		// obj2.getDescription());
 		if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "PELLET") {
 			removePellet(f2, obj2);
 			// Find the correct pacman and increment it's score
@@ -81,6 +80,10 @@ public class CollisionContactListener implements ContactListener {
 			// remove the bonus pellet
 			removePellet(f1, obj1);
 			Pacman pac = identifyPacman(obj2);
+			if (isInvincible) { // If pacman eats a cherry while he is
+								// invincible he gets 500 points
+				pac.incrementScore(500);
+			}
 			pac.incrementScore(50);
 			ghostEffects();
 			setInvincible();
@@ -88,6 +91,11 @@ public class CollisionContactListener implements ContactListener {
 		} else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "BONUS_PELLET") {
 			removePellet(f2, obj2);
 			Pacman pac = identifyPacman(obj1);
+			if (isInvincible) {
+				// If pacman eats a cherry while he is invincible
+				// he gets 500 points
+				pac.incrementScore(500);
+			}
 			pac.incrementScore(50);
 			ghostEffects();
 			setInvincible();
@@ -141,21 +149,19 @@ public class CollisionContactListener implements ContactListener {
 				}
 			}
 		}
-
 	}
 
 	private void setInvincible() {
+		isInvincible = true;
 		Timer timer = new java.util.Timer();
+		timer.schedule(new DelayTask(), 10 * 1000);
+		// Allow pacman to be invincible for 10 seconds
+	}
 
-		timer.schedule(new TimerTask() {
-			public void run() {
-				Platform.runLater(new Runnable() {
-					public void run() {
-						isInvincible = true;
-					}
-				});
-			}
-		}, 15000);
+	class DelayTask extends TimerTask {
+		public void run() {
+			isInvincible = false;
+		}
 	}
 
 	private void ghostEffects() {
