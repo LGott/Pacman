@@ -88,6 +88,7 @@ public class MazeGui extends Application {
 		startSimulation();
 		addKeyListeners(scene);
 		stage.setScene(scene);
+		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacmanIcon2.png")));
 		stage.show();
 	}
 
