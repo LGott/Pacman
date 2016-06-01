@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import mainPackage.Properties;
 
 import org.jbox2d.collision.shapes.PolygonShape;
@@ -94,6 +95,17 @@ public class Ghost extends Piece {
 
 	public void resetSpeed() {
 		body.setLinearVelocity(currDirection);
+	}
+
+	public void turnBlue() {
+		Image img = new Image("/invincible.jpg");
+		ImagePattern imagePattern = new ImagePattern(img);
+		((Shape) node).setFill(imagePattern);
+	}
+	
+	public void resetColor(){
+		ImagePattern imagePattern = new ImagePattern(img);
+		((Shape) node).setFill(imagePattern);
 	}
 
 	
