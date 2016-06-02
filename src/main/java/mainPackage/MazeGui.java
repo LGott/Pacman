@@ -281,7 +281,8 @@ public class MazeGui extends Application {
 						}
 					}
 					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0 || pellets.isEmpty()) {
-						showLabelOnTimer(gameOverLabel);
+						gameOverLabel.setVisible(true);
+						// showLabelOnTimer(gameOverLabel);
 						timeline.stop();
 					}
 				}
