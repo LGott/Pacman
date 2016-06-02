@@ -9,8 +9,10 @@ import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -31,6 +33,12 @@ import org.jbox2d.callbacks.RayCastCallback;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
+import java.io.*;
+
+import com.gluonhq.ignite.guice.GuiceContext;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 public class MazeGui extends Application {
 	private Group rootGroup;
@@ -49,7 +57,7 @@ public class MazeGui extends Application {
 	private ArrayList<Pacman> pacmanArray = new ArrayList<Pacman>();
 	private ArrayList<Label> pacmanLives1;
 	private ArrayList<Label> pacmanLives2;
-	
+
 	private Label scoreLabel;
 	private Label scoreValueLabel;
 	private Label scoreLabel2;
@@ -59,7 +67,7 @@ public class MazeGui extends Application {
 	private Label logo;
 	private Label pacmanLife1;
 	private Label pacmanLife2;
-	
+
 	private int life;
 	private int life2;
 	private ObservableList<Node> group;
@@ -73,12 +81,31 @@ public class MazeGui extends Application {
 	private final Vec2 tmpV2 = new Vec2();
 	private boolean canMove;
 
+	// private GuiceContext context = new GuiceContext(this, () ->
+	// Arrays.asList(new GuiceModule()));
+	// @Inject private FXMLLoader fxmlLoader;
+
 	public enum MoveDir {
 		UP, DOWN, LEFT, RIGHT, NONE
 	}
 
 	@Override
 	public void start(Stage stage) throws Exception {
+
+		Injector injector = Guice.createInjector(new GuiceModule());
+		FXMLLoader fxmlLoader = new FXMLLoader();
+		fxmlLoader.setControllerFactory(instantiatedClass -> {
+			return injector.getInstance(instantiatedClass);
+		});
+		Parent parent = null;
+		try (InputStream fxmlInputStream = ClassLoader
+				.getSystemResourceAsStream("cz/pscheidl/blog/javafxdi/JavaFXDI.fxml")) {
+			parent = fxmlLoader.load(fxmlInputStream);
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
 		setStageProperties(stage);
 		// Create a group for holding all objects on the screen.
 
@@ -99,8 +126,8 @@ public class MazeGui extends Application {
 		setLabels();
 		world.setContactListener(contactListener);
 		startSimulation();
-		addKeyListeners(scene);
-		stage.setScene(scene);
+		addKeyListeners(new Scene(parent));
+		stage.setScene(new Scene(parent));
 		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacmanIcon2.png")));
 		stage.show();
 	}
@@ -428,7 +455,7 @@ public class MazeGui extends Application {
 	}
 
 	private void createWalls() {
-		// WALLS 
+		// WALLS
 		// top wall
 		createWall(0, 84, 100, 1);
 		// bottom wall
@@ -438,7 +465,7 @@ public class MazeGui extends Application {
 		// left wall
 		createWall(0, 37, 1, 74);
 
-		// west 
+		// west
 		createWall(11, 15, 3, 3);
 		createWall(24, 15, 3, 3);
 		createWall(11, 68, 3, 8);
@@ -446,13 +473,13 @@ public class MazeGui extends Application {
 		createWall(24, 64, 3, 12);
 		createWall(24, 35, 3, 10);
 
-		// north 
+		// north
 		createWall(37, 60, 3, 3);
 		createWall(63, 60, 3, 3);
 		createWall(50, 73, 16, 3);
 		createWall(50, 65, 3, 8);
 
-		// south 
+		// south
 		createWall(50, 28, 16, 3);
 		createWall(37, 8, 3, 3);
 		createWall(50, 15, 3, 3);

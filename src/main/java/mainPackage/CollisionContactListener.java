@@ -98,7 +98,7 @@ public class CollisionContactListener implements ContactListener {
 			System.out.println("Bang");
 			turnGhost(obj1);
 		}
-	
+
 		else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "GHOST"
 				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "PACMAN")) {
 

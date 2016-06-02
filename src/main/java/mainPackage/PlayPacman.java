@@ -7,3 +7,4 @@ public class PlayPacman {
 		maze.play(args);
 	}
 }
+

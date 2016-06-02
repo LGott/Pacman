@@ -145,10 +145,12 @@ public class Pacman extends Piece {
 	public String getName() {
 		return this.name;
 	}
-	public void resetLives(){
+
+	public void resetLives() {
 		this.lives = 3;
 	}
-	public  void resetScore(){
+
+	public void resetScore() {
 		this.score = 0;
 	}
 }
