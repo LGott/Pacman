@@ -35,11 +35,6 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
 import java.io.*;
 
-//import com.gluonhq.ignite.guice.GuiceContext;
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-
 public class MazeGui extends Application {
 	private Group rootGroup;
 	private Scene scene;
@@ -81,32 +76,12 @@ public class MazeGui extends Application {
 	private final Vec2 tmpV2 = new Vec2();
 	private boolean canMove;
 
-	// private GuiceContext context = new GuiceContext(this, () ->
-	// Arrays.asList(new GuiceModule()));
-	// @Inject private FXMLLoader fxmlLoader;
-
 	public enum MoveDir {
 		UP, DOWN, LEFT, RIGHT, NONE
 	}
 
 	@Override
 	public void start(Stage stage) throws Exception {
-
-		// Injector injector = Guice.createInjector(new GuiceModule());
-		// FXMLLoader fxmlLoader = new FXMLLoader();
-		// fxmlLoader.setControllerFactory(instantiatedClass -> {
-		// return injector.getInstance(instantiatedClass);
-		// });
-		// Parent parent = null;
-		// try (InputStream fxmlInputStream = ClassLoader
-		// .getSystemResourceAsStream("cz/pscheidl/blog/javafxdi/JavaFXDI.fxml"))
-		// {
-		// parent = fxmlLoader.load(fxmlInputStream);
-		//
-		// } catch (IOException ex) {
-		// ex.printStackTrace();
-		// }
-
 		setStageProperties(stage);
 		// Create a group for holding all objects on the screen.
 
