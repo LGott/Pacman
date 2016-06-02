@@ -1,5 +1,6 @@
 package objectsPackage;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import javafx.scene.Node;
@@ -21,20 +22,39 @@ public class Ghost extends Piece {
 	private final BodyType bodyType = BodyType.DYNAMIC;
 	private Rectangle ghost;
 	private PolygonShape ps;
-	private Image img;
 	private ImagePattern imagePattern;
 	private final int groupIndex = -1;
 	private final int maskBits = -1;
 	private final int categoryBits = -1;
 	private Vec2 currDirection;
+	private ArrayList<Image> upImages = new ArrayList<Image>(),
+			downImages = new ArrayList<Image>(),
+			rightImages = new ArrayList<Image>(),
+			leftImages = new ArrayList<Image>(),
+			invincible = new ArrayList<Image>();
+	private ArrayList<Image> images;
+	private boolean isInvincible;
 
-	public Ghost(int posX, int posY, World world, String image) {
+	public Ghost(int posX, int posY, World world, Image[] images) {
 		super(posX, posY, world, "GHOST");
 		ps = new PolygonShape();
 		ps.setAsBox(width, height);
-		img = new Image(image);
-		imagePattern = new ImagePattern(img);
+		imagePattern = new ImagePattern(images[0]);
 		node = create();
+
+		// images
+		downImages.add(images[0]);
+		downImages.add(images[1]);
+		upImages.add(images[2]);
+		upImages.add(images[3]);
+		leftImages.add(images[4]);
+		leftImages.add(images[5]);
+		rightImages.add(images[6]);
+		rightImages.add(images[7]);
+		invincible.add(images[8]);
+		invincible.add(images[9]);
+
+		this.images = downImages;
 	}
 
 	private Node create() {
@@ -66,7 +86,7 @@ public class Ghost extends Piece {
 		node.setLayoutY(y - Properties.jBoxtoPixelWidth(height));
 	}
 
-	public void changeDirection() {
+	public void changeDirection(long time) {
 		Vec2 oldDir = currDirection;
 		Random randomGen = new Random();
 		while (oldDir == currDirection) {
@@ -75,22 +95,47 @@ public class Ghost extends Piece {
 			case 0: // UP
 				currDirection = new Vec2(0.0f, 30.0f);
 				System.out.println("up");
+				if(!isInvincible){
+					images = upImages;
+				}
 				break;
 			case 1: // DOWN
 				currDirection = new Vec2(0.0f, -30.0f);
 				System.out.println("down");
+				if(!isInvincible){
+					images = downImages;
+				}
 				break;
 			case 2: // LEFT
 				currDirection = new Vec2(-30.0f, 0.0f);
 				System.out.println("left");
+				if(!isInvincible){
+					images = leftImages;
+				}
 				break;
 			case 3: // RIGHT
 				currDirection = new Vec2(30.0f, 0.0f);
 				System.out.println("right");
+				if(!isInvincible){
+					images = rightImages;
+				}
 				break;
 			}
 		}
+
 		resetSpeed();
+
+	}
+
+	public void setImage(Image image) {
+		imagePattern = new ImagePattern(image);
+		((Shape) node).setFill(imagePattern);
+	}
+
+	public void animateGhost(double time) {
+		double duration = 0.100;
+		int index = (int) ((time % (images.size() * duration)) / duration);
+		this.setImage(images.get(index));
 	}
 
 	public void resetSpeed() {
@@ -98,15 +143,15 @@ public class Ghost extends Piece {
 	}
 
 	public void turnBlue() {
-		Image img = new Image("/invincible.jpg");
-		ImagePattern imagePattern = new ImagePattern(img);
-		((Shape) node).setFill(imagePattern);
-	}
-	
-	public void resetColor(){
-		ImagePattern imagePattern = new ImagePattern(img);
-		((Shape) node).setFill(imagePattern);
+		isInvincible = true;
+		images = invincible;
+		this.setImage(images.get(0));
 	}
 
-	
+	public void resetColor() {
+		isInvincible = false;
+		images = upImages;
+		//this.setImage(images.get(0));
+	}
+
 }

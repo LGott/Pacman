@@ -21,7 +21,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import mainPackage.CollisionContactListener.DelayTask;
 import objectsPackage.BonusPellet;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
@@ -79,8 +78,10 @@ public class MazeGui extends Application {
 
 		this.group = rootGroup.getChildren();
 		this.ghosts = new ArrayList<Ghost>();
-		this.contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
-		this.scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
+		this.contactListener = new CollisionContactListener(rootGroup, pellets,
+				pacmanArray, ghosts);
+		this.scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
+				Color.BLACK);
 		this.pacmanLives1 = new ArrayList<Label>();
 		this.pacmanLives2 = new ArrayList<Label>();
 		this.life = 0;
@@ -89,14 +90,15 @@ public class MazeGui extends Application {
 		this.pauseThread = new PausableThread();
 
 		setPacmanLives();
-		
+
 		createShapes();
 		setLabels();
 		world.setContactListener(contactListener);
 		startSimulation();
 		addKeyListeners(scene);
 		stage.setScene(scene);
-		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacmanIcon2.png")));
+		stage.getIcons().add(
+				new Image(getClass().getResourceAsStream("/pacmanIcon2.png")));
 		stage.show();
 	}
 
@@ -152,7 +154,8 @@ public class MazeGui extends Application {
 		label.setTextFill(Color.YELLOW);
 
 		this.logo = new Label("");
-		Image image = new Image(getClass().getResourceAsStream("/PacManLogo.png"));
+		Image image = new Image(getClass().getResourceAsStream(
+				"/PacManLogo.png"));
 		ImageView img = new ImageView(image);
 		img.setFitWidth(300);
 		img.setPreserveRatio(true);
@@ -253,7 +256,8 @@ public class MazeGui extends Application {
 							life2++;
 						}
 					}
-					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0 || pellets.isEmpty()) {
+					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0
+							|| pellets.isEmpty()) {
 						gameOverLabel.setVisible(true);
 						timeline.stop();
 					}
@@ -307,6 +311,7 @@ public class MazeGui extends Application {
 	}
 
 	class ScheduledTask extends TimerTask {
+		@Override
 		public void run() {
 			outLabel.setVisible(false);
 		}
@@ -317,19 +322,26 @@ public class MazeGui extends Application {
 		for (Ghost g : ghosts) {
 			moveAGhost(g);
 			if (x % 65 == 0) {
-				g.changeDirection();
+				g.changeDirection(System.currentTimeMillis());
 			}
 		}
 	}
 
 	private void moveAGhost(Ghost g) {
 		// TODO Auto-generated method stub
+		animateGhost(g);
 		Body body = (Body) g.getNode().getUserData();
 		// body.setLinearVelocity(new Vec2(-20.0f, 0.0f));
 		float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
 		float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 		g.resetLayoutX(xpos);
 		g.resetLayoutY(ypos);
+	}
+
+	private void animateGhost(Ghost ghost) {
+		double time = (System.currentTimeMillis() - timeStart) / 1000.0;
+		ghost.animateGhost(time);
+
 	}
 
 	private void movePacman(Pacman pacman) {
@@ -386,12 +398,12 @@ public class MazeGui extends Application {
 	}
 
 	private void animatePacman(final long timeStart, Pacman pacman) {
-		if (contactListener.isCollidingWithWall() && pacman.isColliding()) {
-			pacman.setOpenPacman();
-		} else {
-			double time = (System.currentTimeMillis() - timeStart) / 1000.0;
-			pacman.animatePacman(time);
-		}
+		// if (contactListener.isCollidingWithWall() && pacman.isColliding()) {
+		// pacman.setOpenPacman();
+		// } else {
+		double time = (System.currentTimeMillis() - timeStart) / 1000.0;
+		pacman.animatePacman(time);
+		// }
 	}
 
 	private void createShapes() {
@@ -451,7 +463,8 @@ public class MazeGui extends Application {
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
-		group.add(new Wall(posX, posY, world, width, height, Color.BLUE).getNode());
+		group.add(new Wall(posX, posY, world, width, height, Color.BLUE)
+		.getNode());
 	}
 
 	public void createPacmans() {
@@ -466,10 +479,93 @@ public class MazeGui extends Application {
 	}
 
 	private void createGhosts() {
-		ghosts.add(new Ghost(42, 44, world, "/blueGhost.png"));
-		ghosts.add(new Ghost(47, 44, world, "/pinkGhost.png"));
-		ghosts.add(new Ghost(53, 44, world, "/orangeGhost.png"));
-		ghosts.add(new Ghost(58, 44, world, "/redGhost.png"));
+		ghosts.add(new Ghost(42, 44, world, new Image[] {
+				new Image(getClass().getResourceAsStream(
+						"/pacman-images/g_blue_down1.png")),
+						new Image(getClass().getResourceAsStream(
+								"/pacman-images/g_blue_down2.png")),
+								new Image(getClass().getResourceAsStream(
+										"/pacman-images/g_blue_up1.png")),
+										new Image(getClass().getResourceAsStream(
+												"/pacman-images/g_blue_up2.png")),
+												new Image(getClass().getResourceAsStream(
+														"/pacman-images/g_blue_left1.png")),
+														new Image(getClass().getResourceAsStream(
+																"/pacman-images/g_blue_left2.png")),
+																new Image(getClass().getResourceAsStream(
+																		"/pacman-images/g_blue_right1.png")),
+																		new Image(getClass().getResourceAsStream(
+																				"/pacman-images/g_blue_right2.png")),
+																				new Image(getClass().getResourceAsStream(
+																						"/pacman-images/invincible1.png")),
+																						new Image(getClass().getResourceAsStream(
+																								"/pacman-images/invincible2.png")) }));
+
+		ghosts.add(new Ghost(47, 44, world, new Image[] {
+				new Image(getClass().getResourceAsStream(
+						"/pacman-images/g_pink_down1.png")),
+						new Image(getClass().getResourceAsStream(
+								"/pacman-images/g_pink_down2.png")),
+								new Image(getClass().getResourceAsStream(
+										"/pacman-images/g_pink_up1.png")),
+										new Image(getClass().getResourceAsStream(
+												"/pacman-images/g_pink_up2.png")),
+												new Image(getClass().getResourceAsStream(
+														"/pacman-images/g_pink_left1.png")),
+														new Image(getClass().getResourceAsStream(
+																"/pacman-images/g_pink_left2.png")),
+																new Image(getClass().getResourceAsStream(
+																		"/pacman-images/g_pink_right1.png")),
+																		new Image(getClass().getResourceAsStream(
+																				"/pacman-images/g_pink_right2.png")),
+																				new Image(getClass().getResourceAsStream(
+																						"/pacman-images/invincible1.png")),
+																						new Image(getClass().getResourceAsStream(
+																								"/pacman-images/invincible2.png")) }));
+
+		ghosts.add(new Ghost(53, 44, world, new Image[] {
+				new Image(getClass().getResourceAsStream(
+						"/pacman-images/g_orange_down1.png")),
+						new Image(getClass().getResourceAsStream(
+								"/pacman-images/g_orange_down2.png")),
+								new Image(getClass().getResourceAsStream(
+										"/pacman-images/g_orange_up1.png")),
+										new Image(getClass().getResourceAsStream(
+												"/pacman-images/g_orange_up2.png")),
+												new Image(getClass().getResourceAsStream(
+														"/pacman-images/g_orange_left1.png")),
+														new Image(getClass().getResourceAsStream(
+																"/pacman-images/g_orange_left2.png")),
+																new Image(getClass().getResourceAsStream(
+																		"/pacman-images/g_orange_right1.png")),
+																		new Image(getClass().getResourceAsStream(
+																				"/pacman-images/g_orange_right2.png")),
+																				new Image(getClass().getResourceAsStream(
+																						"/pacman-images/invincible1.png")),
+																						new Image(getClass().getResourceAsStream(
+																								"/pacman-images/invincible2.png")) }));
+
+		ghosts.add(new Ghost(58, 44, world, new Image[] {
+				new Image(getClass().getResourceAsStream(
+						"/pacman-images/g_red_down1.png")),
+						new Image(getClass().getResourceAsStream(
+								"/pacman-images/g_red_down2.png")),
+								new Image(getClass().getResourceAsStream(
+										"/pacman-images/g_red_up1.png")),
+										new Image(getClass().getResourceAsStream(
+												"/pacman-images/g_red_up2.png")),
+												new Image(getClass().getResourceAsStream(
+														"/pacman-images/g_red_left1.png")),
+														new Image(getClass().getResourceAsStream(
+																"/pacman-images/g_red_left2.png")),
+																new Image(getClass().getResourceAsStream(
+																		"/pacman-images/g_red_right1.png")),
+																		new Image(getClass().getResourceAsStream(
+																				"/pacman-images/g_red_right2.png")),
+																				new Image(getClass().getResourceAsStream(
+																						"/pacman-images/invincible1.png")),
+																						new Image(getClass().getResourceAsStream(
+																								"/pacman-images/invincible2.png")) }));
 
 		for (Ghost g : ghosts) {
 			group.add(g.getNode());
@@ -595,7 +691,7 @@ public class MazeGui extends Application {
 
 	private void createBonusPellet(int posX, int posY) {
 		// TODO Auto-generated method stub
-		Pellet bp = new BonusPellet(posX, posY, world);
+		Pellet bp = new BonusPellet(posX, posY, world, 10);
 		addPellet(bp);
 	}
 

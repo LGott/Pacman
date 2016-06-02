@@ -13,7 +13,7 @@ import org.jbox2d.dynamics.World;
 public class Pellet extends Piece {
 
 	// radius in pixels
-	protected final int radius;
+	protected int radius;
 	protected final BodyType bodyType = BodyType.STATIC;
 	protected Circle pellet;
 	protected String imgName;
@@ -25,7 +25,16 @@ public class Pellet extends Piece {
 	public Pellet(int posX, int posY, World world, String description,
 			String imgName) {
 		super(posX, posY, world, description);
-		this.radius = 10;
+		this.radius = 5;
+		this.imgName = imgName;
+		this.pellet = new Circle();
+		this.node = create();
+	}
+
+	public Pellet(int posX, int posY, World world, String description,
+			String imgName, int radius) {
+		super(posX, posY, world, description);
+		this.radius = radius;
 		this.imgName = imgName;
 		this.pellet = new Circle();
 		this.node = create();
@@ -56,6 +65,10 @@ public class Pellet extends Piece {
 		Image img = new Image(imgName);
 		ImagePattern imagePattern = new ImagePattern(img);
 		pellet.setFill(imagePattern);
+	}
+
+	public void setRadius(int radius){
+		this.radius = radius;
 	}
 
 }
