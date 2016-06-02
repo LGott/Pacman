@@ -655,8 +655,10 @@ public class MazeGui extends Application {
 			public void handle(KeyEvent event) {
 				switch (event.getCode()) {
 				case SHIFT:
-					timeline.playFromStart();
-					moveGhostsStep();
+					if (!gameOverLabel.isVisible()) {
+						timeline.playFromStart();
+						moveGhostsStep();
+					}
 					break;
 				case UP:
 					pacman1.setDirection(0.0f, 20.0f, 270);
