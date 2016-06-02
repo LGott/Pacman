@@ -65,8 +65,6 @@ public class MazeGui extends Application {
 	private Label pacmanLife2;
 	private int life;
 	private int life2;
-	// private volatile boolean isPaused;
-	private PausableThread pauseThread;
 	private ObservableList<Node> group;
 	private final long timeStart = System.currentTimeMillis();
 
@@ -93,16 +91,12 @@ public class MazeGui extends Application {
 
 		this.group = rootGroup.getChildren();
 		this.ghosts = new ArrayList<Ghost>();
-		this.contactListener = new CollisionContactListener(rootGroup, pellets,
-				pacmanArray, ghosts);
-		this.scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
-				Color.BLACK);
+		this.contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
+		this.scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
 		this.pacmanLives1 = new ArrayList<Label>();
 		this.pacmanLives2 = new ArrayList<Label>();
 		this.life = 0;
 		this.life2 = 0;
-		// this.isPaused = false;
-		this.pauseThread = new PausableThread();
 
 		setPacmanLives();
 
@@ -112,8 +106,7 @@ public class MazeGui extends Application {
 		startSimulation();
 		addKeyListeners(scene);
 		stage.setScene(scene);
-		stage.getIcons().add(
-				new Image(getClass().getResourceAsStream("/pacmanIcon2.png")));
+		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacmanIcon2.png")));
 		stage.show();
 	}
 
@@ -169,8 +162,7 @@ public class MazeGui extends Application {
 		label.setTextFill(Color.YELLOW);
 
 		this.logo = new Label("");
-		Image image = new Image(getClass().getResourceAsStream(
-				"/PacManLogo.png"));
+		Image image = new Image(getClass().getResourceAsStream("/PacManLogo.png"));
 		ImageView img = new ImageView(image);
 		img.setFitWidth(300);
 		img.setPreserveRatio(true);
@@ -288,8 +280,7 @@ public class MazeGui extends Application {
 							life2++;
 						}
 					}
-					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0
-							|| pellets.isEmpty()) {
+					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0 || pellets.isEmpty()) {
 						gameOverLabel.setVisible(true);
 						timeline.stop();
 					}
