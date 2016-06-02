@@ -1,7 +1,6 @@
 package mainPackage;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,16 +18,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import objectsPackage.BonusPellet;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
 import objectsPackage.UniqueObject;
-import objectsPackage.Wall;
-import objectsPackage.YellowPellet;
 
 import org.jbox2d.callbacks.RayCastCallback;
 import org.jbox2d.common.Vec2;
@@ -76,7 +71,8 @@ public class MazeGui extends Application {
 	private final Vec2 tmpV2 = new Vec2();
 	private boolean canMove;
 
-	private ComponentSetup codeManager;
+	private ComponentSetup componentSetup;
+	private LabelSetup labelSetup;
 
 	public enum MoveDir {
 		UP, DOWN, LEFT, RIGHT, NONE
@@ -86,9 +82,10 @@ public class MazeGui extends Application {
 	public void start(Stage stage) throws Exception {
 		setStageProperties(stage);
 		// Create a group for holding all objects on the screen.
-		this.codeManager = new ComponentSetup(this);
 		this.rootGroup = new Group();
-		setScoreLabels();
+		this.componentSetup = new ComponentSetup(this);
+		this.labelSetup = new LabelSetup(this);
+		this.labelSetup.setScoreLabels();
 		this.group = rootGroup.getChildren();
 		this.ghosts = new ArrayList<Ghost>();
 		this.contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
@@ -99,8 +96,8 @@ public class MazeGui extends Application {
 		this.life2 = 0;
 		this.timer = new Timer();
 
-		codeManager.createShapes();
-		setLabels();
+		componentSetup.createShapes();
+		labelSetup.setLabels();
 		setPacmanLives();
 		world.setContactListener(contactListener);
 		startSimulation();
@@ -108,76 +105,6 @@ public class MazeGui extends Application {
 		stage.setScene(scene);
 		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacmanIcon2.png")));
 		stage.show();
-	}
-
-	private void setLabels() {
-		gameOverLabel = new Label("   GAME OVER" + "\n" + "Press R to restart");
-		gameOverLabel.setFont(new Font(50));
-		gameOverLabel.setTranslateX(125);
-		gameOverLabel.setTranslateY(150);
-		gameOverLabel.setTextFill(Color.WHITE);
-		gameOverLabel.setVisible(false);
-
-		outLabel = new Label("BOOM!!"); // Subject to change lol
-		outLabel.setFont(new Font(90));
-		outLabel.setTranslateX(195);
-		outLabel.setTranslateY(250);
-		outLabel.setTextFill(Color.WHITE);
-		outLabel.setVisible(false);
-
-		group.add(gameOverLabel);
-		group.add(outLabel);
-
-	}
-
-	private void setScoreLabels() {
-		scoreLabel = new Label("Pacman 1 Score: ");
-		setLabel(scoreLabel, 25, 25);
-		scoreValueLabel = new Label();
-		setLabel(scoreValueLabel, 140, 25);
-
-		scoreLabel2 = new Label("Pacman 2 Score: ");
-		setLabel(scoreLabel2, 25, 45);
-		scoreValueLabel2 = new Label();
-		setLabel(scoreValueLabel2, 140, 45);
-
-		setLifeLabels();
-		addToGroup();
-
-	}
-
-	private void setLifeLabels() {
-		pacmanLife1 = new Label("Pacman 1");
-		pacmanLife2 = new Label("Pacman 2");
-		setLabel(pacmanLife1, 570, 10);
-		setLabel(pacmanLife2, 570, 60);
-	}
-
-	private void addToGroup() {
-		rootGroup.getChildren().add(scoreLabel);
-		rootGroup.getChildren().add(scoreValueLabel);
-		rootGroup.getChildren().add(scoreLabel2);
-		rootGroup.getChildren().add(scoreValueLabel2);
-		rootGroup.getChildren().add(pacmanLife1);
-		rootGroup.getChildren().add(pacmanLife2);
-	}
-
-	private void setLabel(Label label, int x, int y) {
-
-		label.setTranslateX(x);
-		label.setTranslateY(y);
-		label.setTextFill(Color.YELLOW);
-
-		this.logo = new Label("");
-		Image image = new Image(getClass().getResourceAsStream("/PacManLogo.png"));
-		ImageView img = new ImageView(image);
-		img.setFitWidth(300);
-		img.setPreserveRatio(true);
-		logo.setGraphic(img);
-		logo.setTranslateX(200);
-		logo.setTranslateY(1);
-		rootGroup.getChildren().add(logo);
-
 	}
 
 	private void setStageProperties(Stage stage) {
@@ -249,7 +176,7 @@ public class MazeGui extends Application {
 		}
 		ghosts.clear();
 		showLabelOnTimer(outLabel);
-		codeManager.createGhosts();
+		componentSetup.createGhosts();
 
 	}
 
@@ -408,8 +335,8 @@ public class MazeGui extends Application {
 	// Reset the game
 	private void restartGame() {
 		resetPacmansAndGhosts();
-		codeManager.createPellets();
-		codeManager.createBonusPellets();
+		componentSetup.createPellets();
+		componentSetup.createBonusPellets();
 		pacman1.resetLives();
 		pacman2.resetLives();
 		pacman1.resetScore();
@@ -438,32 +365,16 @@ public class MazeGui extends Application {
 		return this.world;
 	}
 
-	public void setPacmanArray(ArrayList<Pacman> pacmanArray) {
-		this.pacmanArray = pacmanArray;
-	}
-
 	public Pacman getPacman1() {
 		return pacman1;
-	}
-
-	public void setPacman1(Pacman pacman1) {
-		this.pacman1 = pacman1;
 	}
 
 	public Pacman getPacman2() {
 		return pacman2;
 	}
 
-	public void setPacman2(Pacman pacman2) {
-		this.pacman2 = pacman2;
-	}
-
 	public ArrayList<Ghost> getGhosts() {
 		return ghosts;
-	}
-
-	public void setGhosts(ArrayList<Ghost> ghosts) {
-		this.ghosts = ghosts;
 	}
 
 	public ArrayList<Pacman> getPacmanArray() {
@@ -476,6 +387,14 @@ public class MazeGui extends Application {
 
 	public void setPellets(ArrayList<Pellet> pellets) {
 		this.pellets = pellets;
+	}
+
+	public Label getGameOverLabel() {
+		return gameOverLabel;
+	}
+
+	public Label getOutLabel() {
+		return outLabel;
 	}
 
 	private void animatePacman(final long timeStart, Pacman pacman) {
@@ -573,6 +492,8 @@ public class MazeGui extends Application {
 		case RIGHT:
 			pacman.setDirection(20.0f, 0.0f, 0);
 			break;
+		default:
+			break;
 		}
 	}
 
@@ -603,6 +524,8 @@ public class MazeGui extends Application {
 				break;
 			case RIGHT:
 				tmpV2.set(body.getPosition().x + 3.1f, body.getPosition().y + i);
+				break;
+			default:
 				break;
 			}
 
