@@ -9,7 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class LabelSetup {
-	private MazeGui mazeGui;
 	private ObservableList<Node> group;
 	private Label scoreLabel;
 	private Label scoreValueLabel;
@@ -22,7 +21,6 @@ public class LabelSetup {
 	private Label pacmanLife2;
 
 	public LabelSetup(MazeGui mazeGui) {
-		this.mazeGui = mazeGui;
 		this.gameOverLabel = mazeGui.getGameOverLabel();
 		this.outLabel = mazeGui.getOutLabel();
 		this.group = mazeGui.getGroup();

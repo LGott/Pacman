@@ -30,6 +30,9 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class MazeGui extends Application {
 	private Group rootGroup;
 	private Scene scene;
