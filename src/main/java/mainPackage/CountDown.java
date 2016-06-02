@@ -4,8 +4,8 @@ public class CountDown {
 	private static final double SPEED_UP_FACTOR = 0.15;
 
 	public static void main(String[] args) {
-		CountDownTimer timer = new CountDownTimer(10, 1000);
-		new Thread(timer).start();
+		// CountDownTimer timer = new CountDownTimer(10, 1000);
+		// new Thread(timer).start();
 	}
 
 	class CountDownTimer implements Runnable {
@@ -28,7 +28,7 @@ public class CountDown {
 		}
 	}
 
-	private  void sleep(long timeout) {
+	private void sleep(long timeout) {
 		try {
 			Thread.sleep(timeout);
 		} catch (InterruptedException e) {

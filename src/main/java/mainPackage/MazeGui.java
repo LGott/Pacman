@@ -72,9 +72,9 @@ public class MazeGui extends Application {
 	private ObservableList<Node> group;
 	private final long timeStart = System.currentTimeMillis();
 
-	private static final Integer STARTTIME = 3;
+	private static final Integer STARTTIME = 0;
 	private Label timerLabel;
-	private IntegerProperty timeSeconds;
+	private Integer timeSeconds;
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -100,6 +100,8 @@ public class MazeGui extends Application {
 
 		createShapes();
 		setLabels();
+		setTimerLabel();
+		// timeSeconds.setText(STARTTIME);
 
 		world.setContactListener(contactListener);
 		startSimulation();
@@ -107,12 +109,8 @@ public class MazeGui extends Application {
 		stage.setScene(scene);
 		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacmanIcon2.png")));
 
-		setTimerLabel();
-		timeSeconds.set(STARTTIME);
-		timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(STARTTIME - 1), new KeyValue(timeSeconds, 0)));
-
 		stage.show();
-	
+
 	}
 
 	private void setLabels() {
@@ -137,12 +135,11 @@ public class MazeGui extends Application {
 
 	private void setTimerLabel() {
 		timerLabel = new Label();
-		timeSeconds = new SimpleIntegerProperty(STARTTIME);
+		timeSeconds = STARTTIME;
 		timerLabel.setText(timeSeconds.toString());
 		timerLabel.setTextFill(Color.RED);
 		timerLabel.setStyle("-fx-font-size: 4em;");
-		timerLabel.textProperty().bind(timeSeconds.asString());
-
+		// timerLabel.textProperty().bind(timeSeconds.asString());
 		group.add(timerLabel);
 	}
 
@@ -244,9 +241,12 @@ public class MazeGui extends Application {
 
 		EventHandler<ActionEvent> ae = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
-
+				// timeline.getKeyFrames().add(new
+				// KeyFrame(Duration.seconds(STARTTIME + 1), new
+				// KeyValue(timeSeconds, 1200)));
 				world.step(1.0f / 60.f, 8, 3);
 				x++;
+				timerLabel.setText((timeSeconds++).toString());
 				removeFixturesAndPellets();
 				scoreValueLabel.setText(String.valueOf(pacman1.getScore()));
 				scoreValueLabel2.setText(String.valueOf(pacman2.getScore()));
