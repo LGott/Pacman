@@ -18,6 +18,9 @@ import org.jbox2d.collision.Manifold;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.contacts.Contact;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class CollisionContactListener implements ContactListener {
 
 	private ArrayList<Pellet> pellets;
@@ -96,7 +99,7 @@ public class CollisionContactListener implements ContactListener {
 		} else if (obj2.getDescription() == "WALL" && obj1.getDescription() == "GHOST") {
 			turnGhost(obj1);
 		}
-	
+
 		else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "GHOST"
 				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "PACMAN")) {
 
@@ -119,7 +122,7 @@ public class CollisionContactListener implements ContactListener {
 					}
 				}
 			}
-	
+
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "PACMAN") {
 			collidingWithWall = true;
 			for (int i = 0; i < pacmanArray.size(); i++) {

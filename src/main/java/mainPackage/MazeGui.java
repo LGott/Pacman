@@ -30,6 +30,9 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class MazeGui extends Application {
 	private Group rootGroup;
 	private Scene scene;
@@ -48,15 +51,10 @@ public class MazeGui extends Application {
 	private ArrayList<Label> pacmanLives1;
 	private ArrayList<Label> pacmanLives2;
 
-	private Label scoreLabel;
 	private Label scoreValueLabel;
-	private Label scoreLabel2;
 	private Label scoreValueLabel2;
 	private Label gameOverLabel;
 	private Label outLabel;
-	private Label logo;
-	private Label pacmanLife1;
-	private Label pacmanLife2;
 
 	private int life;
 	private int life2;
@@ -85,7 +83,6 @@ public class MazeGui extends Application {
 		this.rootGroup = new Group();
 		this.componentSetup = new ComponentSetup(this);
 		this.labelSetup = new LabelSetup(this);
-		this.labelSetup.setScoreLabels();
 		this.group = rootGroup.getChildren();
 		this.ghosts = new ArrayList<Ghost>();
 		this.contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
@@ -96,9 +93,8 @@ public class MazeGui extends Application {
 		this.life2 = 0;
 		this.timer = new Timer();
 
-		componentSetup.createShapes();
-		labelSetup.setLabels();
-		setPacmanLives();
+		this.componentSetup.createShapes();
+		this.labelSetup.setLabels();
 		world.setContactListener(contactListener);
 		startSimulation();
 		addKeyListeners(scene);
@@ -298,40 +294,6 @@ public class MazeGui extends Application {
 
 	}
 
-	// Display the pacman labels in the correct position
-	private void setPacmanLives() {
-		int x = 630;
-		int y = 28;
-
-		for (int i = 0; i < 3; i++) {
-			pacmanLives1.add(new Label(""));
-			pacmanLives2.add(new Label(""));
-		}
-
-		for (Label pac : pacmanLives1) {
-			pacLives(pac, x, y);
-			x -= 45;
-		}
-		x = 630;
-		for (Label pac2 : pacmanLives2) {
-			pacLives(pac2, x, 80);
-			x -= 45;
-		}
-	}
-
-	private void pacLives(Label pac, int x, int y) {
-
-		Image image = new Image(getClass().getResourceAsStream("/pacman.png"));
-		ImageView img = new ImageView(image);
-		img.setFitWidth(25);
-		img.setPreserveRatio(true);
-		pac.setGraphic(img);
-		pac.setTranslateX(x);
-		pac.setTranslateY(y);
-		group.add(pac);
-
-	}
-
 	// Reset the game
 	private void restartGame() {
 		resetPacmansAndGhosts();
@@ -353,7 +315,6 @@ public class MazeGui extends Application {
 		for (Label pac2 : pacmanLives2) {
 			group.remove(pac2.getNodeOrientation());
 		}
-		setPacmanLives();
 		timeline.playFromStart();
 	}
 
@@ -381,20 +342,16 @@ public class MazeGui extends Application {
 		return pacmanArray;
 	}
 
+	public void setPacmanArray(ArrayList<Pacman> pacmanArray) {
+		this.pacmanArray = pacmanArray;
+	}
+
 	public ArrayList<Pellet> getPellets() {
 		return pellets;
 	}
 
 	public void setPellets(ArrayList<Pellet> pellets) {
 		this.pellets = pellets;
-	}
-
-	public Label getGameOverLabel() {
-		return gameOverLabel;
-	}
-
-	public Label getOutLabel() {
-		return outLabel;
 	}
 
 	private void animatePacman(final long timeStart, Pacman pacman) {
