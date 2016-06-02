@@ -3,7 +3,6 @@ package mainPackage;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -28,7 +27,6 @@ import objectsPackage.Pellet;
 import objectsPackage.UniqueObject;
 import objectsPackage.Wall;
 import objectsPackage.YellowPellet;
-
 import org.jbox2d.callbacks.RayCastCallback;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -44,9 +42,6 @@ public class MazeGui extends Application {
 	private Pacman pacman2;
 	private ArrayList<Ghost> ghosts;
 	private int x = 0;
-
-	// private int numBonusPellets; //I think they can be counted together, and
-	// when they're both all finished - you finished the round!
 	final Timeline timeline = new Timeline();
 	private CollisionContactListener contactListener;
 
@@ -54,6 +49,7 @@ public class MazeGui extends Application {
 	private ArrayList<Pacman> pacmanArray = new ArrayList<Pacman>();
 	private ArrayList<Label> pacmanLives1;
 	private ArrayList<Label> pacmanLives2;
+	
 	private Label scoreLabel;
 	private Label scoreValueLabel;
 	private Label scoreLabel2;
@@ -63,6 +59,7 @@ public class MazeGui extends Application {
 	private Label logo;
 	private Label pacmanLife1;
 	private Label pacmanLife2;
+	
 	private int life;
 	private int life2;
 	private ObservableList<Node> group;
@@ -87,7 +84,6 @@ public class MazeGui extends Application {
 
 		this.rootGroup = new Group();
 		setScoreLabels();
-
 		this.group = rootGroup.getChildren();
 		this.ghosts = new ArrayList<Ghost>();
 		this.contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
@@ -99,7 +95,6 @@ public class MazeGui extends Application {
 		this.timer = new Timer();
 
 		setPacmanLives();
-
 		createShapes();
 		setLabels();
 		world.setContactListener(contactListener);
@@ -174,7 +169,6 @@ public class MazeGui extends Application {
 	}
 
 	private void setStageProperties(Stage stage) {
-		// TODO Auto-generated method stub
 		stage.setWidth(Properties.WIDTH);
 		stage.setHeight(Properties.HEIGHT);
 		stage.setTitle("Pacman");
@@ -293,7 +287,6 @@ public class MazeGui extends Application {
 		 * trigged when KeyFrame execution is over.
 		 */
 		KeyFrame frame = new KeyFrame(duration, ae, null, null);
-
 		timeline.getKeyFrames().add(frame);
 
 	}
@@ -347,7 +340,6 @@ public class MazeGui extends Application {
 	}
 
 	private void moveGhostsStep() {
-		// TODO Auto-generated method stub
 		for (Ghost g : ghosts) {
 			moveAGhost(g);
 			if (x % 65 == 0) {
@@ -357,10 +349,8 @@ public class MazeGui extends Application {
 	}
 
 	private void moveAGhost(Ghost g) {
-		// TODO Auto-generated method stub
 		animateGhost(g);
 		Body body = (Body) g.getNode().getUserData();
-		// body.setLinearVelocity(new Vec2(-20.0f, 0.0f));
 		float xpos = Properties.jBoxToFxPosX(body.getPosition().x);
 		float ypos = Properties.jBoxToFxPosY(body.getPosition().y);
 		g.resetLayoutX(xpos);
@@ -387,7 +377,6 @@ public class MazeGui extends Application {
 	private void removeFixturesAndPellets() {
 		for (Fixture b : contactListener.getFixturesToRemove()) {
 			world.destroyBody(b.getBody());
-			// rootGroup.getChildren().remove(b);
 		}
 
 		for (Pellet p : contactListener.getPelletsToRemove()) {
@@ -395,7 +384,6 @@ public class MazeGui extends Application {
 		}
 
 		// clear for next step
-		// contactListener.getPacmanColliding().clear();
 		contactListener.getPelletsToRemove().clear();
 		contactListener.getFixturesToRemove().clear();
 
@@ -427,12 +415,8 @@ public class MazeGui extends Application {
 	}
 
 	private void animatePacman(final long timeStart, Pacman pacman) {
-		// if (contactListener.isCollidingWithWall() && pacman.isColliding()) {
-		// pacman.setOpenPacman();
-		// } else {
 		double time = (System.currentTimeMillis() - timeStart) / 1000.0;
 		pacman.animatePacman(time);
-		// }
 	}
 
 	private void createShapes() {
@@ -444,8 +428,7 @@ public class MazeGui extends Application {
 	}
 
 	private void createWalls() {
-		// wall (x,y) = 1/2 from edge (x,y)
-		// WALLS DON'T TOUCH!
+		// WALLS 
 		// top wall
 		createWall(0, 84, 100, 1);
 		// bottom wall
@@ -455,7 +438,7 @@ public class MazeGui extends Application {
 		// left wall
 		createWall(0, 37, 1, 74);
 
-		// west DON'T TOUCH
+		// west 
 		createWall(11, 15, 3, 3);
 		createWall(24, 15, 3, 3);
 		createWall(11, 68, 3, 8);
@@ -463,13 +446,13 @@ public class MazeGui extends Application {
 		createWall(24, 64, 3, 12);
 		createWall(24, 35, 3, 10);
 
-		// north DON'T TOUCH
+		// north 
 		createWall(37, 60, 3, 3);
 		createWall(63, 60, 3, 3);
 		createWall(50, 73, 16, 3);
 		createWall(50, 65, 3, 8);
 
-		// south DON'T TOUCH
+		// south 
 		createWall(50, 28, 16, 3);
 		createWall(37, 8, 3, 3);
 		createWall(50, 15, 3, 3);
@@ -679,7 +662,6 @@ public class MazeGui extends Application {
 	}
 
 	private void createBonusPellet(int posX, int posY) {
-		// TODO Auto-generated method stub
 		Pellet bp = new BonusPellet(posX, posY, world, 10);
 		addPellet(bp);
 	}
