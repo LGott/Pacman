@@ -63,8 +63,6 @@ public class MazeGui extends Application {
 	private Label pacmanLife2;
 	private int life;
 	private int life2;
-	// private volatile boolean isPaused;
-	private PausableThread pauseThread;
 	private ObservableList<Node> group;
 	private final long timeStart = System.currentTimeMillis();
 
@@ -78,16 +76,12 @@ public class MazeGui extends Application {
 
 		this.group = rootGroup.getChildren();
 		this.ghosts = new ArrayList<Ghost>();
-		this.contactListener = new CollisionContactListener(rootGroup, pellets,
-				pacmanArray, ghosts);
-		this.scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT,
-				Color.BLACK);
+		this.contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
+		this.scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
 		this.pacmanLives1 = new ArrayList<Label>();
 		this.pacmanLives2 = new ArrayList<Label>();
 		this.life = 0;
 		this.life2 = 0;
-		// this.isPaused = false;
-		this.pauseThread = new PausableThread();
 
 		setPacmanLives();
 
@@ -97,8 +91,7 @@ public class MazeGui extends Application {
 		startSimulation();
 		addKeyListeners(scene);
 		stage.setScene(scene);
-		stage.getIcons().add(
-				new Image(getClass().getResourceAsStream("/pacmanIcon2.png")));
+		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacmanIcon2.png")));
 		stage.show();
 	}
 
@@ -154,8 +147,7 @@ public class MazeGui extends Application {
 		label.setTextFill(Color.YELLOW);
 
 		this.logo = new Label("");
-		Image image = new Image(getClass().getResourceAsStream(
-				"/PacManLogo.png"));
+		Image image = new Image(getClass().getResourceAsStream("/PacManLogo.png"));
 		ImageView img = new ImageView(image);
 		img.setFitWidth(300);
 		img.setPreserveRatio(true);
@@ -256,8 +248,7 @@ public class MazeGui extends Application {
 							life2++;
 						}
 					}
-					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0
-							|| pellets.isEmpty()) {
+					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0 || pellets.isEmpty()) {
 						gameOverLabel.setVisible(true);
 						timeline.stop();
 					}
@@ -463,8 +454,7 @@ public class MazeGui extends Application {
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
-		group.add(new Wall(posX, posY, world, width, height, Color.BLUE)
-		.getNode());
+		group.add(new Wall(posX, posY, world, width, height, Color.BLUE).getNode());
 	}
 
 	public void createPacmans() {
@@ -479,93 +469,53 @@ public class MazeGui extends Application {
 	}
 
 	private void createGhosts() {
-		ghosts.add(new Ghost(42, 44, world, new Image[] {
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_blue_down1.png")),
-						new Image(getClass().getResourceAsStream(
-								"/pacman-images/g_blue_down2.png")),
-								new Image(getClass().getResourceAsStream(
-										"/pacman-images/g_blue_up1.png")),
-										new Image(getClass().getResourceAsStream(
-												"/pacman-images/g_blue_up2.png")),
-												new Image(getClass().getResourceAsStream(
-														"/pacman-images/g_blue_left1.png")),
-														new Image(getClass().getResourceAsStream(
-																"/pacman-images/g_blue_left2.png")),
-																new Image(getClass().getResourceAsStream(
-																		"/pacman-images/g_blue_right1.png")),
-																		new Image(getClass().getResourceAsStream(
-																				"/pacman-images/g_blue_right2.png")),
-																				new Image(getClass().getResourceAsStream(
-																						"/pacman-images/invincible1.png")),
-																						new Image(getClass().getResourceAsStream(
-																								"/pacman-images/invincible2.png")) }));
+		ghosts.add(new Ghost(42, 44, world,
+				new Image[] { new Image(getClass().getResourceAsStream("/pacman-images/g_blue_down1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_blue_down2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_blue_up1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_blue_up2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_blue_left1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_blue_left2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_blue_right1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_blue_right2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible2.png")) }));
 
-		ghosts.add(new Ghost(47, 44, world, new Image[] {
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_pink_down1.png")),
-						new Image(getClass().getResourceAsStream(
-								"/pacman-images/g_pink_down2.png")),
-								new Image(getClass().getResourceAsStream(
-										"/pacman-images/g_pink_up1.png")),
-										new Image(getClass().getResourceAsStream(
-												"/pacman-images/g_pink_up2.png")),
-												new Image(getClass().getResourceAsStream(
-														"/pacman-images/g_pink_left1.png")),
-														new Image(getClass().getResourceAsStream(
-																"/pacman-images/g_pink_left2.png")),
-																new Image(getClass().getResourceAsStream(
-																		"/pacman-images/g_pink_right1.png")),
-																		new Image(getClass().getResourceAsStream(
-																				"/pacman-images/g_pink_right2.png")),
-																				new Image(getClass().getResourceAsStream(
-																						"/pacman-images/invincible1.png")),
-																						new Image(getClass().getResourceAsStream(
-																								"/pacman-images/invincible2.png")) }));
+		ghosts.add(new Ghost(47, 44, world,
+				new Image[] { new Image(getClass().getResourceAsStream("/pacman-images/g_pink_down1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_pink_down2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_pink_up1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_pink_up2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_pink_left1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_pink_left2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_pink_right1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_pink_right2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible2.png")) }));
 
-		ghosts.add(new Ghost(53, 44, world, new Image[] {
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_orange_down1.png")),
-						new Image(getClass().getResourceAsStream(
-								"/pacman-images/g_orange_down2.png")),
-								new Image(getClass().getResourceAsStream(
-										"/pacman-images/g_orange_up1.png")),
-										new Image(getClass().getResourceAsStream(
-												"/pacman-images/g_orange_up2.png")),
-												new Image(getClass().getResourceAsStream(
-														"/pacman-images/g_orange_left1.png")),
-														new Image(getClass().getResourceAsStream(
-																"/pacman-images/g_orange_left2.png")),
-																new Image(getClass().getResourceAsStream(
-																		"/pacman-images/g_orange_right1.png")),
-																		new Image(getClass().getResourceAsStream(
-																				"/pacman-images/g_orange_right2.png")),
-																				new Image(getClass().getResourceAsStream(
-																						"/pacman-images/invincible1.png")),
-																						new Image(getClass().getResourceAsStream(
-																								"/pacman-images/invincible2.png")) }));
+		ghosts.add(new Ghost(53, 44, world,
+				new Image[] { new Image(getClass().getResourceAsStream("/pacman-images/g_orange_down1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_orange_down2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_orange_up1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_orange_up2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_orange_left1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_orange_left2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_orange_right1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_orange_right2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible2.png")) }));
 
-		ghosts.add(new Ghost(58, 44, world, new Image[] {
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_red_down1.png")),
-						new Image(getClass().getResourceAsStream(
-								"/pacman-images/g_red_down2.png")),
-								new Image(getClass().getResourceAsStream(
-										"/pacman-images/g_red_up1.png")),
-										new Image(getClass().getResourceAsStream(
-												"/pacman-images/g_red_up2.png")),
-												new Image(getClass().getResourceAsStream(
-														"/pacman-images/g_red_left1.png")),
-														new Image(getClass().getResourceAsStream(
-																"/pacman-images/g_red_left2.png")),
-																new Image(getClass().getResourceAsStream(
-																		"/pacman-images/g_red_right1.png")),
-																		new Image(getClass().getResourceAsStream(
-																				"/pacman-images/g_red_right2.png")),
-																				new Image(getClass().getResourceAsStream(
-																						"/pacman-images/invincible1.png")),
-																						new Image(getClass().getResourceAsStream(
-																								"/pacman-images/invincible2.png")) }));
+		ghosts.add(new Ghost(58, 44, world,
+				new Image[] { new Image(getClass().getResourceAsStream("/pacman-images/g_red_down1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_red_down2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_red_up1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_red_up2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_red_left1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_red_left2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_red_right1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_red_right2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible2.png")) }));
 
 		for (Ghost g : ghosts) {
 			group.add(g.getNode());
