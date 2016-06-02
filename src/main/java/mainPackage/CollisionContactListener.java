@@ -91,11 +91,9 @@ public class CollisionContactListener implements ContactListener {
 			setInvincible();
 
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "GHOST") {
-			System.out.println("Bang");
 			turnGhost(obj2);
 
 		} else if (obj2.getDescription() == "WALL" && obj1.getDescription() == "GHOST") {
-			System.out.println("Bang");
 			turnGhost(obj1);
 		}
 	
@@ -111,7 +109,6 @@ public class CollisionContactListener implements ContactListener {
 						this.determinePacman = pac.getName();
 						pac.decrementLives();
 						deadPacmans.add(pac);
-						System.out.println(pac.getName() + " added to dead list");
 					}
 				} else if (obj2.getDescription() == "PACMAN") {
 					Pacman pac = identifyPacman(obj2);
@@ -119,12 +116,10 @@ public class CollisionContactListener implements ContactListener {
 						this.determinePacman = pac.getName();
 						pac.decrementLives();
 						deadPacmans.add(pac);
-						System.out.println(pac.getName() + " added to dead list");
 					}
 				}
 			}
-			System.out.println("pacman-ghost   are colliding");
-
+	
 		} else if (obj1.getDescription() == "WALL" && obj2.getDescription() == "PACMAN") {
 			collidingWithWall = true;
 			for (int i = 0; i < pacmanArray.size(); i++) {
@@ -156,7 +151,6 @@ public class CollisionContactListener implements ContactListener {
 	private void ghostEffects() {
 		for (Ghost ghost : ghosts) {
 			ghost.turnBlue();
-			System.out.println("invincible");
 			FadeTransition ft = new FadeTransition(Duration.millis(1000), ghost.getNode());
 			ft.setFromValue(3.0);
 			ft.setToValue(.2);
@@ -185,7 +179,6 @@ public class CollisionContactListener implements ContactListener {
 	private void turnGhost(UniqueObject obj) {
 		for (Ghost g : ghosts) {
 			if (g.getObjectDescription().getID() == obj.getID()) {
-				System.out.println("TURN GHOST");
 				g.changeDirection(System.currentTimeMillis());
 				break;
 			}
