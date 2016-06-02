@@ -15,7 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
-public class CodeManager {
+public class ComponentSetup {
 
 	private MazeGui mazeGui;
 	private ObservableList<Node> group;
@@ -26,7 +26,7 @@ public class CodeManager {
 	private ArrayList<Ghost> ghosts;
 	private ArrayList<Pellet> pellets;
 
-	public CodeManager(MazeGui mazeGui) {
+	public ComponentSetup(MazeGui mazeGui) {
 		this.mazeGui = mazeGui;
 		this.group = mazeGui.getGroup();
 		this.world = mazeGui.getWorld();
@@ -262,6 +262,7 @@ public class CodeManager {
 		for (int i = 35; i < 58; i += 8) {
 			createYellowPellet(87, i);
 		}
+		mazeGui.setPellets(pellets);
 	}
 
 	private void createYellowPellet(int posX, int posY) {

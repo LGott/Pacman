@@ -76,7 +76,7 @@ public class MazeGui extends Application {
 	private final Vec2 tmpV2 = new Vec2();
 	private boolean canMove;
 
-	private CodeManager codeManager;
+	private ComponentSetup codeManager;
 
 	public enum MoveDir {
 		UP, DOWN, LEFT, RIGHT, NONE
@@ -86,7 +86,7 @@ public class MazeGui extends Application {
 	public void start(Stage stage) throws Exception {
 		setStageProperties(stage);
 		// Create a group for holding all objects on the screen.
-		this.codeManager = new CodeManager(this);
+		this.codeManager = new ComponentSetup(this);
 		this.rootGroup = new Group();
 		setScoreLabels();
 		this.group = rootGroup.getChildren();
