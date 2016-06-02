@@ -5,15 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.scene.Group;
-import javafx.scene.effect.Bloom;
-import javafx.scene.effect.Glow;
-import javafx.scene.effect.Light;
-import javafx.scene.effect.Light.Distant;
-import javafx.scene.effect.Lighting;
 import javafx.util.Duration;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
@@ -22,14 +14,13 @@ import objectsPackage.UniqueObject;
 
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
-import org.jbox2d.collision.Distance;
 import org.jbox2d.collision.Manifold;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.contacts.Contact;
 
 public class CollisionContactListener implements ContactListener {
 
-	
+
 	private ArrayList<Pellet> pellets;
 	private ArrayList<Fixture> fixturesToRemove;
 	private ArrayList<Pellet> pelletsToRemove;
@@ -81,7 +72,7 @@ public class CollisionContactListener implements ContactListener {
 			removePellet(f1, obj1);
 			Pacman pac = identifyPacman(obj2);
 			if (isInvincible) { // If pacman eats a cherry while he is
-								// invincible he gets 500 points
+				// invincible he gets 500 points
 				pac.incrementScore(500);
 			}
 			pac.incrementScore(50);
@@ -159,6 +150,7 @@ public class CollisionContactListener implements ContactListener {
 	}
 
 	class DelayTask extends TimerTask {
+		@Override
 		public void run() {
 			isInvincible = false;
 		}
@@ -195,7 +187,7 @@ public class CollisionContactListener implements ContactListener {
 		for (Ghost g : ghosts) {
 			if (g.getObjectDescription().getID() == obj.getID()) {
 				System.out.println("TURN GHOST");
-				g.changeDirection();
+				g.changeDirection(System.currentTimeMillis());
 				break;
 			}
 		}

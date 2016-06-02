@@ -18,11 +18,11 @@ public class Pacman extends Piece {
 	private final int height = 3;
 	private final BodyType bodyType = BodyType.DYNAMIC;
 
-	private Image imageClose = new Image(getClass().getResourceAsStream("/pacman-closed.png"));
-	private Image imageOpen = new Image(getClass().getResourceAsStream("/pacman-opened.png"));
-	private Image[] images = new Image[] { imageClose, imageOpen };
+	private Image imageWideOpen = new Image(getClass().getResourceAsStream("/pacman-images/pacman-wideopen.png"));
+	private Image imageClose = new Image(getClass().getResourceAsStream("/pacman-images/pacman-closed.png"));
+	private Image imageOpen = new Image(getClass().getResourceAsStream("/pacman-images/pacman-opened.png"));
+	private Image[] images = new Image[] { imageWideOpen, imageOpen };
 	private boolean colliding = false;
-	private Image image;
 	// starts moving to the left
 	private Vec2 currDirection = new Vec2(-20.0f, 0.0f);
 	private int currDegree = 180;
@@ -53,7 +53,7 @@ public class Pacman extends Piece {
 	}
 
 	private Node create() {
-		Image img = images[0];
+		Image img = imageClose;
 		ImagePattern imagePattern = new ImagePattern(img);
 
 		Rectangle pacman = new Rectangle((Properties.jBoxtoPixelWidth(width) * 2),

@@ -1,11 +1,13 @@
 package objectsPackage;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import mainPackage.Properties;
 
 import org.jbox2d.collision.shapes.PolygonShape;
@@ -20,20 +22,37 @@ public class Ghost extends Piece {
 	private final BodyType bodyType = BodyType.DYNAMIC;
 	private Rectangle ghost;
 	private PolygonShape ps;
-	private Image img;
 	private ImagePattern imagePattern;
 	private final int groupIndex = -1;
 	private final int maskBits = -1;
 	private final int categoryBits = -1;
 	private Vec2 currDirection;
+	private ArrayList<Image> upImages = new ArrayList<Image>(),
+			downImages = new ArrayList<Image>(),
+			rightImages = new ArrayList<Image>(),
+			leftImages = new ArrayList<Image>();
+	private Animation animation;
 
-	public Ghost(int posX, int posY, World world, String image) {
+	public Ghost(int posX, int posY, World world, Image[] images) {
 		super(posX, posY, world, "GHOST");
 		ps = new PolygonShape();
 		ps.setAsBox(width, height);
-		img = new Image(image);
-		imagePattern = new ImagePattern(img);
+		imagePattern = new ImagePattern(images[0]);
 		node = create();
+
+		// images
+		downImages.add(images[0]);
+		downImages.add(images[1]);
+		upImages.add(images[2]);
+		upImages.add(images[3]);
+		leftImages.add(images[4]);
+		leftImages.add(images[5]);
+		rightImages.add(images[6]);
+		rightImages.add(images[7]);
+
+		animation = new Animation(downImages);
+		animation.setSpeed(10);
+		animation.start();
 	}
 
 	private Node create() {
@@ -65,7 +84,7 @@ public class Ghost extends Piece {
 		node.setLayoutY(y - Properties.jBoxtoPixelWidth(height));
 	}
 
-	public void changeDirection() {
+	public void changeDirection(long time) {
 		Vec2 oldDir = currDirection;
 		Random randomGen = new Random();
 		while (oldDir == currDirection) {
@@ -74,27 +93,43 @@ public class Ghost extends Piece {
 			case 0: // UP
 				currDirection = new Vec2(0.0f, 30.0f);
 				System.out.println("up");
+				//newAnimation(upImages, time);
+				animation.setImages(upImages);
 				break;
 			case 1: // DOWN
 				currDirection = new Vec2(0.0f, -30.0f);
 				System.out.println("down");
+				//newAnimation(downImages, time);
+				animation.setImages(downImages);
 				break;
 			case 2: // LEFT
 				currDirection = new Vec2(-30.0f, 0.0f);
 				System.out.println("left");
+				//newAnimation(leftImages, time);
+				animation.setImages(leftImages);
 				break;
 			case 3: // RIGHT
 				currDirection = new Vec2(30.0f, 0.0f);
 				System.out.println("right");
+				//newAnimation(rightImages, time);
+				animation.setImages(rightImages);
 				break;
 			}
 		}
+
 		resetSpeed();
+		//animation.start();
+		if (animation != null) {
+			animation.update(time);
+			((Shape) node).setFill(new ImagePattern(animation.getSprite()));
+			System.out.println("changed image direction");
+		}
+
+
 	}
 
 	public void resetSpeed() {
 		body.setLinearVelocity(currDirection);
 	}
 
-	
 }
