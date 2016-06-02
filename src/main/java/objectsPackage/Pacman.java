@@ -109,12 +109,6 @@ public class Pacman extends Piece {
 		double duration = 0.100;
 		int index = (int) ((time % (images.length * duration)) / duration);
 		this.setImage(images[index]);
-		// if(++imgNum == 3){
-		// imgNum= 0;
-		// this.setImage(images[imgNum]);
-		// }else{
-		// this.setImage(images[imgNum++]);
-		// }
 	}
 
 	public int getScore() {

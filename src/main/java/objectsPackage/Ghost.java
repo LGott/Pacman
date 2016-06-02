@@ -69,7 +69,6 @@ public class Ghost extends Piece {
 	}
 
 	private void setGhostProperties() {
-		// TODO Auto-generated method stub
 		ghost.setFill(imagePattern);
 		ghost.setLayoutX(Properties.jBoxToFxPosX(getPosX())
 				- Properties.jBoxtoPixelWidth(width));

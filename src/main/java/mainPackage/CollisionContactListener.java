@@ -20,7 +20,6 @@ import org.jbox2d.dynamics.contacts.Contact;
 
 public class CollisionContactListener implements ContactListener {
 
-
 	private ArrayList<Pellet> pellets;
 	private ArrayList<Fixture> fixturesToRemove;
 	private ArrayList<Pellet> pelletsToRemove;
@@ -98,13 +97,8 @@ public class CollisionContactListener implements ContactListener {
 		} else if (obj2.getDescription() == "WALL" && obj1.getDescription() == "GHOST") {
 			System.out.println("Bang");
 			turnGhost(obj1);
-
 		}
-		// else if (obj1.getDescription() == "GHOST" && obj2.getDescription() ==
-		// "GHOST") {
-		// turnGhost(obj1);
-		// }
-
+	
 		else if (obj1.getDescription() == "PACMAN" && obj2.getDescription() == "GHOST"
 				|| (obj1.getDescription() == "GHOST" && obj2.getDescription() == "PACMAN")) {
 
