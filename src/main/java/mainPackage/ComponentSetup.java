@@ -38,63 +38,63 @@ public class ComponentSetup {
 	}
 
 	public void createShapes() {
-		createWalls();
+	//	createWalls();
 		createGhosts();
 		createPacmans();
 		createPellets();
 		createBonusPellets();
 	}
 
-	private void createWalls() {
-		// WALLS
-		// top wall
-		createWall(0, 84, 100, 1);
-		// bottom wall
-		createWall(0, 4, 100, 1);
-		// right wall
-		createWall(99, 37, 1, 74);
-		// left wall
-		createWall(0, 37, 1, 74);
-
-		// west
-		createWall(11, 15, 3, 3);
-		createWall(24, 15, 3, 3);
-		createWall(11, 68, 3, 8);
-		createWall(11, 39, 3, 14);
-		createWall(24, 64, 3, 12);
-		createWall(24, 35, 3, 10);
-
-		// north
-		createWall(37, 60, 3, 3);
-		createWall(63, 60, 3, 3);
-		createWall(50, 73, 16, 3);
-		createWall(50, 65, 3, 8);
-
-		// south
-		createWall(50, 28, 16, 3);
-		createWall(37, 8, 3, 3);
-		createWall(50, 15, 3, 3);
-		createWall(63, 8, 3, 3);
-
-		// east
-		createWall(95, 69, 3, 7);
-		createWall(95, 40, 3, 9);
-		createWall(82, 15, 9, 3);
-		createWall(82, 59, 3, 3);
-		createWall(82, 28, 3, 3);
-
-		createWall(76, 66, 3, 10);
-		createWall(76, 37, 3, 12);
-
-		// center
-		createWall(50, 48, 9, 1);
-		createWall(50, 39, 9, 1);
-
-	}
-
-	private void createWall(int posX, int posY, int width, int height) {
-		group.add(new Wall(posX, posY, mazeGui.getWorld(), width, height, Color.BLUE).getNode());
-	}
+//	private void createWalls() {
+//		// WALLS
+//		// top wall
+//		createWall(0, 84, 100, 1);
+//		// bottom wall
+//		createWall(0, 4, 100, 1);
+//		// right wall
+//		createWall(99, 37, 1, 74);
+//		// left wall
+//		createWall(0, 37, 1, 74);
+//
+//		// west
+//		createWall(11, 15, 3, 3);
+//		createWall(24, 15, 3, 3);
+//		createWall(11, 68, 3, 8);
+//		createWall(11, 39, 3, 14);
+//		createWall(24, 64, 3, 12);
+//		createWall(24, 35, 3, 10);
+//
+//		// north
+//		createWall(37, 60, 3, 3);
+//		createWall(63, 60, 3, 3);
+//		createWall(50, 73, 16, 3);
+//		createWall(50, 65, 3, 8);
+//
+//		// south
+//		createWall(50, 28, 16, 3);
+//		createWall(37, 8, 3, 3);
+//		createWall(50, 15, 3, 3);
+//		createWall(63, 8, 3, 3);
+//
+//		// east
+//		createWall(95, 69, 3, 7);
+//		createWall(95, 40, 3, 9);
+//		createWall(82, 15, 9, 3);
+//		createWall(82, 59, 3, 3);
+//		createWall(82, 28, 3, 3);
+//
+//		createWall(76, 66, 3, 10);
+//		createWall(76, 37, 3, 12);
+//
+//		// center
+//		createWall(50, 48, 9, 1);
+//		createWall(50, 39, 9, 1);
+//
+//	}
+//
+//	private void createWall(int posX, int posY, int width, int height) {
+//		group.add(new Wall(posX, posY, mazeGui.getWorld(), width, height, Color.BLUE).getNode());
+//	}
 
 	public void createPacmans() {
 		pacman1 = createPacman(50, 80, "Pacman1");
@@ -102,6 +102,8 @@ public class ComponentSetup {
 		pacmanArray.add(pacman1);
 		pacmanArray.add(pacman2);
 		mazeGui.setPacmanArray(pacmanArray);
+		mazeGui.setPacman1(pacman1);
+		mazeGui.setPacman2(pacman2);
 	}
 
 	private Pacman createPacman(int x, int y, String name) {

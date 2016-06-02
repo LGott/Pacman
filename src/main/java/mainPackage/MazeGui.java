@@ -24,6 +24,7 @@ import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
 import objectsPackage.UniqueObject;
+import objectsPackage.Wall;
 
 import org.jbox2d.callbacks.RayCastCallback;
 import org.jbox2d.common.Vec2;
@@ -79,27 +80,34 @@ public class MazeGui extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		setStageProperties(stage);
-		// Create a group for holding all objects on the screen.
 		this.rootGroup = new Group();
-		this.componentSetup = new ComponentSetup(this);
-		this.labelSetup = new LabelSetup(this);
 		this.group = rootGroup.getChildren();
+		// Create a group for holding all objects on the screen.
 		this.ghosts = new ArrayList<Ghost>();
-		this.contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
-		this.scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
+
 		this.pacmanLives1 = new ArrayList<Label>();
 		this.pacmanLives2 = new ArrayList<Label>();
+
+		this.componentSetup = new ComponentSetup(this);
+		this.componentSetup.createShapes();
+
+		this.labelSetup = new LabelSetup(this);
+		this.labelSetup.setLabels();
+	//	this.gameOverLabel = new Label("   GAME OVER" + "\n" + "Press R to restart");
+		this.scene = new Scene(rootGroup, Properties.WIDTH, Properties.HEIGHT, Color.BLACK);
+
+		this.contactListener = new CollisionContactListener(rootGroup, pellets, pacmanArray, ghosts);
+
 		this.life = 0;
 		this.life2 = 0;
 		this.timer = new Timer();
-
-		this.componentSetup.createShapes();
-		this.labelSetup.setLabels();
+		createWalls();
 		world.setContactListener(contactListener);
 		startSimulation();
 		addKeyListeners(scene);
 		stage.setScene(scene);
 		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacmanIcon2.png")));
+
 		stage.show();
 	}
 
@@ -124,6 +132,7 @@ public class MazeGui extends Application {
 			public void handle(ActionEvent t) {
 
 				world.step(1.0f / 60.f, 8, 3);
+				createWalls();
 				x++;
 				removeFixturesAndPellets();
 				scoreValueLabel.setText(String.valueOf(pacman1.getScore()));
@@ -207,6 +216,12 @@ public class MazeGui extends Application {
 		}
 	}
 
+	public ArrayList<Label> getPacmanLives(){
+		return pacmanLives2;
+	}
+	public ArrayList<Label> getPacmanLives1(){
+		return pacmanLives1;
+	}
 	private void checkIntendedMove() {
 		if (P1intendedMoveDir != MoveDir.NONE) {
 			// automatic pacman movement based on input
@@ -494,6 +509,65 @@ public class MazeGui extends Application {
 		return canMove;
 	}
 
+	private void createWalls() {
+		// WALLS
+		// top wall
+		createWall(0, 84, 100, 1);
+		// bottom wall
+		createWall(0, 4, 100, 1);
+		// right wall
+		createWall(99, 37, 1, 74);
+		// left wall
+		createWall(0, 37, 1, 74);
+
+		// west
+		createWall(11, 15, 3, 3);
+		createWall(24, 15, 3, 3);
+		createWall(11, 68, 3, 8);
+		createWall(11, 39, 3, 14);
+		createWall(24, 64, 3, 12);
+		createWall(24, 35, 3, 10);
+
+		// north
+		createWall(37, 60, 3, 3);
+		createWall(63, 60, 3, 3);
+		createWall(50, 73, 16, 3);
+		createWall(50, 65, 3, 8);
+
+		// south
+		createWall(50, 28, 16, 3);
+		createWall(37, 8, 3, 3);
+		createWall(50, 15, 3, 3);
+		createWall(63, 8, 3, 3);
+
+		// east
+		createWall(95, 69, 3, 7);
+		createWall(95, 40, 3, 9);
+		createWall(82, 15, 9, 3);
+		createWall(82, 59, 3, 3);
+		createWall(82, 28, 3, 3);
+
+		createWall(76, 66, 3, 10);
+		createWall(76, 37, 3, 12);
+
+		// center
+		createWall(50, 48, 9, 1);
+		createWall(50, 39, 9, 1);
+
+	}
+
+	private void createWall(int posX, int posY, int width, int height) {
+		group.add(new Wall(posX, posY, world, width, height, Color.BLUE).getNode());
+	}
+
+	public void setPacman1(Pacman p ){
+		this.pacman1 = p;
+	}
+	
+	public void setPacman2(Pacman p ){
+		this.pacman2 = p;
+	}
+	
 	public void play(String[] args) {
 		Application.launch(args);
 	}

@@ -26,6 +26,9 @@ public class LabelSetup {
 
 	public LabelSetup(MazeGui mazeGui) {
 		this.group = mazeGui.getGroup();
+		this.pacmanLives1 = mazeGui.getPacmanLives1();
+		this.pacmanLives2 = mazeGui.getPacmanLives2();
+		setLabels();
 	}
 
 	public void setLabels() {
@@ -42,7 +45,6 @@ public class LabelSetup {
 		outLabel.setTranslateY(250);
 		outLabel.setTextFill(Color.WHITE);
 		outLabel.setVisible(false);
-
 		setScoreLabels();
 		setLifeLabels();
 		setPacmanLives();
@@ -69,7 +71,7 @@ public class LabelSetup {
 	}
 
 	// Display the pacman labels in the correct position
-	private void setPacmanLives() {
+	private void setPacmanLives() {	
 		int x = 630;
 		int y = 28;
 
@@ -97,7 +99,7 @@ public class LabelSetup {
 		pac.setGraphic(img);
 		pac.setTranslateX(x);
 		pac.setTranslateY(y);
-		group.add(pac);
+		//group.add(pac);
 
 	}
 
