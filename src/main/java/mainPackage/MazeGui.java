@@ -75,6 +75,7 @@ public class MazeGui extends Application {
 	private static final Integer STARTTIME = 0;
 	private Label timerLabel;
 	private Integer timeSeconds;
+	private Timer timer;
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -93,22 +94,17 @@ public class MazeGui extends Application {
 		this.pacmanLives2 = new ArrayList<Label>();
 		this.life = 0;
 		this.life2 = 0;
-		// this.isPaused = false;
 		this.pauseThread = new PausableThread();
-
+		this.timer = new Timer();
 		setPacmanLives();
-
 		createShapes();
 		setLabels();
 		setTimerLabel();
-		// timeSeconds.setText(STARTTIME);
-
 		world.setContactListener(contactListener);
 		startSimulation();
 		addKeyListeners(scene);
 		stage.setScene(scene);
 		stage.getIcons().add(new Image(getClass().getResourceAsStream("/pacmanIcon2.png")));
-
 		stage.show();
 
 	}
@@ -136,10 +132,11 @@ public class MazeGui extends Application {
 	private void setTimerLabel() {
 		timerLabel = new Label();
 		timeSeconds = STARTTIME;
-		timerLabel.setText(timeSeconds.toString());
-		timerLabel.setTextFill(Color.RED);
-		timerLabel.setStyle("-fx-font-size: 4em;");
-		// timerLabel.textProperty().bind(timeSeconds.asString());
+		timerLabel.setText("Timer: " + timeSeconds.toString());
+		timerLabel.setTextFill(Color.YELLOW);
+		timerLabel.setTranslateX(25);
+		timerLabel.setTranslateY(65);
+
 		group.add(timerLabel);
 	}
 
@@ -241,18 +238,23 @@ public class MazeGui extends Application {
 
 		EventHandler<ActionEvent> ae = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
-				// timeline.getKeyFrames().add(new
-				// KeyFrame(Duration.seconds(STARTTIME + 1), new
-				// KeyValue(timeSeconds, 1200)));
 				world.step(1.0f / 60.f, 8, 3);
 				x++;
-				timerLabel.setText((timeSeconds++).toString());
+
+				timer.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timeSeconds++;
+					}
+				}, 12 * 1000);
+
+				timerLabel.setText(timeSeconds.toString());
 				removeFixturesAndPellets();
 				scoreValueLabel.setText(String.valueOf(pacman1.getScore()));
 				scoreValueLabel2.setText(String.valueOf(pacman2.getScore()));
 
 				// Move pacmans to the new position computed by JBox2D
-
+				
 				movePacman(pacman1);
 				movePacman(pacman2);
 				moveGhostsStep();
@@ -328,7 +330,7 @@ public class MazeGui extends Application {
 
 	private void showLabelOnTimer() {
 		outLabel.setVisible(true);
-		Timer timer = new java.util.Timer();
+
 		timer.schedule(new ScheduledTask(), 2 * 1000);
 	}
 
@@ -400,6 +402,7 @@ public class MazeGui extends Application {
 		life = 0;
 		life2 = 0;
 		gameOverLabel.setVisible(false);
+		timerLabel.setText("");
 
 		for (Label pac : pacmanLives1) {
 			group.remove(pac.getNodeOrientation());
