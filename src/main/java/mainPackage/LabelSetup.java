@@ -1,5 +1,7 @@
 package mainPackage;
 
+import java.util.ArrayList;
+
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -19,10 +21,10 @@ public class LabelSetup {
 	private Label logo;
 	private Label pacmanLife1;
 	private Label pacmanLife2;
+	private ArrayList<Label> pacmanLives1;
+	private ArrayList<Label> pacmanLives2;
 
 	public LabelSetup(MazeGui mazeGui) {
-		this.gameOverLabel = mazeGui.getGameOverLabel();
-		this.outLabel = mazeGui.getOutLabel();
 		this.group = mazeGui.getGroup();
 	}
 
@@ -41,11 +43,13 @@ public class LabelSetup {
 		outLabel.setTextFill(Color.WHITE);
 		outLabel.setVisible(false);
 
-		group.add(gameOverLabel);
-		group.add(outLabel);
+		setScoreLabels();
+		setLifeLabels();
+		setPacmanLives();
+		addToGroup();
 	}
 
-	public void setScoreLabels() {
+	private void setScoreLabels() {
 		scoreLabel = new Label("Pacman 1 Score: ");
 		setLabel(scoreLabel, 25, 25);
 		scoreValueLabel = new Label();
@@ -55,9 +59,46 @@ public class LabelSetup {
 		setLabel(scoreLabel2, 25, 45);
 		scoreValueLabel2 = new Label();
 		setLabel(scoreValueLabel2, 140, 45);
+	}
 
-		setLifeLabels();
-		addToGroup();
+	private void setLifeLabels() {
+		pacmanLife1 = new Label("Pacman 1");
+		pacmanLife2 = new Label("Pacman 2");
+		setLabel(pacmanLife1, 570, 10);
+		setLabel(pacmanLife2, 570, 60);
+	}
+
+	// Display the pacman labels in the correct position
+	private void setPacmanLives() {
+		int x = 630;
+		int y = 28;
+
+		for (int i = 0; i < 3; i++) {
+			pacmanLives1.add(new Label(""));
+			pacmanLives2.add(new Label(""));
+		}
+
+		for (Label pac : pacmanLives1) {
+			pacLives(pac, x, y);
+			x -= 45;
+		}
+		x = 630;
+		for (Label pac2 : pacmanLives2) {
+			pacLives(pac2, x, 80);
+			x -= 45;
+		}
+	}
+
+	private void pacLives(Label pac, int x, int y) {
+		Image image = new Image(getClass().getResourceAsStream("/pacman.png"));
+		ImageView img = new ImageView(image);
+		img.setFitWidth(25);
+		img.setPreserveRatio(true);
+		pac.setGraphic(img);
+		pac.setTranslateX(x);
+		pac.setTranslateY(y);
+		group.add(pac);
+
 	}
 
 	private void addToGroup() {
@@ -67,13 +108,6 @@ public class LabelSetup {
 		group.add(scoreValueLabel2);
 		group.add(pacmanLife1);
 		group.add(pacmanLife2);
-	}
-
-	private void setLifeLabels() {
-		pacmanLife1 = new Label("Pacman 1");
-		pacmanLife2 = new Label("Pacman 2");
-		setLabel(pacmanLife1, 570, 10);
-		setLabel(pacmanLife2, 570, 60);
 	}
 
 	private void setLabel(Label label, int x, int y) {
