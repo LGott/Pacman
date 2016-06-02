@@ -102,7 +102,6 @@ public class MazeGui extends Application {
 		codeManager.createShapes();
 		setLabels();
 		setPacmanLives();
-
 		world.setContactListener(contactListener);
 		startSimulation();
 		addKeyListeners(scene);
@@ -142,18 +141,25 @@ public class MazeGui extends Application {
 		scoreValueLabel2 = new Label();
 		setLabel(scoreValueLabel2, 140, 45);
 
+		setLifeLabels();
+		addToGroup();
+
+	}
+
+	private void setLifeLabels() {
 		pacmanLife1 = new Label("Pacman 1");
 		pacmanLife2 = new Label("Pacman 2");
 		setLabel(pacmanLife1, 570, 10);
 		setLabel(pacmanLife2, 570, 60);
+	}
 
+	private void addToGroup() {
 		rootGroup.getChildren().add(scoreLabel);
 		rootGroup.getChildren().add(scoreValueLabel);
 		rootGroup.getChildren().add(scoreLabel2);
 		rootGroup.getChildren().add(scoreValueLabel2);
 		rootGroup.getChildren().add(pacmanLife1);
 		rootGroup.getChildren().add(pacmanLife2);
-
 	}
 
 	private void setLabel(Label label, int x, int y) {
