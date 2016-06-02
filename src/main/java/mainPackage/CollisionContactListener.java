@@ -153,14 +153,19 @@ public class CollisionContactListener implements ContactListener {
 		@Override
 		public void run() {
 			isInvincible = false;
+			for (Ghost ghost : ghosts) {
+				ghost.resetColor();
+			}
 		}
 	}
 
 	private void ghostEffects() {
 		for (Ghost ghost : ghosts) {
+			ghost.turnBlue();
+			System.out.println("invincible");
 			FadeTransition ft = new FadeTransition(Duration.millis(1000), ghost.getNode());
 			ft.setFromValue(3.0);
-			ft.setToValue(0.2);
+			ft.setToValue(.2);
 			ft.setCycleCount(10);
 			ft.setAutoReverse(true);
 			ft.play();
@@ -225,6 +230,7 @@ public class CollisionContactListener implements ContactListener {
 		for (int i = 0; i < pellets.size(); i++) {
 			if (pellets.get(i).getObjectDescription().getID() == obj.getID()) {
 				pelletsToRemove.add(pellets.get(i));
+				pellets.remove(i);
 				break;
 			}
 		}

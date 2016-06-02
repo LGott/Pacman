@@ -30,8 +30,10 @@ public class Ghost extends Piece {
 	private ArrayList<Image> upImages = new ArrayList<Image>(),
 			downImages = new ArrayList<Image>(),
 			rightImages = new ArrayList<Image>(),
-			leftImages = new ArrayList<Image>();
-	private Animation animation;
+			leftImages = new ArrayList<Image>(),
+			invincible = new ArrayList<Image>();
+	private ArrayList<Image> images;
+	private boolean isInvincible;
 
 	public Ghost(int posX, int posY, World world, Image[] images) {
 		super(posX, posY, world, "GHOST");
@@ -49,10 +51,10 @@ public class Ghost extends Piece {
 		leftImages.add(images[5]);
 		rightImages.add(images[6]);
 		rightImages.add(images[7]);
+		invincible.add(images[8]);
+		invincible.add(images[9]);
 
-		animation = new Animation(downImages);
-		animation.setSpeed(10);
-		animation.start();
+		this.images = downImages;
 	}
 
 	private Node create() {
@@ -93,43 +95,63 @@ public class Ghost extends Piece {
 			case 0: // UP
 				currDirection = new Vec2(0.0f, 30.0f);
 				System.out.println("up");
-				//newAnimation(upImages, time);
-				animation.setImages(upImages);
+				if(!isInvincible){
+					images = upImages;
+				}
 				break;
 			case 1: // DOWN
 				currDirection = new Vec2(0.0f, -30.0f);
 				System.out.println("down");
-				//newAnimation(downImages, time);
-				animation.setImages(downImages);
+				if(!isInvincible){
+					images = downImages;
+				}
 				break;
 			case 2: // LEFT
 				currDirection = new Vec2(-30.0f, 0.0f);
 				System.out.println("left");
-				//newAnimation(leftImages, time);
-				animation.setImages(leftImages);
+				if(!isInvincible){
+					images = leftImages;
+				}
 				break;
 			case 3: // RIGHT
 				currDirection = new Vec2(30.0f, 0.0f);
 				System.out.println("right");
-				//newAnimation(rightImages, time);
-				animation.setImages(rightImages);
+				if(!isInvincible){
+					images = rightImages;
+				}
 				break;
 			}
 		}
 
 		resetSpeed();
-		//animation.start();
-		if (animation != null) {
-			animation.update(time);
-			((Shape) node).setFill(new ImagePattern(animation.getSprite()));
-			System.out.println("changed image direction");
-		}
 
+	}
 
+	public void setImage(Image image) {
+		imagePattern = new ImagePattern(image);
+		((Shape) node).setFill(imagePattern);
+	}
+
+	public void animateGhost(double time) {
+		double duration = 0.100;
+		int index = (int) ((time % (images.size() * duration)) / duration);
+		this.setImage(images.get(index));
 	}
 
 	public void resetSpeed() {
 		body.setLinearVelocity(currDirection);
+	}
+
+	public void turnBlue() {
+		isInvincible = true;
+		images = invincible;
+		this.setImage(images.get(0));
+	}
+
+	public void resetColor() {
+		isInvincible = false;
+		images = upImages;
+		//this.setImage(images.get(0));
 	}
 
 }
