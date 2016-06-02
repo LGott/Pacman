@@ -27,10 +27,8 @@ public class Ghost extends Piece {
 	private final int maskBits = -1;
 	private final int categoryBits = -1;
 	private Vec2 currDirection;
-	private ArrayList<Image> upImages = new ArrayList<Image>(),
-			downImages = new ArrayList<Image>(),
-			rightImages = new ArrayList<Image>(),
-			leftImages = new ArrayList<Image>(),
+	private ArrayList<Image> upImages = new ArrayList<Image>(), downImages = new ArrayList<Image>(),
+			rightImages = new ArrayList<Image>(), leftImages = new ArrayList<Image>(),
 			invincible = new ArrayList<Image>();
 	private ArrayList<Image> images;
 	private boolean isInvincible;
@@ -58,11 +56,9 @@ public class Ghost extends Piece {
 	}
 
 	private Node create() {
-		ghost = new Rectangle((Properties.jBoxtoPixelWidth(width) * 2),
-				(Properties.jBoxtoPixelHeight(height) * 2));
+		ghost = new Rectangle((Properties.jBoxtoPixelWidth(width) * 2), (Properties.jBoxtoPixelHeight(height) * 2));
 		setGhostProperties();
-		body = createBodyAndFixture(bodyType, ps, maskBits, groupIndex,
-				categoryBits);
+		body = createBodyAndFixture(bodyType, ps, maskBits, groupIndex, categoryBits);
 		super.setUserData();
 		ghost.setUserData(body);
 		return ghost;
@@ -70,10 +66,8 @@ public class Ghost extends Piece {
 
 	private void setGhostProperties() {
 		ghost.setFill(imagePattern);
-		ghost.setLayoutX(Properties.jBoxToFxPosX(getPosX())
-				- Properties.jBoxtoPixelWidth(width));
-		ghost.setLayoutY(Properties.jBoxToFxPosY(getPosY())
-				- Properties.jBoxtoPixelHeight(height));
+		ghost.setLayoutX(Properties.jBoxToFxPosX(getPosX()) - Properties.jBoxtoPixelWidth(width));
+		ghost.setLayoutY(Properties.jBoxToFxPosY(getPosY()) - Properties.jBoxtoPixelHeight(height));
 		ghost.setCache(true); // Cache this object for better performance
 	}
 
@@ -93,29 +87,25 @@ public class Ghost extends Piece {
 			switch (dir) {
 			case 0: // UP
 				currDirection = new Vec2(0.0f, 30.0f);
-				System.out.println("up");
-				if(!isInvincible){
+				if (!isInvincible) {
 					images = upImages;
 				}
 				break;
 			case 1: // DOWN
 				currDirection = new Vec2(0.0f, -30.0f);
-				System.out.println("down");
-				if(!isInvincible){
+				if (!isInvincible) {
 					images = downImages;
 				}
 				break;
 			case 2: // LEFT
 				currDirection = new Vec2(-30.0f, 0.0f);
-				System.out.println("left");
-				if(!isInvincible){
+				if (!isInvincible) {
 					images = leftImages;
 				}
 				break;
 			case 3: // RIGHT
 				currDirection = new Vec2(30.0f, 0.0f);
-				System.out.println("right");
-				if(!isInvincible){
+				if (!isInvincible) {
 					images = rightImages;
 				}
 				break;
@@ -150,7 +140,7 @@ public class Ghost extends Piece {
 	public void resetColor() {
 		isInvincible = false;
 		images = upImages;
-		//this.setImage(images.get(0));
+		// this.setImage(images.get(0));
 	}
 
 }
