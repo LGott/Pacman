@@ -18,9 +18,6 @@ import org.jbox2d.collision.Manifold;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.contacts.Contact;
 
-import com.google.inject.Singleton;
-
-@Singleton
 public class CollisionContactListener implements ContactListener {
 
 	private ArrayList<Pellet> pellets;
