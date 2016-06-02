@@ -67,19 +67,18 @@ public class MazeGui extends Application {
 	private int life2;
 	private ObservableList<Node> group;
 	private final long timeStart = System.currentTimeMillis();
-
-	public enum MoveDir {
-		UP, DOWN, LEFT, RIGHT, NONE
-	}
-
+	private Timer timer;
 	private MoveDir P2intendedMoveDir = MoveDir.NONE;
 	private MoveDir P1intendedMoveDir = MoveDir.NONE;
 	private MoveDir P1currentDir = MoveDir.RIGHT;
 	private MoveDir P2currentDir = MoveDir.RIGHT;
-
 	private final Vec2 tmpV1 = new Vec2();
 	private final Vec2 tmpV2 = new Vec2();
 	private boolean canMove;
+
+	public enum MoveDir {
+		UP, DOWN, LEFT, RIGHT, NONE
+	}
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -97,6 +96,7 @@ public class MazeGui extends Application {
 		this.pacmanLives2 = new ArrayList<Label>();
 		this.life = 0;
 		this.life2 = 0;
+		this.timer = new Timer();
 
 		setPacmanLives();
 
@@ -281,7 +281,7 @@ public class MazeGui extends Application {
 						}
 					}
 					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0 || pellets.isEmpty()) {
-						gameOverLabel.setVisible(true);
+						showLabelOnTimer(gameOverLabel);
 						timeline.stop();
 					}
 				}
@@ -322,21 +322,26 @@ public class MazeGui extends Application {
 			world.destroyBody(g.getFixture().getBody());
 		}
 		ghosts.clear();
-		showLabelOnTimer();
+		showLabelOnTimer(outLabel);
 		createGhosts();
 
 	}
 
-	private void showLabelOnTimer() {
-		outLabel.setVisible(true);
-		Timer timer = new java.util.Timer();
-		timer.schedule(new ScheduledTask(), 2 * 1000);
+	private void showLabelOnTimer(Label label) {
+		label.setVisible(true);
+		timer.schedule(new ScheduledTask(label), 2 * 1000);
 	}
 
 	class ScheduledTask extends TimerTask {
+		private Label newLabel;
+
+		public ScheduledTask(Label label) {
+			newLabel = label;
+		}
+
 		@Override
 		public void run() {
-			outLabel.setVisible(false);
+			newLabel.setVisible(false);
 		}
 	}
 
@@ -486,8 +491,7 @@ public class MazeGui extends Application {
 	}
 
 	private void createWall(int posX, int posY, int width, int height) {
-		group.add(new Wall(posX, posY, world, width, height, Color.BLUE)
-				.getNode());
+		group.add(new Wall(posX, posY, world, width, height, Color.BLUE).getNode());
 	}
 
 	public void createPacmans() {
@@ -501,94 +505,55 @@ public class MazeGui extends Application {
 		return pacman;
 	}
 
+	// Animated Ghosts
 	private void createGhosts() {
-		ghosts.add(new Ghost(42, 44, world, new Image[] {
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_blue_down1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_blue_down2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_blue_up1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_blue_up2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_blue_left1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_blue_left2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_blue_right1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_blue_right2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/invincible1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/invincible2.png")) }));
+		ghosts.add(new Ghost(42, 44, world,
+				new Image[] { new Image(getClass().getResourceAsStream("/pacman-images/g_blue_down1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_blue_down2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_blue_up1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_blue_up2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_blue_left1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_blue_left2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_blue_right1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_blue_right2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible2.png")) }));
 
-		ghosts.add(new Ghost(47, 44, world, new Image[] {
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_pink_down1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_pink_down2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_pink_up1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_pink_up2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_pink_left1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_pink_left2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_pink_right1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_pink_right2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/invincible1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/invincible2.png")) }));
+		ghosts.add(new Ghost(47, 44, world,
+				new Image[] { new Image(getClass().getResourceAsStream("/pacman-images/g_pink_down1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_pink_down2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_pink_up1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_pink_up2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_pink_left1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_pink_left2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_pink_right1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_pink_right2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible2.png")) }));
 
-		ghosts.add(new Ghost(53, 44, world, new Image[] {
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_orange_down1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_orange_down2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_orange_up1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_orange_up2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_orange_left1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_orange_left2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_orange_right1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_orange_right2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/invincible1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/invincible2.png")) }));
+		ghosts.add(new Ghost(53, 44, world,
+				new Image[] { new Image(getClass().getResourceAsStream("/pacman-images/g_orange_down1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_orange_down2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_orange_up1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_orange_up2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_orange_left1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_orange_left2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_orange_right1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_orange_right2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible2.png")) }));
 
-		ghosts.add(new Ghost(58, 44, world, new Image[] {
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_red_down1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_red_down2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_red_up1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_red_up2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_red_left1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_red_left2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_red_right1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/g_red_right2.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/invincible1.png")),
-				new Image(getClass().getResourceAsStream(
-						"/pacman-images/invincible2.png")) }));
+		ghosts.add(new Ghost(58, 44, world,
+				new Image[] { new Image(getClass().getResourceAsStream("/pacman-images/g_red_down1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_red_down2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_red_up1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_red_up2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_red_left1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_red_left2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_red_right1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/g_red_right2.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible1.png")),
+						new Image(getClass().getResourceAsStream("/pacman-images/invincible2.png")) }));
 
 		for (Ghost g : ghosts) {
 			group.add(g.getNode());
@@ -818,10 +783,8 @@ public class MazeGui extends Application {
 
 	private boolean checkMovable(Pacman pacman, final MoveDir dir) {
 		RayCastCallback rayCastCallback = new RayCastCallback() {
-			public float reportFixture(Fixture fixture, Vec2 point,
-					Vec2 normal, float fraction) {
-				if (((UniqueObject) fixture.getBody().getUserData())
-						.getDescription() == "WALL") {
+			public float reportFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction) {
+				if (((UniqueObject) fixture.getBody().getUserData()).getDescription() == "WALL") {
 					canMove = false;
 					return 0;
 				}
