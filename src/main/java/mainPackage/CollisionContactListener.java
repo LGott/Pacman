@@ -123,6 +123,12 @@ public class CollisionContactListener implements ContactListener {
 				if (obj1.getDescription() == "PACMAN") {
 					Pacman pac = identifyPacman(obj1);
 					if (pac.getLives() > 0) {
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						this.determinePacman = pac.getName();
 						pac.decrementLives();
 						deadPacmans.add(pac);
@@ -131,6 +137,12 @@ public class CollisionContactListener implements ContactListener {
 				} else if (obj2.getDescription() == "PACMAN") {
 					Pacman pac = identifyPacman(obj2);
 					if (pac.getLives() > 0) {
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						this.determinePacman = pac.getName();
 						pac.decrementLives();
 						deadPacmans.add(pac);

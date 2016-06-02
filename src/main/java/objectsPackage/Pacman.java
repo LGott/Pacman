@@ -1,15 +1,25 @@
 package objectsPackage;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.management.Query;
+
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import mainPackage.MazeGui.MoveDir;
 import mainPackage.Properties;
 
+import org.jbox2d.callbacks.QueryCallback;
+import org.jbox2d.collision.AABB;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
 
 public class Pacman extends Piece {
@@ -87,12 +97,6 @@ public class Pacman extends Piece {
 		return node;
 	}
 
-	public void setDirection(float horizontal, float vertical, int degree) {
-		Vec2 newDirection = new Vec2(horizontal, vertical);
-		currDirection = newDirection;
-		currDegree = degree;
-		resetSpeed();
-	}
 
 	public void resetSpeed() {
 		body.setLinearVelocity(currDirection);
@@ -151,10 +155,54 @@ public class Pacman extends Piece {
 	public String getName() {
 		return this.name;
 	}
+
 	public void resetLives(){
 		this.lives = 3;
 	}
 	public  void resetScore(){
 		this.score = 0;
 	}
+
+	public void setDirection(float horizontal, float vertical, int degree) {		
+		Vec2 newDirection = new Vec2(horizontal, vertical);
+		currDirection = newDirection;
+		currDegree = degree;
+		resetSpeed();
+	}
+
+	/*public void setDirection(MoveDir dir) {
+		final List<Body> foundBodies = new ArrayList<Body>();
+		QueryCallback callback = new QueryCallback(){
+
+			public boolean reportFixture(Fixture fixture) {
+				
+				 if(((UniqueObject)fixture.getBody().getUserData()).getDescription() == "WALL")
+					 System.out.println("WALL UP");
+				 foundBodies.add(fixture.getBody());
+				 return false;
+			}
+		};
+
+
+		switch(dir){
+		case UP:
+			//world.queryAABB(callback, new AABB(new Vec2(getPosX(), getPosY()), new Vec2(getPosX(), getPosY() - 20)));
+			setDirection(0.0f, -20.0f, 90);	
+			break;
+		case DOWN:
+			setDirection(0.0f, -20.0f, 90);	
+			break;
+		case LEFT:
+			setDirection(-20.0f, 0.0f, 180);
+			break;
+		case RIGHT:
+			setDirection(20.0f, 0.0f, 0);
+			break;
+		case NONE:
+			break;
+		default:
+			break;
+		}		
+
+	}*/
 }
