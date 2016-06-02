@@ -58,17 +58,24 @@ public class LabelSetup {
 		scoreValueLabel2 = new Label();
 		setLabel(scoreValueLabel2, 140, 45);
 
-		pacmanLife1 = new Label("Pacman 1");
-		pacmanLife2 = new Label("Pacman 2");
-		setLabel(pacmanLife1, 570, 10);
-		setLabel(pacmanLife2, 570, 60);
+		setLifeLabels();
+		addToGroup();
+	}
 
+	private void addToGroup() {
 		group.add(scoreLabel);
 		group.add(scoreValueLabel);
 		group.add(scoreLabel2);
 		group.add(scoreValueLabel2);
 		group.add(pacmanLife1);
 		group.add(pacmanLife2);
+	}
+
+	private void setLifeLabels() {
+		pacmanLife1 = new Label("Pacman 1");
+		pacmanLife2 = new Label("Pacman 2");
+		setLabel(pacmanLife1, 570, 10);
+		setLabel(pacmanLife2, 570, 60);
 	}
 
 	private void setLabel(Label label, int x, int y) {

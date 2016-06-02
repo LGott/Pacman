@@ -1,7 +1,6 @@
 package mainPackage;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,16 +18,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import objectsPackage.BonusPellet;
 import objectsPackage.Ghost;
 import objectsPackage.Pacman;
 import objectsPackage.Pellet;
 import objectsPackage.UniqueObject;
-import objectsPackage.Wall;
-import objectsPackage.YellowPellet;
 
 import org.jbox2d.callbacks.RayCastCallback;
 import org.jbox2d.common.Vec2;
@@ -104,7 +99,6 @@ public class MazeGui extends Application {
 		componentSetup.createShapes();
 		labelSetup.setLabels();
 		setPacmanLives();
-
 		world.setContactListener(contactListener);
 		startSimulation();
 		addKeyListeners(scene);
@@ -138,58 +132,13 @@ public class MazeGui extends Application {
 				removeFixturesAndPellets();
 				scoreValueLabel.setText(String.valueOf(pacman1.getScore()));
 				scoreValueLabel2.setText(String.valueOf(pacman2.getScore()));
-
-				if (P1intendedMoveDir != MoveDir.NONE) {
-					// automatic pacman movement based on input
-					if (checkMovable(pacman1, P1intendedMoveDir)) {
-						P1currentDir = P1intendedMoveDir;
-						P1intendedMoveDir = MoveDir.NONE;
-						movePacman(pacman1, P1currentDir);
-					}
-				}
-				if (P2intendedMoveDir != MoveDir.NONE) {
-					// automatic pacman movement based on input
-					if (checkMovable(pacman2, P2intendedMoveDir)) {
-						P2currentDir = P2intendedMoveDir;
-						P2intendedMoveDir = MoveDir.NONE;
-						movePacman(pacman2, P2currentDir);
-					}
-				}
+				checkIntendedMove();
 
 				// Move pacmans to the new position computed by JBox2D
-
 				movePacman(pacman1);
 				movePacman(pacman2);
 				moveGhostsStep();
-
-				if (contactListener.isPacmanLost()) {
-					timeline.pause();
-					resetPacmansAndGhosts();
-
-					// If pacman1 hit a ghost, decrement its score
-					if (contactListener.determinePacman() == "Pacman1") {
-						pacmanLives1.get(life).setGraphic(null);
-						contactListener.setPacmanLoss(false);
-						contactListener.setPacmans("Neutral"); // reset
-						if (life < 2) {
-							life++;
-						}
-					}
-					// If pacman2 hit a ghost decrement its score
-					if (contactListener.determinePacman() == "Pacman2") {
-						pacmanLives2.get(life2).setGraphic(null);
-						contactListener.setPacmanLoss(false);
-						contactListener.setPacmans("Neutral"); // reset
-						if (life2 < 2) {
-							life2++;
-						}
-					}
-					if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0 || pellets.isEmpty()) {
-						gameOverLabel.setVisible(true);
-						// showLabelOnTimer(gameOverLabel);
-						timeline.stop();
-					}
-				}
+				onPacmanContact();
 			}
 		};
 		/**
@@ -229,6 +178,56 @@ public class MazeGui extends Application {
 		showLabelOnTimer(outLabel);
 		componentSetup.createGhosts();
 
+	}
+
+	private void onPacmanContact() {
+		if (contactListener.isPacmanLost()) {
+			timeline.pause();
+			resetPacmansAndGhosts();
+
+			// If pacman1 hit a ghost, decrement its score
+			if (contactListener.determinePacman() == "Pacman1") {
+				pacmanLives1.get(life).setGraphic(null);
+				contactListener.setPacmanLoss(false);
+				contactListener.setPacmans("Neutral"); // reset
+				if (life < 2) {
+					life++;
+				}
+			}
+			// If pacman2 hit a ghost decrement its score
+			if (contactListener.determinePacman() == "Pacman2") {
+				pacmanLives2.get(life2).setGraphic(null);
+				contactListener.setPacmanLoss(false);
+				contactListener.setPacmans("Neutral"); // reset
+				if (life2 < 2) {
+					life2++;
+				}
+			}
+			if (pacman1.getLives() <= 0 || pacman2.getLives() <= 0 || pellets.isEmpty()) {
+				gameOverLabel.setVisible(true);
+				// showLabelOnTimer(gameOverLabel);
+				timeline.stop();
+			}
+		}
+	}
+
+	private void checkIntendedMove() {
+		if (P1intendedMoveDir != MoveDir.NONE) {
+			// automatic pacman movement based on input
+			if (checkMovable(pacman1, P1intendedMoveDir)) {
+				P1currentDir = P1intendedMoveDir;
+				P1intendedMoveDir = MoveDir.NONE;
+				movePacman(pacman1, P1currentDir);
+			}
+		}
+		if (P2intendedMoveDir != MoveDir.NONE) {
+			// automatic pacman movement based on input
+			if (checkMovable(pacman2, P2intendedMoveDir)) {
+				P2currentDir = P2intendedMoveDir;
+				P2intendedMoveDir = MoveDir.NONE;
+				movePacman(pacman2, P2currentDir);
+			}
+		}
 	}
 
 	private void showLabelOnTimer(Label label) {
