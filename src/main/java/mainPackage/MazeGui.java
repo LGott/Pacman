@@ -384,6 +384,10 @@ public class MazeGui extends Application {
 		return pacmanArray;
 	}
 
+	public void setPacmanArray(ArrayList<Pacman> pacmanArray) {
+		this.pacmanArray = pacmanArray;
+	}
+
 	public ArrayList<Pellet> getPellets() {
 		return pellets;
 	}

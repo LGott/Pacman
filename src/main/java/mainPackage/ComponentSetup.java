@@ -262,7 +262,7 @@ public class ComponentSetup {
 		for (int i = 35; i < 58; i += 8) {
 			createYellowPellet(87, i);
 		}
-	//	mazeGui.setPellets(pellets);
+		// mazeGui.setPellets(pellets);
 	}
 
 	private void createYellowPellet(int posX, int posY) {
