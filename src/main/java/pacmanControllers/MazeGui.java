@@ -1,4 +1,4 @@
-package mainPackage;
+package pacmanControllers;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -22,13 +22,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import objectsPackage.BonusPellet;
-import objectsPackage.Ghost;
-import objectsPackage.Pacman;
-import objectsPackage.Pellet;
-import objectsPackage.UniqueObject;
-import objectsPackage.Wall;
-import objectsPackage.YellowPellet;
+import pacmanComponents.BonusPellet;
+import pacmanComponents.Ghost;
+import pacmanComponents.Pacman;
+import pacmanComponents.Pellet;
+import pacmanComponents.UniqueObject;
+import pacmanComponents.Wall;
+import pacmanComponents.YellowPellet;
+
 import org.jbox2d.callbacks.RayCastCallback;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;

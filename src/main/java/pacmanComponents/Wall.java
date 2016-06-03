@@ -1,10 +1,10 @@
-package objectsPackage;
+package pacmanComponents;
 
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.RectangleBuilder;
-import mainPackage.Properties;
+import pacmanControllers.Properties;
 
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.BodyType;

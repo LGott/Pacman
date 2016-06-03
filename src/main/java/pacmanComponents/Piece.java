@@ -1,4 +1,4 @@
-package objectsPackage;
+package pacmanComponents;
 
 import javafx.scene.Node;
 

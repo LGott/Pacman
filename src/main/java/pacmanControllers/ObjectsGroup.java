@@ -1,4 +1,4 @@
-package mainPackage;
+package pacmanControllers;
 
 import javafx.scene.Group;
 

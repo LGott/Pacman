@@ -1,4 +1,4 @@
-package objectsPackage;
+package pacmanComponents;
 
 import org.jbox2d.dynamics.World;
 

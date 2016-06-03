@@ -1,4 +1,4 @@
-package mainPackage;
+package pacmanControllers;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -7,10 +7,10 @@ import java.util.TimerTask;
 import javafx.animation.FadeTransition;
 import javafx.scene.Group;
 import javafx.util.Duration;
-import objectsPackage.Ghost;
-import objectsPackage.Pacman;
-import objectsPackage.Pellet;
-import objectsPackage.UniqueObject;
+import pacmanComponents.Ghost;
+import pacmanComponents.Pacman;
+import pacmanComponents.Pellet;
+import pacmanComponents.UniqueObject;
 
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;

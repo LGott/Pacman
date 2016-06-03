@@ -1,4 +1,4 @@
-package mainPackage;
+package pacmanControllers;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;

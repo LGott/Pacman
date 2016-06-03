@@ -1,4 +1,4 @@
-package objectsPackage;
+package pacmanComponents;
 
 public class UniqueObject {
 	private int ID;

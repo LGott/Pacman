@@ -1,4 +1,4 @@
-package mainPackage;
+package pacmanControllers;
 
 public class Properties {
 	public static final int WIDTH = 700;
